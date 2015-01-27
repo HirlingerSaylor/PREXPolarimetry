@@ -1,0 +1,25 @@
+MACRO gmag_test
+
+ mollang 90.0 90.001  0.0 0.001
+* mollang 60. 130. -30. 30.
+ beammom 1.0 1.0001 0.0001
+ magf 1    1.4
+ magf 2    0.6
+ magf 3    0.0
+ magf 4    0.4
+ magf 6    1.55
+ magf 5    0.0
+
+ zone 1 2
+ exec plot_setup z2=800 y2=15 y1=-70
+ exec eve n=10
+ exec plot_setup z2=800 proj=2 x1=-10 x2=10
+ exec eve n=10
+ wait
+ mollang 60. 120. -30. 30.
+ exec plot_setup z2=800 y2=15 y1=-70
+ exec eve n=200
+ exec plot_setup z2=800 proj=2 x1=-10 x2=10
+ exec eve n=200
+
+RETURN

@@ -1,0 +1,17 @@
+<a name="target">
+<h3>Target definition</h3>
+</a>
+
+The following example describes the targets for WA89 1993 run:
+<pre>
+C
+C ---                  Define the target volumes and the target area
+C
+TRGVOL    'TRD1'  'TRD2'  'TRD3'  'TRCU'  'MS11'  'MS31'  'MS32'  target volumes
+TRGPROB   0.0082  0.0082  0.0082  0.0261 0.00066 0.00066 0.00066  interaction probabilities
+TRGLIM    -1380. -1328.  -3. 3.   -3. 3.                          general X,Y,Z limits
+</pre>
+The interaction point is simulated in one of the specified volumes accordingly
+to their thickness in interaction probabilities (normalised to 1) and the beam
+profile.  
+

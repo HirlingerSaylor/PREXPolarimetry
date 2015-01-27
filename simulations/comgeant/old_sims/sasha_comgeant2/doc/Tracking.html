@@ -1,0 +1,128 @@
+<a name="Tracking">
+<h2>Tracking</h2>
+</a>
+Tracking is turned on by the command:
+<pre>
+OMTRACK   1
+</pre>
+<a name="dabsorbers">
+<h3>Dead absorbers</h3>
+</a>
+The tracking is mainly done by GEANT. There are several options implemented in
+OMGEANT mainly in order to speed up the computing. One may declare a "dead
+absorber" either for all particles or for particles of some certain types. The
+<a name="dead a">command</a>:
+<pre>
+DEADVOL 99
+</pre>
+requires that all particles should be stopped when entering the medium 99. This
+medium should have been of course declared. The command also inserts "dead
+volumes" - some boxes around the setup which fill the space between the 'HALL'
+walls and the maximum sizes of the areas declared by XMNAREA,YMXAREA and
+ZMXAREA.
+<p> One may also declare up to 9 media be opaque for certain types of tracks:
+<pre>
+C
+C       Absorbers: 
+C         medium      tracking types
+MEDABSORB1   54        1  2  3  4  7      photons electrons hadrons
+MEDABSORB2   95        1  2  3  4  7      photons electrons hadrons
+MEDABSORB3  295        1  2  3  4  7      photons electrons hadrons
+</pre>
+
+<a name="newparticles">
+<h3>New particles</h3>
+</a>
+New particles may be produces on the tracking stage as the result of decays
+or interactions. Storing of all new particles to the KINE bank including
+the shower elements may
+cause memory problems. Therefore by default
+only the products of decays are stored in the KINE bank and thus get
+a number 'itra'. The products of interactions are not stored in the KINE.
+While tracking they have the 'itra' number of the mother particle.
+One may change this 'storing rule'  using the command:
+<pre>
+C === "storing of new particles" 0 - decays,
+C                                1 - + hadron interactions 
+C                                2 - all processes
+ONEWKINE    2
+</pre>
+
+<a name="tflight">
+<h3>Time of flight</h3>
+</a>
+While tracking GEANT calculates the time of flight of a particle
+using the time offset stored in the origin vertex bank. These offsets
+are stored by GSVERT using the current value of the variable TOFG
+from /GCTRAC/, reset to 0 by GEANT at the event initialisation.
+In OMGEANT a "zero time point" should be defined using the command:
+<pre>
+XYZTIME0  -1500. 0. 0.  (or something like that)
+</pre>
+It is logical to set this point at a place where the beam enters
+the setup.
+The primary vertex is assigned a time needed for the beam to
+come from the "zero time point" to this vertex.
+
+<hr>
+
+<a name="Hits">
+<h2>Hits</h2>
+</a>
+Calculation and storing of hits is turned on by the command:
+<pre>
+OMHITS   1
+</pre>
+At the moment all types of detectors are treated in the same way.
+All tracks which give at least one hit in detectors are marked and counted
+as "trajectories". For intersections of tracks with sensitive volumes of the
+detector planes the coordinates of the entrance and exit points are stored.
+The centre of the line between this points is calculated.
+The timing of the hit is checked - it should be within -tgate:tgate interval,
+where tgate is the time gate of the detector set (see SETXXGATE).
+For a given
+trajectory (track)
+the following information is stored in the GEANT hits banks (via CALL GSAHIT):
+<ul>
+ <li> <i>32bit</i> words 1-3 - X,Y,Z of the centre of the track crossing with the sensitive
+   volume in the MRS;
+ <li> <i>32bit</i> words 4-6 - the X,Y,Z of the entrance point in the DRS (detector refer. system)
+ <li> <i>32bit</i> words 7-9 - the X,Y,Z of the exit point in the DRS (detector refer. system)
+ <li> <i>32bit</i> word 10   - full energy deposit in the sensitive volume;
+ <li> <i>32bit</i> word 11   - ionisation energy deposit in the sensitive volume (at the
+   moment does not differ from the full energy deposit);
+ <li> <i>32bit</i> word 12   - momentum;
+ <li> <i>08bit</i> word 13   - the track type if this hit is caused by a
+   product of 
+   the original track or
+   0 if it is caused by the original track;
+ <li> <i>24bit</i> word 14   - "reduced time of flight": the difference between 
+                  the actual time of flight and the time needed for light
+                  to reach this point from the "zero time point" XYZTIME0,
+                  the value; for the beam this value is set to 0. This
+                  value is used for the drift chamber digitisation.
+</ul>
+   <p align=center><i>Filled starting with the <a href="#vers32">version 3.2</a></i></p>
+<ul>
+ <li> <i>32bit</i> word 15-17
+                - direction cosines in MRS at the enterance point.
+ <li> <i>16bit</i> word 18   - the serial number of this hit on the track (only
+                  hits in the detectors are considered). 
+ <li> <i>32bit</i> word 19   - the additive response of the detector (for 'calorimeters' -
+                               see also hodoscopes IDTYP=46..)
+                   At the moment = the ionisation losses.
+</ul>
+<p>
+At the moment calorimeters are not treated as GEANT detectors. For WA89 there
+is a patch allowing to store the hits with the Lead Glass calorimeter. For that 
+the volume with the "lead glass" sensitive medium should be called 'LG',
+or one redefined by the FF command:
+<pre>
+LGVNAME 'LGS '
+</pre>
+Then
+the hits of all tracks with its surface will be stored and written out in
+the <a href="#trident output">TRIDENT output</a> format. They can be treated
+in <a href="http://vsnhd1.cern.ch/offline/phynix/">PHYNIX</a>. Another way
+to write out the hit information including all sensitive media is described
+in the <a href="#hits output">Hits output</a> section.

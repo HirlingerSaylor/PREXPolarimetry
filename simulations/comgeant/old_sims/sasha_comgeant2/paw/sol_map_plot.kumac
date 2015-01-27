@@ -1,0 +1,42 @@
+MACRO sol_map_plot z=0. y1=0. y2=92.
+*
+* == Draw a solenoidal field map
+*
+
+  hz=0
+    
+  x0=$RSIGMA([x])
+  y0=$RSIGMA([y])
+  z0=$RSIGMA([z])
+
+  do i=1,[n]
+    cmn='solen_v.f('//[x0]//','//[y0]//','//[z0]//')'
+    b=$CALL([cmn])
+*    mess b=[b]
+    ve/wri sol_b ! '3F10.3'
+    bx=sol_b(1)
+    by=sol_b(2)
+    bz=sol_b(3)
+    sx=[bx]/[b]
+    sy=[by]/[b]
+    sz=[bz]/[b]
+    x1=[x0]+[dl]*[sx]
+    y1=[y0]+[dl]*[sy]
+    z1=[z0]+[dl]*[sz]
+    if [z1]<[zl1] .OR. [z1]>[zl2] .OR. [y1]<[yl1] .OR. [y1]>[yl2] then
+      goto endc
+    endif  
+    igset plci 3
+    igset ltyp 3 
+    dline [z0] [z1] [y0] [y1]
+    igset plci 1
+    igset ltyp 3 
+    x0=$RSIGMA([x1])
+    y0=$RSIGMA([y1])
+    z0=$RSIGMA([z1])
+  enddo
+  endc:
+ 
+RETURN
+
+

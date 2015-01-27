@@ -1,0 +1,41 @@
+<a name="magnets">
+<h3>Magnets</h3>
+</a>
+
+At the moment 5 magnets are defined in the code:
+<ul>
+<LI>(1) - <A HREF="magnet.1.html">Omega magnet</A>
+<LI>(2) - <A HREF="magnet.2.html">SM1h (Torino C-shape magnet)</A>
+<LI>(3) - <A HREF="magnet.3.html">Polarized target solenoid</A>
+<LI>(4) - <A HREF="magnet.4.html">SM1m (HMC original and OAFM)</A>
+<LI>(5) - <A HREF="magnet.5.html">SM2 (FSM SMC Magnet)</A>
+</ul>
+If a particle is inside an area, say #4 which refers to the magnet #5
+the field map for the M2 magnet will be called from GUFLD. One should
+keep in mind that no volume is defined in the code, so one has to define
+the magnet geometry (the yoke, poles etc) in the FFREAD. One should also
+set the commands for the particular magnets used.
+Example:
+
+<PRE>
+C        Xcen  Ycen  Zcen   rot    bfield bscale kflag
+MAGNET4  350.    0.    0.    0     1.      1.    2    SM1m
+C         Xcen  Ycen  Zcen   rot  scale   flag1 flag2
+MAGNET5 1550.    0.    0.    0     1.      0    0      FSM
+</PRE>
+
+These commands set the position of the center of the field maps in the
+MRS (rotation does not work at the moment) and allow to scale the field
+and set special flags in order to control the field map. To get the explanation
+of the meaning of the different flag setting for a given magnet just click
+on the magnet list above.
+
+These routines are used to initialise the field maps and to return the
+values of the field; the magnet number is hardwired in the code:
+
+<PRE>
+OMAGINI1,OMAGINI2,...
+OMAGFLD1(X,B),OMAGFLD2(X,B),... where X(1-3) is the input position vector
+                                 and  B(1-3) is the output field vector
+</PRE>
+

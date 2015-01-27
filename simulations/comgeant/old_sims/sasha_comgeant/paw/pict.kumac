@@ -1,0 +1,14 @@
+MACRO pict black=0
+ zone 1 2
+ if [black]>0 then
+   sparatt 1 3 1
+   sparatt 2 1 1
+ endif
+
+ exec plot_setup_pap proj=1 black=[black]
+ dxyz
+ exec plot_setup_pap proj=2 black=[black]
+ dxyz
+ sparatt 1 3 4
+ sparatt 2 1 2
+RETURN

@@ -1,0 +1,88 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OUNTINI(NTFLA,LENMX,LOUT,ID)
+C
+C     ******************************************************************
+C     *   Used for e- scattering NTUPLE:                               *
+C     *                                                                *
+C     *   Users routine                                                *
+C     *   Should book user's data to add data to the regular NTUPLE    *
+C     *                                                                *
+C     *   INPUT :  NTFLA - flag                                        *
+C     *            LENMX - flag                                        *
+C     *            LENMX >=0 - output NTUPLE                           *
+C     *                  =-1 - input  NTUPLE                           *
+C     *            LOUT  - logical unit for printouts                  *
+C     *   OUTPUT:  ID - id of the ntuple                               *
+C     *                                                                *
+C     *   Usage:                                                       *
+C     *   1) define a /COMMON/ with the variables to be stored         *
+C     *   2) book the ntuple variable in this routine                  *
+C     *      (see omntkini.F for example)                              *
+C     *                                                                *
+C     *    ==>Called by : OMNTUPIN                                     *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER  NTFLA,LENMX,LOUT,ID
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+#include "omgeant/omcdpar.inc"
+#include "omgeant/omcnthit.inc"
+#include "moller/cntescat.inc"
+C
+      COMMON/CUOMNTH/ ZHIT(MXHITNT)
+      REAL            ZHIT
+C
+C     ------------------------------------------------------------------
+C
+      ID=2
+C
+      THETCM=0.
+      PHICM=0.
+      WGCROS=0.
+      ANPOWER=0.
+C
+      IF(LENMX.GE.0) THEN
+C
+C---     OUTPUT ntuple
+C
+        CALL HBNAME(ID,'esca',NEWOR   ,'newor[0,1000]')
+        CALL HBNAME(ID,'esca',IETYPE  ,'ietype[0,255]')
+        CALL HBNAME(ID,'esca',THETCM  ,'thetcm')
+        CALL HBNAME(ID,'esca',PHICM   ,'phicm')
+        CALL HBNAME(ID,'esca',WGCROS  ,'wgcros')
+        CALL HBNAME(ID,'esca',ANPOWER ,'anpower')
+C---        nhit is defined before
+        CALL HBNAME(ID,'hit',ZHIT(1)   ,'zhit(nhit)')
+        CALL HBNAME(ID,'hit',HITDRS    ,'hitd(3,nhit)')
+        CALL HBNAME(ID,'hit',PHIT      ,'phit(nhit)')
+        CALL HBNAME(ID,'hit',HITSLDRS  ,'hitsld(2,nhit)')
+        CALL HBNAME(ID,'hit',HITION(1) ,'hition(nhit)')
+C
+      ELSE
+C
+C---     INPUT ntuple
+C
+        CALL HBNAME(ID,'esca',NEWOR   ,'$SET:newor')
+        CALL HBNAME(ID,'esca',IETYPE  ,'$SET:ietype')
+        CALL HBNAME(ID,'esca',THETCM  ,'$SET:thetcm')
+        CALL HBNAME(ID,'esca',PHICM   ,'$SET:phicm')
+        CALL HBNAME(ID,'esca',WGCROS  ,'$SET:wgcros')
+        CALL HBNAME(ID,'esca',ANPOWER ,'$SET:anpower')
+        CALL HBNAME(ID,'hit',ZHIT     ,'$SET:zhit')
+        CALL HBNAME(ID,'hit',HITDRS   ,'$SET:hitd')
+        CALL HBNAME(ID,'hit',PHIT     ,'$SET:phit')
+        CALL HBNAME(ID,'hit',HITSLDRS ,'$SET:hitsld')
+        CALL HBNAME(ID,'hit',HITION   ,'$SET:hition')
+C
+      ENDIF
+C
+ 999  RETURN
+      END
+

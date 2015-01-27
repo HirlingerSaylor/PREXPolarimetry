@@ -1,0 +1,32 @@
+<a name="Geometry">
+<h2>Geometry definition</h2>
+</a>
+
+Everything but the main mother volume may be defined using the FFREAD commands.
+Several FFREAD files may be read one after another thus defining the general
+geometry and some particular settings. The later files may redefine
+values set by the previous ones. In order to reduce unwanted interference
+between different input FFREAD files there are different sets of FFREAD keys
+for the same variables.
+The main mother volume of the 'BOX' shape called 'HALL' is defined in the code.
+The medium number of the 'HALL' is set to 1.
+The sizes of the volume 'HALL' are taken from the "..AREA"
+definitions (see below).
+The center of the master reference frame (MRS) is positioned to the center of
+the 'HALL'. Normally the MRS is defined in a way that X goes along the beam
+and Z goes up. In fact, another options exist, but they have not been really
+tested.
+<p>
+Starting with the <a href="#vers32">version 3.2</a>
+it is possible to pass a name of the setup with the FFREAD card:
+<pre>
+SETUPNAME  'WA89HY93'
+</pre>
+The first 4 characters serve for the setup/experiment name and are checked
+in the present version of the code. The second 4 characters may be used to
+distinguish runs, configurations etc. At the moment the name 'WA89' is used
+in the OMGEANT code to check if some WA89 specific routines should be called.
+
+</p>
+
+

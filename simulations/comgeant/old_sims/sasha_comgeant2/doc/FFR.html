@@ -1,0 +1,23 @@
+<a name="FFR">
+<h2>FFREAD commands</h2>
+</a>
+The table is not complete yet!
+<pre>
+<hr>
+   keyword   variable   Meaning                                       Default
+<hr>
+                     <h4>General commands</h4>
+   LUNGET    LUNOMG(1)          Logical unit to read event data...................1
+   LUNSAVE   LUNOMG(2)          Logical unit to write event data..................2
+   LENPIPE   LENPIPE            Length of I/O buffer for the pipe..............1024
+                     <h4>Geometry</h4>
+   DEADVOL   IDEADVOL           Medium number for <a href="#dead a">dead absorber</a>...................0
+                     <h4>Kinematics</h4>
+   TMPKINE   KINTMP(1,1):(20,5) <a href="#primitive m">"Primitive kinematics"</a>...zeros
+                     <h4>Miscellaneous</h4>
+   ERRTRAP   IERTRAP            =0 - ignore arithmetic errors.....................2
+                                 1 - print a message and continue
+                                 2 - crash
+                                 (works on ULTRIX) 
+<hr>
+</pre>

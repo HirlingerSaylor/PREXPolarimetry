@@ -1,0 +1,105 @@
+MACRO solenoid x=0. y=0. z=0. dl=5. n=100 zl1=0 zl2=250 yl1=0 yl2=150 new=1 fill=0.
+*
+* == Draw a solenoidal field
+*
+  if $VDIM(sol_par)<3 then
+    ve/cr sol_par(12,3) r
+    ve/cr sol_b(3) r
+  endif
+*                     enable x,y,z cen    r1   r2   L/2  A/cm**2    
+*!  ve/in sol_par(1:8,1)  1.   0. 0. 60.     92.  102.  70.   -400. 
+*  ve/in sol_par(1:8,1)  1.   0. 0. 0.     92.  102. 200.  -2200. 
+*  ve/in sol_par(1:8,1)  1.   0. 0. 40.    55.  65.  40.  -2000. 
+*  ve/in sol_par(1:8,1)  1.     3*0.      100. 101. 0.5   4.E6 
+*!  ve/in sol_par(1:8,2)  0.   0. 0. 200.    14.  17. 100.  -2000. 
+  ve/in sol_par(1:8,1)  1.   0. 0. -4.     2.58  9.5  2.7  -200. 
+  ve/in sol_par(1:8,2)  1.   0. 0.  4.     2.58  9.5  2.7  -200. 
+  
+  x0=$RSIGMA([x])
+  y0=$RSIGMA([y])
+  z0=$RSIGMA([z])
+  if [new]>0 then
+    null [zl1] [zl2] [yl1] [yl2]
+    do isol=1,3
+      en=sol_par(1,[isol])
+      if [en]>0.1 then
+        zc=sol_par(4,[isol])
+        z1=sol_par(7,[isol])
+        y1=sol_par(5,[isol])
+        z2=[zc]+[z1]
+        z1=[zc]-[z1]
+*        mess [z1] [y1] 
+        az1=$SIGMA(MAX([z1],[zl1]))
+        az2=$SIGMA(MIN([z2],[zl2]))
+        ay1=$SIGMA(MAX(-[y1],[yl1]))
+        ay2=$SIGMA(MIN([y1],[yl2]))
+*        mess [az1] [az2] [ay1] [ay2]
+        dbox [az1] [az2] [ay1] [ay2]
+        y1=sol_par(6,[isol])
+*        dbox -[z1] [z1] -[y1] [y1]
+        ay1=$SIGMA(MAX(-[y1],[yl1]))
+        ay2=$SIGMA(MIN([y1],[yl2]))
+        dbox [az1] [az2] [ay1] [ay2]
+      endif
+    enddo
+  endif
+
+  ybef=[y0]
+  nfill=0
+  startc:
+  hzcn=0.
+  zmin=10000.
+  do i=1,[n]
+    cmn='solen_v.f('//[x0]//','//[y0]//','//[z0]//')'
+    b=$CALL([cmn])
+    zzc=sol_par(4,1)
+    az0=$SIGMA(ABS([z0]-[zzc]))
+    if [az0]<[zmin] then
+      zmin=[az0]
+      hzcn=sol_b(3)
+      hzcn=$SIGMA(ABS([hzcn]))
+    endif
+*    mess b=[b]
+    ve/wri sol_b ! '3F10.3'
+    bx=sol_b(1)
+    by=sol_b(2)
+    bz=sol_b(3)
+    sx=[bx]/[b]
+    sy=[by]/[b]
+    sz=[bz]/[b]
+    x1=[x0]+[dl]*[sx]
+    y1=[y0]+[dl]*[sy]
+    z1=[z0]+[dl]*[sz]
+    if [z1]<[zl1] .OR. [z1]>[zl2] .OR. [y1]<[yl1] .OR. [y1]>[yl2] then
+      goto endc
+    endif  
+    igset plci 3
+    igset ltyp 3 
+    dline [z0] [z1] [y0] [y1]
+    igset plci 1
+    igset ltyp 3 
+    x0=$RSIGMA([x1])
+    y0=$RSIGMA([y1])
+    z0=$RSIGMA([z1])
+  enddo
+  endc:
+  if [fill]>0.1 then
+    ymx=sol_par(5,1)
+    if [hzcn]>0. .AND. [ybef]<[ymx] .AND. [nfill]<100 then
+      ydel=$SIGMA(MAX([fill]/[hzcn],1.))
+      mess y=[y] ydel=[ydel]
+      x0=$RSIGMA([x])
+      y0=$RSIGMA([ybef]+[ydel])
+      z0=$RSIGMA([z])
+      ybef=[y0]
+      if [ybef]<[ymx] then
+        nfill=[nfill]+1
+        goto startc
+      endif
+    endif
+  endif
+
+  eend: 
+RETURN
+
+

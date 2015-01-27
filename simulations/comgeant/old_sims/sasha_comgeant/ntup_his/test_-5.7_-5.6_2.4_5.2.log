@@ -1,0 +1,1504 @@
+
+ MZSTOR.  ZEBRA table base TAB(0) in /MZCC/ at adr    52999063     328B397 HEX
+
+ MZSTOR.  Initialize Store  0  in /GCBANK/
+          with Store/Table at absolute adrs    33655013    52999063
+                                        HEX     20188E5     328B397
+                                        HEX    FED8D15A           0
+                              relative adrs   -19345062           0
+          with     1 Str. in     2 Links in  10100 Low words in 3999970 words.
+          This store has a fence of   16 words.
+
+ MZLOGL.  Set Log Level 0 for store  0
+
+ MZSTOR.  Initialize Store  1  in /PAWC/  
+          with Store/Table at absolute adrs    37655073    38254664
+                                        HEX     23E9221     247B848
+                                        HEX    FF15DA96    FF1F04B1
+                              relative adrs   -15345002   -14744399
+          with     1 Str. in     1 Links in   5001 Low words in  599990 words.
+          This store has a fence of    5 words.
+
+ MZLINK.  Initialize Link Area  /HCBOOK/  for Store  1 NL/NS=    49     4
+1*****  GEANT Version  3.21/14 Released on 19032002
+0*****  Correction Cradle Version  0.1400
+
+ MZLINK.  Initialize Link Area  /OMCBANK  for Store  0 NL/NS=    32    32
+
+
+                               === Start OMGEANT initialization ===
+
+
+1           USER'S DIRECTIVES TO RUN THIS JOB
+            ----------------------------------
+
+
+ ***** DATA CARD CONTENT     LIST                                                                                                                    
+ ***** DATA CARD CONTENT     C KEYS                                                                                                                  
+ ***** DATA CARD CONTENT     C  -------  Read the geomtery file                                                                                      
+ ***** DATA CARD CONTENT     C NOLI                                                                                                                  
+ ***** DATA CARD CONTENT     C LIST                                                                                                                  
+ ***** DATA CARD CONTENT     READ  17         materials                                                                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C Generic table of materials and menia                                                                                  
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C Material:            GPARMAT   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Medium:              GPARMED   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C -- New materials: mixtures                                                                                            
+ ***** DATA CARD CONTENT      C            #       name                g/cm3     Nmat    A1   Z1  W1    A2  Z2  W2                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARMXT01   21 'Near vacuum$        '   1.E-11     -1     14.6  7.3  1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT02   22 'HE gas$             '   0.000164   -1      4.   2.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT03   23 '3He 10 atm $        '   0.00133    -1      3.   2.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT04   24 'Argon gas$          '   0.00164    -1     40.  18.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT05   25 'Diamond$            '   3.52       -1     12.   6.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT06   26 'Silicon$            '   2.33       -1     28.  14.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT07   27 'Titanium$           '   4.54       -1     48.  22.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT08   28 'CO2$                '   0.00180    -2     12.   6.   1.   16.  8.  2.                                   
+ ***** DATA CARD CONTENT      GPARMXT09   29 'Ar CO2 80/20$       '   0.00167    -3     40.  18.   8.   12.  6.  2.   16.  8.  4.                     
+ ***** DATA CARD CONTENT      GPARMXT10   30 'Freon 12 $          '   0.00495    -3     12.   6.   1.   35.5 17. 2.   19.0 9.  2.                     
+ ***** DATA CARD CONTENT      GPARMXT11   31 'Mylar$              '   1.39       -3     12.   6.   5.    1.  1.  4.   16.  8.  2.                     
+ ***** DATA CARD CONTENT      GPARMXT12   32 'Straw kapton+fibers$'   1.70       -3     12.   6.   5.    1.  1.  4.   16.  8.  2.                     
+ ***** DATA CARD CONTENT      C  Aluminosilicate glass SiO2 57%, Al2O3 20%, MgO 12%, CaO 5%, B2O3 4%, Na2O 1%                                         
+ ***** DATA CARD CONTENT      GPARMXT13   33 'Glass al-sil  GE180$'   2.76        7     16.  8. 0.524  28.1 14. 0.266   27. 13. 0.072  24.3 12. 0.072 
+ ***** DATA CARD CONTENT                                                                40. 20. 0.036  11.   5. 0.013   23. 11. 0.007                 
+ ***** DATA CARD CONTENT      GPARMXT14   34 'Glass F8-00$        '   3.60        5    207.1  82. 0.4177   28.0 14. 0.21   39.1 19. 0.0738            
+ ***** DATA CARD CONTENT                                                                23.0  11. 0.0106   16.0  8. 0.2879                            
+ ***** DATA CARD CONTENT      GPARMXT15   35 'Glass TF1$          '   3.86        5    207.1  82. 0.4752   28.0 14. 0.1927 39.1 19. 0.0497            
+ ***** DATA CARD CONTENT                                                                74.9  33. 0.0038   16.0  8. 0.2786                            
+ ***** DATA CARD CONTENT      GPARMXT16   36 'Eff.GEM 0.7%RL/cm$  '   0.168      -1     26.  13.   1.                                                 
+ ***** DATA CARD CONTENT      GPARMXT17   37 'PVC              $  '   1.32       -3     12.   6.  2.       1. 1. 3.     35.5 17.  1.                  
+ ***** DATA CARD CONTENT      GPARMXT18   38 'SPACAL 48/42/10  $  '   5.34        3    207.1 82.  0.885   12. 6. 0.088   1.   1.  0.027               
+ ***** DATA CARD CONTENT      GPARMXT19   39 'Cables gluex     $  '   1.84        4     63.54 29. 0.33    12. 6. 0.257   1.   1.  0.032  35.5 17. 0.38
+ ***** DATA CARD CONTENT      GPARMXT20   40 'C4F10    $          '   0.00973    -2     12.   6.   4.   19.0 9. 10.                                   
+ ***** DATA CARD CONTENT      GPARMXT21   41 'Kapton      $       '   1.42       -4     12.   6.  22.    1.  1. 10.   16.  8.  5.  14.  7.  2.        
+ ***** DATA CARD CONTENT      GPARMXT22   42 'Delrin            $ '   1.42       -3     12.  6.  1.   1.  1. 2.   14.  7.  1.                         
+ ***** DATA CARD CONTENT      GPARMXT23   43 'CDC eff. layer 16mm$'   0.026       3     34.6 15.7 0.048   12.7 6.4 0.95   183.8  74.  0.002           
+ ***** DATA CARD CONTENT      GPARMXT24   44 'FDC effec 12cm pack$'   0.0275      2     12.7 6.4 0.85   63.5 29. 0.15                                 
+ ***** DATA CARD CONTENT      GPARMXT25   45 'Tedlar      $       '   1.49       -3     12.   6.   2.    1.  1.  3.   19.  9.  1.                     
+ ***** DATA CARD CONTENT      GPARMXT26   46 'CF4    $            '   0.00393    -2     12.   6.   1.   19.0 9.  4.                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C -- New materials: the number of the card is arbitrary (used to distinguish                                            
+ ***** DATA CARD CONTENT      C                                                        the cards)                                                     
+ ***** DATA CARD CONTENT      C            #       name               A    Z    g/cm3        RLcm   Int.len cm                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARMAT01   50 'Plastic, scint$     '  12.   6.   1.032       42.4    80.0   0                                          
+ ***** DATA CARD CONTENT      GPARMAT02   51 'Glass borosilic.$   '  19.  10.   2.23        12.7    44.    0                                          
+ ***** DATA CARD CONTENT      GPARMAT03   52 'Quartz$             '  44.  22.   2.2         12.3    44.3   0                                          
+ ***** DATA CARD CONTENT      GPARMAT04   53 'Lead glass SF57$    ' 150.  60.   5.51         1.546  26.9   0                                          
+ ***** DATA CARD CONTENT      GPARMAT05   54 'G10           $     '  16.   8.   1.7         19.4    53.0   0                                          
+ ***** DATA CARD CONTENT      GPARMAT06   55 'Fiberglass 65%glass$'  17.   9.   1.82        17.     52.0   0                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---  Aerogels (NIMA 494 (2002) 491)                                                                                   
+ ***** DATA CARD CONTENT      C      n**2-1=0.438+/-0.001*density(g/dm**3), transmission of one layer A*exp(thick/Lscat(400nm)/(lambda/400nm)**4)     
+ ***** DATA CARD CONTENT      C                                             Lscat(400nm)=45-55 mm, A=0.9-0.97                                         
+ ***** DATA CARD CONTENT      C                Some LHCb samples: 20x20x5cm blocks: Lascat=46 mm, A=0.96, n=1.03, dens=0.14 g/cm**3                   
+ ***** DATA CARD CONTENT      C                Let us assume a stack built from 50mm plates,                                                          
+ ***** DATA CARD CONTENT      C         Dispersion:                                                                                                   
+ ***** DATA CARD CONTENT      C            HERMES aerogel n=1.02804+0.789308E-3*exp(0.368298*Egamma)                                                  
+ ***** DATA CARD CONTENT      C                   c4F10   n=1.001287+1.723E-7*E+5.495E-6*E**2                                                         
+ ***** DATA CARD CONTENT                                                                                                                              
+ ***** DATA CARD CONTENT      C               Hall A aerogel                                                                                          
+ ***** DATA CARD CONTENT      GPARMAT07   56 'Aerogel 1.030 HallA$'  44.  22.   0.120      225.0   812.0   0                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARMAT08   57 'Aerogel 1.030 LHCb$ '  44.  22.   0.140      193.0   696.0   0                                          
+ ***** DATA CARD CONTENT      GPARMAT09   58 'Aerogel 1.020 calc$ '  44.  22.   0.092      294.0  1060.0   0                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARMAT10   60 'Mirror, artif      $'  19.  10.   1.00        30.    100.0   0                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C -- Media definition:                                                                                                  
+ ***** DATA CARD CONTENT      C          Convention: (not binding, but just to keep some order)                                                       
+ ***** DATA CARD CONTENT      C                   med=med0 + field*200 + sens*400                                                                     
+ ***** DATA CARD CONTENT      C                   where 0<med0<200                                                                                    
+ ***** DATA CARD CONTENT      C                   HALL contains the medium #1, (air with or without the field)                                        
+ ***** DATA CARD CONTENT      C                   Fan,Dmul,Elo and st are calculated automatically if AUTO>0 (default)                                
+ ***** DATA CARD CONTENT      C                                           or if the given value is negative.                                          
+ ***** DATA CARD CONTENT      AUTO    0    semiautomatic media definitions                                                                            
+ ***** DATA CARD CONTENT      C           #       name             mat sen F Fmx Fan stmx  Elo epsi st(mu,lo)  user words                             
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARMED01     1 'LH2,   nmf$         '   1  0  0  0. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED02   201 'LH2,    mf$         '   1  0  1 80. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED03     2 'LD2,   nmf$         '   2  0  0  0. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED04   202 'LD2,    mf$         '   2  0  1 80. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED05     3 'L4He,  nmf$         '   3  0  0  0. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED06   203 'L4He,   mf$         '   3  0  1 80. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED07     5 'Berillium, nmf$     '   5  0  0  0. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED08   205 'Berillium,  mf$     '   5  0  1 80. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED09     6 'Carbon foil, nmf$   '   6  0  0  0. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED10   206 'Carbon foil,  mf$   '   6  0  1 80. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED11     7 'N2 gas,      nmf$   '   6  0  0  0. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED12   207 'N2 gas,       mf$   '   6  0  1 80. -1. -1.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED13   707 'N2 gas, opt  nmf$   '   6  0  0  0. -1. 10.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED14   807 'N2 gas, opt   mf$   '   6  0  1 80. -1. 10.   -1.   0.02   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED15     9 'Alum, nmf$          '   9  0  0  0. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED16   209 'Alum,  mf$          '   9  0  1 80. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED17    10 'Steel nmf$          '  10  0  0  0. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED18   210 'Steel  mf$          '  10  0  1 80. -1. -1.   -1.   0.2    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED19    11 'Copper  nmf$        '  11  0  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED20   211 'Copper   mf$        '  11  0  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED21    12 'Tungsten  nmf$      '  12  0  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED22   212 'Tungsten  mf$       '  12  0  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED23    13 'Lead  nmf$          '  13  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED24   213 'Lead   mf$          '  13  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED25    15 'Air,  nmf$          '  15  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED26   215 'Air,   mf$          '  15  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED27   715 'Air,  opt nmf$      '  15  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED28   815 'Air,  opt  mf$      '  15  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED29    16 'Vacuum,   nmf$      '  16  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED30   216 'Vacuum,    mf$      '  16  0  1 80. -1.  5.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED31    21 'Near vacuum, nmf$   '  21  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED32   221 'Near vacuum,  mf$   '  21  0  1 80. -1.  5.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED33    22 'He gas, nmf$        '  22  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED34   222 'He gas,  mf$        '  22  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED35    23 '3He gas 10atm, nmf$ '  23  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED36   223 '3He gas 10atm, mf$  '  23  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED37    24 'Ar  gas, nmf$       '  24  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED38   224 'Ar  gas, mf$        '  24  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED39    25 'Diamond, nmf $      '  25  0  0  0. -1. -1.   -1.   0.05   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED40   225 'Diamond,  mf $      '  25  0  1 80. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED41    26 'Silicon, nmf,   $   '  26  0  0  0. -1. -1.   -1.   0.05   -1.                                         
+ ***** DATA CARD CONTENT      GPARMED42   226 'Silicon,  mf$       '  26  0  1 80. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED43   426 'Silicon, nmf, sn$   '  26  1  0  0. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED44   626 'Silicon,  mf, sn$   '  26  1  1 80. -1. -1.   -1.   0.0002 -1.                                         
+ ***** DATA CARD CONTENT      GPARMED45    27 'Titanium  nmf$      '  27  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED46   227 'Titanium   mf$      '  27  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED47    28 'CO2 gas,  nmf$      '  28  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED48   228 'CO2 gas,   mf$      '  28  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED49   728 'CO2 gas,  opt   nmf$'  28  0  0  0. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED50   828 'CO2 gas,  opt    mf$'  28  0  1 80. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED51    29 'Ar/CO2 80/20,  nmf$ '  29  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED52   229 'Ar/CO2 80/20   mf$  '  29  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED53   429 'Ar/CO2 80/20,sn nmf$'  29  1  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED54   629 'Ar/CO2 80/20,sn  mf$'  29  1  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED55    30 'Freon 12 nmf$       '  30  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED56   230 'Freon 12 mf$        '  30  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED57    31 'Mylar nmf$          '  31  0  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED58   231 'Mylar mf$           '  31  0  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED59    32 'Straw kap+fibrs nmf$'  32  0  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED60   232 'Straw kap+fibrs  mf$'  32  0  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED61    33 'Glass ALSi nmf$     '  33  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED62   233 'Glass AlSi mf$      '  33  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED63    34 'Glass F8-00 nmf$    '  34  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED64   234 'Glass F8-00  mf$    '  34  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED65   434 'Glass F8-00 sen,nmf$'  34  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED66   634 'Glass F8-00 sen, mf$'  34  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED67   734 'Glass F8-00 opt nmf$'  34  0  0  0. -1.  0.5  -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED68   834 'Glass F8-00 opt mf$ '  34  0  1 80. -1.  0.5  -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED69    35 'Glass TF1 nmf$      '  35  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED70   235 'Glass TF1  mf$      '  35  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED71   435 'Glass TF1 sen,nmf$  '  35  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED72   635 'Glass TF1 sen, mf$  '  35  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED73   735 'Glass TF1 opt nmf$  '  35  0  0  0. -1.  0.5  -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED74   835 'Glass TF1 opt  mf$  '  35  0  1 80. -1.  0.5  -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED75    36 'Ef.GEM .7%RL/cm nmf$'  36  0  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED76   236 'Ef.GEM .7%RL/cm  mf$'  36  0  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED77   436 'Ef.GEM .7%RL/cm nmf$'  36  1  0  0. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED78   636 'Ef.GEM .7%RL/cm  mf$'  36  1  1 80. -1. -1.   -1.   0.002  -1.                                         
+ ***** DATA CARD CONTENT      GPARMED79    37 'PVC             nmf$'  37  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED80   237 'PVC              mf$'  37  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED81    38 'SPACAL          nmf$'  38  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED82   238 'SPACAL           mf$'  38  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED83   438 'SPACAL      sen nmf$'  38  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED84   638 'SPACAL      sen  mf$'  38  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED85    39 'Cables GLUEX    nmf$'  39  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED86   239 'Cables GLUEX     mf$'  39  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED87    40 'C4F10           nmf$'  40  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED88   240 'C4F10            mf$'  40  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED89   740 'C4F10  optic    nmf$'  40  0  0  0. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED90   840 'C4F10  optic     mf$'  40  0  1 80. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED91    41 'Kapton          nmf$'  41  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED92   241 'Kapton           mf$'  41  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED93    42 'Delrin          nmf$'  42  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED94   242 'Delrin           mf$'  42  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED95    43 'CDC eff layer   nmf$'  43  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED96   243 'CDC eff layer    mf$'  43  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED97   643 'CDC eff layer sn mf$'  43  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED98    44 'FDC eff         nmf$'  44  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED99   244 'FDC eff          mf$'  44  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED100  644 'FDC eff       sn mf$'  44  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED101   45 'Tedlar          nmf$'  45  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED102  245 'Tedlar           mf$'  45  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED103   46 'CF4             nmf$'  46  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED104  246 'CF4              mf$'  46  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED105  746 'CF4    optic    nmf$'  46  0  0  0. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED106  846 'CF4    optic     mf$'  46  0  1 80. -1. 10.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED107   50 'Plastic,scintil nmf$'  50  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED108  250 'Plastic,scintil  mf$'  50  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED109  450 'Scintil. sens nmf$  '  50  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED110  650 'Scintil. sens  mf$  '  50  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED111   51 'Glass BSi nmf$      '  51  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED112  251 'Glass BSi mf$       '  51  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED113  751 'PMT BS window nmf$  '  51  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED114  851 'PMT BS window  mf$  '  51  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED115  951 'PMT BS window  mf$  '  51  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED116 1051 'PMT BS window  mf$  '  51  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED117   52 'Quartz nmf$         '  52  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED118  252 'Quartz mf$          '  52  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED119  752 'PMT Q window nmf$   '  52  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED120  852 'PMT Q window  mf$   '  52  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED121  952 'PMT Q window  mf$   '  52  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED122 1052 'PMT Q window  mf$   '  52  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED123   53 'Glass SF57 nmf$     '  53  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED124  253 'Glass SF57  mf$     '  53  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED125  453 'Glass SF57 sen,nmf$ '  53  1  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED126  653 'Glass SF57 sen, mf$ '  53  1  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED127   54 'G10 nmf$            '  54  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED128  254 'G10 mf$             '  54  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED129   55 'Fibrgl 60%glass nmf$'  55  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED130  255 'Fibrgl 60%glass nmf$'  55  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED131   56 'Aerogel 1.03    nmf$'  56  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED132  256 'Aerogel 1.03     mf$'  56  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED133  756 'Aerogel 1.03 op nmf$'  56  0  0  0. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED134  856 'Aerogel 1.03 op  mf$'  56  0  1 80. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED135   57 'Aerogel 1.03 lb nmf$'  57  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED136  257 'Aerogel 1.03 lb  mf$'  57  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED137  757 'Aerogel 1.03 lb nmf$'  57  0  0  0. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED138  857 'Aerogel 1.03 lb  mf$'  57  0  1 80. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED139   58 'Aerogel 1.02 lb nmf$'  58  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED140  258 'Aerogel 1.02 lb  mf$'  58  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED141  758 'Aerogel 1.02 lb nmf$'  58  0  0  0. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED142  858 'Aerogel 1.02 lb  mf$'  58  0  1 80. -1.  1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED143   60 'Mirror, artif   nmf$'  60  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED144  260 'Mirror, artif    mf$'  60  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED145  760 'Mirror, opt     nmf$'  60  0  0  0. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED146  860 'Mirror, opt      mf$'  60  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED147  960 'Mirror, opt idealmf$'  60  0  1 80. -1. -1.   -1.   0.1    -1.                                         
+ ***** DATA CARD CONTENT      GPARMED148   97 'Absorber$           '  10  0  0  0. -1. -1.   -1.   1.     -1.                                         
+ ***** DATA CARD CONTENT      GPARMED149   98 'Escape area$        '  21  0  0  0. -1. -1.   -1.   1.     -1.                                         
+ ***** DATA CARD CONTENT      GPARMED150   99 'Dead absorber$      '  10  0  0  0. -1. -1.   -1.   1.     -1.                                         
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      MEDABSORB1   99        1  2  3  4  7  8     photons electrons hadrons (all except muons and geantino                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---  Optical properties                                                                                               
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  C4F10, absorption CLAS                                                                            
+ ***** DATA CARD CONTENT      GOPTMED01   740 20                                                                                                      
+ ***** DATA CARD CONTENT      C nm        669.       608.       546.       485.       424.       362.       301.       260.       219.       203.     
+ ***** DATA CARD CONTENT      C nm        192.       185.       183.       180.       178.       175.       173.       170.       168.       165.     
+ ***** DATA CARD CONTENT             0.185E-08  0.204E-08  0.227E-08  0.256E-08  0.293E-08  0.342E-08  0.412E-08  0.477E-08  0.566E-08  0.612E-08     
+ ***** DATA CARD CONTENT             0.645E-08  0.670E-08  0.679E-08  0.689E-08  0.698E-08  0.710E-08  0.718E-08  0.730E-08  0.739E-08  0.750E-08     
+ ***** DATA CARD CONTENT             0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06     
+ ***** DATA CARD CONTENT             0.175E+06  0.609E+04  0.192E+04  0.596E+03  0.339E+03  0.246E+03  0.143E+03  0.731E+02  0.405E+02  0.100E-02     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT               0.00134    0.00134    0.00135    0.00135    0.00137    0.00138    0.00141    0.00144    0.00150    0.00152     
+ ***** DATA CARD CONTENT               0.00155    0.00157    0.00157    0.00158    0.00159    0.00160    0.00160    0.00161    0.00162    0.00163     
+ ***** DATA CARD CONTENT      GOPTMED02   840 -740                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   CO2 absorption NIM,93 593                                                                        
+ ***** DATA CARD CONTENT      GOPTMED03   728 14                                                                                                      
+ ***** DATA CARD CONTENT      C nm        240.       212.       206.       203.       201.       200.       198.       196.       194.       192.     
+ ***** DATA CARD CONTENT      C nm        191.       189.       187.       186.                                                                       
+ ***** DATA CARD CONTENT             0.517E-08  0.586E-08  0.602E-08  0.611E-08  0.617E-08  0.620E-08  0.627E-08  0.632E-08  0.639E-08  0.644E-08     
+ ***** DATA CARD CONTENT             0.651E-08  0.656E-08  0.664E-08  0.668E-08                                                                       
+ ***** DATA CARD CONTENT             0.100E+05  0.995E+04  0.195E+04  0.949E+03  0.615E+03  0.448E+03  0.280E+03  0.196E+03  0.144E+03  0.109E+03     
+ ***** DATA CARD CONTENT             0.831E+02  0.621E+02  0.434E+02  0.100E-02                                                                       
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0                                                                       
+ ***** DATA CARD CONTENT             0.0004623  0.0004806  0.0004855  0.0004885  0.0004904  0.0004916  0.0004941  0.0004960  0.0004984  0.0005005     
+ ***** DATA CARD CONTENT             0.0005031  0.0005055  0.0005088  0.0005106                                                                       
+ ***** DATA CARD CONTENT      GOPTMED04   828 -728                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   N2 absorption NIM,93 593                                                                         
+ ***** DATA CARD CONTENT      GOPTMED05   707 11                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       400.       300.       250.       200.       190.       180.       170.     
+ ***** DATA CARD CONTENT      C nm        160.                                                                                                        
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.310E-08  0.413E-08  0.496E-08  0.620E-08  0.653E-08  0.689E-08  0.729E-08     
+ ***** DATA CARD CONTENT             0.775E-08                                                                                                        
+ ***** DATA CARD CONTENT             0.100E+05  0.100E+05  0.100E+05  0.100E+05  0.100E+05  0.100E+06  0.495E+04  0.245E+04  0.120E+04  0.574E+03     
+ ***** DATA CARD CONTENT             0.259E+03                                                                                                        
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0                                                                                                        
+ ***** DATA CARD CONTENT             0.0002762  0.0002778  0.0002804  0.0002851  0.0002952  0.0003055  0.0003243  0.0003300  0.0003366  0.0003444     
+ ***** DATA CARD CONTENT             0.0003538                                                                                                        
+ ***** DATA CARD CONTENT      GOPTMED06   807 -707                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   Air absorption - guess                                                                           
+ ***** DATA CARD CONTENT      GOPTMED07   715 12                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       400.       300.       250.       220.       210.       200.       190.     
+ ***** DATA CARD CONTENT      C nm        180.       170.                                                                                             
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.310E-08  0.413E-08  0.496E-08  0.564E-08  0.590E-08  0.620E-08  0.653E-08     
+ ***** DATA CARD CONTENT             0.689E-08  0.729E-08                                                                                             
+ ***** DATA CARD CONTENT             0.100E+05  0.100E+05  0.100E+05  0.100E+05  0.100E+05  0.995E+04  0.195E+04  0.949E+03  0.144E+03  0.434E+02     
+ ***** DATA CARD CONTENT             0.217E+02  0.100E-02                                                                                             
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0        0.0                                                                                             
+ ***** DATA CARD CONTENT             0.0002599  0.0002610  0.0002629  0.0002664  0.0002745  0.0002836  0.0002935  0.0002983  0.0003043  0.0003122     
+ ***** DATA CARD CONTENT             0.0003230  0.0003395                                                                                             
+ ***** DATA CARD CONTENT      GOPTMED08   815 -715                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   Aerogel n=1.03 LHCb                                                                              
+ ***** DATA CARD CONTENT      GOPTMED09   756 9                                                                                                       
+ ***** DATA CARD CONTENT      C nm        605.       557.       508.       459.       411.       362.       314.       257.       200.                
+ ***** DATA CARD CONTENT             0.205E-08  0.223E-08  0.244E-08  0.270E-08  0.302E-08  0.342E-08  0.395E-08  0.483E-08  0.620E-08                
+ ***** DATA CARD CONTENT             0.958E+01  0.813E+01  0.728E+01  0.562E+01  0.399E+01  0.250E+01  0.142E+01  0.620E+00  0.100E-02                
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0                
+ ***** DATA CARD CONTENT                0.0271     0.0272     0.0273     0.0275     0.0278     0.0282     0.0289     0.0303     0.0334                
+ ***** DATA CARD CONTENT      GOPTMED10   856 -756                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   Aerogel n=1.03 LHCb, recalc                                                                      
+ ***** DATA CARD CONTENT      GOPTMED11   757 11                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       450.       400.       350.       300.       275.       250.       225.     
+ ***** DATA CARD CONTENT      C nm        200.                                                                                                        
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.276E-08  0.310E-08  0.354E-08  0.413E-08  0.451E-08  0.496E-08  0.551E-08     
+ ***** DATA CARD CONTENT             0.620E-08                                                                                                        
+ ***** DATA CARD CONTENT             0.319E+02  0.196E+02  0.103E+02  0.695E+01  0.443E+01  0.264E+01  0.144E+01  0.102E+01  0.698E+00  0.459E+00     
+ ***** DATA CARD CONTENT             0.287E+00                                                                                                        
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0                                                                                                        
+ ***** DATA CARD CONTENT                0.0269     0.0271     0.0274     0.0276     0.0279     0.0284     0.0291     0.0297     0.0305     0.0316     
+ ***** DATA CARD CONTENT                0.0334                                                                                                        
+ ***** DATA CARD CONTENT      GOPTMED12   857 -757                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium   Aerogel n=1.02 calculated from LHCb 1.03                                                         
+ ***** DATA CARD CONTENT      GOPTMED13   758 11                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       450.       400.       350.       300.       275.       250.       225.     
+ ***** DATA CARD CONTENT      C nm        200.                                                                                                        
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.276E-08  0.310E-08  0.354E-08  0.413E-08  0.451E-08  0.496E-08  0.551E-08     
+ ***** DATA CARD CONTENT             0.620E-08                                                                                                        
+ ***** DATA CARD CONTENT             0.319E+02  0.196E+02  0.103E+02  0.695E+01  0.443E+01  0.264E+01  0.144E+01  0.102E+01  0.698E+00  0.459E+00     
+ ***** DATA CARD CONTENT             0.287E+00                                                                                                        
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0                                                                                                        
+ ***** DATA CARD CONTENT                0.0179     0.0180     0.0182     0.0184     0.0186     0.0189     0.0194     0.0198     0.0203     0.0211     
+ ***** DATA CARD CONTENT                0.0223                                                                                                        
+ ***** DATA CARD CONTENT      GOPTMED14   858 -758                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  Mirror CLAS Hall B                                                                                
+ ***** DATA CARD CONTENT      GOPTMED15   760 12                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       300.       260.       250.       240.       230.       220.       210.     
+ ***** DATA CARD CONTENT      C nm        200.       190.                                                                                             
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.413E-08  0.477E-08  0.496E-08  0.517E-08  0.539E-08  0.564E-08  0.590E-08     
+ ***** DATA CARD CONTENT             0.620E-08  0.653E-08                                                                                             
+ ***** DATA CARD CONTENT             0.100E+00  0.100E+00  0.100E+00  0.120E+00  0.150E+00  0.190E+00  0.270E+00  0.380E+00  0.500E+00  0.600E+00     
+ ***** DATA CARD CONTENT             0.800E+00  0.100E+01                                                                                             
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0        0.0                                                                                             
+ ***** DATA CARD CONTENT                  -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0     
+ ***** DATA CARD CONTENT                  -1.0       -1.0                                                                                             
+ ***** DATA CARD CONTENT      GOPTMED16   860 -760                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  Mirror ideal                                                                                      
+ ***** DATA CARD CONTENT      GOPTMED17   960 10                                                                                                      
+ ***** DATA CARD CONTENT      C nm        700.       600.       500.       400.       350.       300.       250.       200.       150.       100.     
+ ***** DATA CARD CONTENT             0.177E-08  0.207E-08  0.248E-08  0.310E-08  0.354E-08  0.413E-08  0.496E-08  0.620E-08  0.827E-08  0.124E-07     
+ ***** DATA CARD CONTENT             0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00  0.010E+00     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                  -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0       -1.0     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  PMT XP4572 borosilicate                                                                           
+ ***** DATA CARD CONTENT      GOPTMED18   751 22                                                                                                      
+ ***** DATA CARD CONTENT      C nm        632.       617.       617.       599.       577.       555.       537.       518.       485.       463.     
+ ***** DATA CARD CONTENT      C nm        441.       416.       390.       368.       343.       317.       302.       291.       284.       277.     
+ ***** DATA CARD CONTENT      C nm        273.       270.                                                                                             
+ ***** DATA CARD CONTENT             0.196E-08  0.201E-08  0.201E-08  0.207E-08  0.215E-08  0.223E-08  0.231E-08  0.239E-08  0.255E-08  0.268E-08     
+ ***** DATA CARD CONTENT             0.281E-08  0.298E-08  0.318E-08  0.337E-08  0.362E-08  0.391E-08  0.410E-08  0.425E-08  0.436E-08  0.448E-08     
+ ***** DATA CARD CONTENT             0.454E-08  0.460E-08                                                                                             
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02                                                                                             
+ ***** DATA CARD CONTENT                0.0025     0.0049     0.0049     0.0097     0.0227     0.0385     0.0606     0.0860     0.1258     0.1464     
+ ***** DATA CARD CONTENT                0.1768     0.1943     0.2000     0.1842     0.1549     0.1221     0.0841     0.0593     0.0348     0.0165     
+ ***** DATA CARD CONTENT                0.0065     0.0027                                                                                             
+ ***** DATA CARD CONTENT                 0.467      0.468      0.468      0.468      0.469      0.470      0.471      0.472      0.475      0.476     
+ ***** DATA CARD CONTENT                 0.478      0.481      0.484      0.488      0.493      0.500      0.505      0.509      0.513      0.516     
+ ***** DATA CARD CONTENT                 0.518      0.520                                                                                             
+ ***** DATA CARD CONTENT      GOPTMED19   851 -751                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  PMT XP4570 UV enhanced                                                                            
+ ***** DATA CARD CONTENT      GOPTMED20   951 22                                                                                                      
+ ***** DATA CARD CONTENT      C nm        683.       665.       652.       635.       617.       600.       574.       543.       509.       474.     
+ ***** DATA CARD CONTENT      C nm        435.       409.       378.       339.       313.       283.       257.       239.       222.       213.     
+ ***** DATA CARD CONTENT      C nm        204.       200.                                                                                             
+ ***** DATA CARD CONTENT             0.182E-08  0.186E-08  0.190E-08  0.195E-08  0.201E-08  0.207E-08  0.216E-08  0.228E-08  0.244E-08  0.262E-08     
+ ***** DATA CARD CONTENT             0.285E-08  0.303E-08  0.328E-08  0.366E-08  0.396E-08  0.439E-08  0.483E-08  0.518E-08  0.559E-08  0.582E-08     
+ ***** DATA CARD CONTENT             0.607E-08  0.620E-08                                                                                             
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02                                                                                             
+ ***** DATA CARD CONTENT                0.0003     0.0009     0.0021     0.0049     0.0118     0.0213     0.0442     0.0781     0.1175     0.1704     
+ ***** DATA CARD CONTENT                0.2205     0.2345     0.2326     0.2093     0.1830     0.1501     0.1173     0.0819     0.0551     0.0254     
+ ***** DATA CARD CONTENT                0.0122     0.0053                                                                                             
+ ***** DATA CARD CONTENT                 0.466      0.466      0.466      0.467      0.468      0.468      0.469      0.471      0.473      0.475     
+ ***** DATA CARD CONTENT                 0.479      0.482      0.486      0.494      0.501      0.513      0.529      0.544      0.566      0.581     
+ ***** DATA CARD CONTENT                 0.600      0.612                                                                                             
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  PMT Burle 8854 UV enhanced                                                                        
+ ***** DATA CARD CONTENT      GOPTMED21  1051 20                                                                                                      
+ ***** DATA CARD CONTENT      C nm        636.       628.       612.       580.       536.       516.       484.       448.       416.       388.     
+ ***** DATA CARD CONTENT      C nm        360.       340.       312.       284.       264.       244.       236.       232.       228.       224.     
+ ***** DATA CARD CONTENT             0.195E-08  0.197E-08  0.203E-08  0.214E-08  0.231E-08  0.240E-08  0.256E-08  0.277E-08  0.298E-08  0.320E-08     
+ ***** DATA CARD CONTENT             0.344E-08  0.365E-08  0.397E-08  0.437E-08  0.470E-08  0.508E-08  0.525E-08  0.534E-08  0.544E-08  0.554E-08     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT                0.0019     0.0037     0.0081     0.0216     0.0592     0.0963     0.1285     0.1678     0.2040     0.2225     
+ ***** DATA CARD CONTENT                0.2317     0.2174     0.1994     0.1720     0.1429     0.1022     0.0830     0.0630     0.0438     0.0055     
+ ***** DATA CARD CONTENT                 0.467      0.467      0.468      0.469      0.471      0.472      0.475      0.478      0.481      0.485     
+ ***** DATA CARD CONTENT                 0.489      0.494      0.502      0.513      0.524      0.539      0.547      0.552      0.557      0.563     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  PMT XP4508 fused silica                                                                           
+ ***** DATA CARD CONTENT      GOPTMED22   752 22                                                                                                      
+ ***** DATA CARD CONTENT      C nm        626.       617.       612.       603.       590.       567.       553.       525.       503.       484.     
+ ***** DATA CARD CONTENT      C nm        457.       439.       411.       393.       347.       301.       256.       210.       187.       178.     
+ ***** DATA CARD CONTENT      C nm        169.       159.                                                                                             
+ ***** DATA CARD CONTENT             0.198E-08  0.201E-08  0.202E-08  0.206E-08  0.210E-08  0.219E-08  0.224E-08  0.236E-08  0.247E-08  0.256E-08     
+ ***** DATA CARD CONTENT             0.271E-08  0.283E-08  0.302E-08  0.316E-08  0.357E-08  0.411E-08  0.485E-08  0.591E-08  0.663E-08  0.697E-08     
+ ***** DATA CARD CONTENT             0.735E-08  0.777E-08                                                                                             
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02                                                                                             
+ ***** DATA CARD CONTENT                0.0016     0.0032     0.0053     0.0108     0.0164     0.0393     0.0684     0.1023     0.1392     0.1649     
+ ***** DATA CARD CONTENT                0.1995     0.2171     0.2421     0.2424     0.2301     0.2223     0.2103     0.2056     0.1935     0.1369     
+ ***** DATA CARD CONTENT                0.0296     0.0064                                                                                             
+ ***** DATA CARD CONTENT                 0.467      0.468      0.468      0.468      0.469      0.470      0.470      0.472      0.473      0.475     
+ ***** DATA CARD CONTENT                 0.477      0.479      0.482      0.484      0.492      0.505      0.530      0.588      0.659      0.712     
+ ***** DATA CARD CONTENT                 0.794      0.943                                                                                             
+ ***** DATA CARD CONTENT      GOPTMED23   852 -752                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  PMT XP4578 fused silica                                                                           
+ ***** DATA CARD CONTENT      GOPTMED24   952 20                                                                                                      
+ ***** DATA CARD CONTENT      C nm        639.       631.       613.       586.       555.       524.       492.       466.       434.       403.     
+ ***** DATA CARD CONTENT      C nm        381.       354.       314.       269.       234.       203.       180.       171.       167.       162.     
+ ***** DATA CARD CONTENT             0.194E-08  0.197E-08  0.202E-08  0.212E-08  0.223E-08  0.237E-08  0.252E-08  0.266E-08  0.285E-08  0.308E-08     
+ ***** DATA CARD CONTENT             0.326E-08  0.350E-08  0.395E-08  0.460E-08  0.530E-08  0.612E-08  0.688E-08  0.724E-08  0.743E-08  0.763E-08     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT             0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02  0.100E-02     
+ ***** DATA CARD CONTENT                0.0015     0.0031     0.0081     0.0212     0.0500     0.1060     0.1624     0.2062     0.2558     0.2756     
+ ***** DATA CARD CONTENT                0.2712     0.2614     0.2547     0.2473     0.2289     0.1833     0.1235     0.0724     0.0430     0.0061     
+ ***** DATA CARD CONTENT                 0.467      0.467      0.468      0.469      0.470      0.472      0.474      0.476      0.479      0.483     
+ ***** DATA CARD CONTENT                 0.486      0.491      0.501      0.520      0.550      0.605      0.695      0.765      0.816      0.884     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C  -- optical medium  CF4    absorption ?? - a clone of C4F10 so far                                                    
+ ***** DATA CARD CONTENT      GOPTMED25   746 20                                                                                                      
+ ***** DATA CARD CONTENT      C nm        669.       608.       546.       485.       424.       362.       301.       260.       219.       203.     
+ ***** DATA CARD CONTENT      C nm        192.       185.       183.       180.       178.       175.       173.       170.       168.       165.     
+ ***** DATA CARD CONTENT             0.185E-08  0.204E-08  0.227E-08  0.256E-08  0.293E-08  0.342E-08  0.412E-08  0.477E-08  0.566E-08  0.612E-08     
+ ***** DATA CARD CONTENT             0.645E-08  0.670E-08  0.679E-08  0.689E-08  0.698E-08  0.710E-08  0.718E-08  0.730E-08  0.739E-08  0.750E-08     
+ ***** DATA CARD CONTENT             0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06  0.175E+06     
+ ***** DATA CARD CONTENT             0.175E+06  0.609E+04  0.192E+04  0.596E+03  0.339E+03  0.246E+03  0.143E+03  0.731E+02  0.405E+02  0.100E-02     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT                   0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0        0.0     
+ ***** DATA CARD CONTENT               0.00134    0.00134    0.00135    0.00135    0.00137    0.00138    0.00141    0.00144    0.00150    0.00152     
+ ***** DATA CARD CONTENT               0.00155    0.00157    0.00157    0.00158    0.00159    0.00160    0.00160    0.00161    0.00162    0.00163     
+ ***** DATA CARD CONTENT      GOPTMED26   846 -746                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GMEDPOLISH                                                                                                              
+ ***** DATA CARD CONTENT                   728  760 1.   760  728 1.                                                                                  
+ ***** DATA CARD CONTENT                   728  751 1.   751  728 1.                                                                                  
+ ***** DATA CARD CONTENT                   728  752 1.   752  728 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  860 1.   860  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  960 1.   960  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  851 1.   851  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  852 1.   852  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  951 1.   951  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828 1051 1.  1051  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  952 1.   952  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   740  760 1.   760  740 1.                                                                                  
+ ***** DATA CARD CONTENT                   740  751 1.   751  740 1.                                                                                  
+ ***** DATA CARD CONTENT                   740  752 1.   752  740 1.                                                                                  
+ ***** DATA CARD CONTENT                   828  952 1.   952  828 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  860 1.   860  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  960 1.   960  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  851 1.   851  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  852 1.   852  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  951 1.   951  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840 1051 1.  1051  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   840  952 1.   952  840 1.                                                                                  
+ ***** DATA CARD CONTENT                   707  760 1.   760  707 1.                                                                                  
+ ***** DATA CARD CONTENT                   707  751 1.   751  707 1.                                                                                  
+ ***** DATA CARD CONTENT                   707  752 1.   752  707 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  860 1.   860  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  960 1.   960  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  851 1.   851  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  852 1.   852  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  951 1.   951  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807 1051 1.  1051  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   807  952 1.   952  807 1.                                                                                  
+ ***** DATA CARD CONTENT                   715  760 1.   760  715 1.                                                                                  
+ ***** DATA CARD CONTENT                   715  751 1.   751  715 1.                                                                                  
+ ***** DATA CARD CONTENT                   715  752 1.   752  715 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  860 1.   860  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  960 1.   960  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  851 1.   851  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  852 1.   852  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  951 1.   951  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815 1051 1.  1051  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   815  952 1.   952  815 1.                                                                                  
+ ***** DATA CARD CONTENT                   756  728 1.   728  756 1.                                                                                  
+ ***** DATA CARD CONTENT                   756  740 1.   740  756 1.                                                                                  
+ ***** DATA CARD CONTENT                   756  707 1.   707  756 1.                                                                                  
+ ***** DATA CARD CONTENT                   756  715 1.   715  756 1.                                                                                  
+ ***** DATA CARD CONTENT                   856  828 1.   828  856 1.                                                                                  
+ ***** DATA CARD CONTENT                   856  840 1.   840  856 1.                                                                                  
+ ***** DATA CARD CONTENT                   856  807 1.   807  856 1.                                                                                  
+ ***** DATA CARD CONTENT                   856  815 1.   815  856 1.                                                                                  
+ ***** DATA CARD CONTENT                   757  728 1.   728  757 1.                                                                                  
+ ***** DATA CARD CONTENT                   757  740 1.   740  757 1.                                                                                  
+ ***** DATA CARD CONTENT                   757  707 1.   707  757 1.                                                                                  
+ ***** DATA CARD CONTENT                   757  715 1.   715  757 1.                                                                                  
+ ***** DATA CARD CONTENT                   857  828 1.   828  857 1.                                                                                  
+ ***** DATA CARD CONTENT                   857  840 1.   840  857 1.                                                                                  
+ ***** DATA CARD CONTENT                   857  807 1.   807  857 1.                                                                                  
+ ***** DATA CARD CONTENT                   857  815 1.   815  857 1.                                                                                  
+ ***** DATA CARD CONTENT                   758  728 1.   728  758 1.                                                                                  
+ ***** DATA CARD CONTENT                   758  740 1.   740  758 1.                                                                                  
+ ***** DATA CARD CONTENT                   758  707 1.   707  758 1.                                                                                  
+ ***** DATA CARD CONTENT                   758  715 1.   715  758 1.                                                                                  
+ ***** DATA CARD CONTENT                   858  828 1.   828  858 1.                                                                                  
+ ***** DATA CARD CONTENT                   858  840 1.   840  858 1.                                                                                  
+ ***** DATA CARD CONTENT                   858  807 1.   807  858 1.                                                                                  
+ ***** DATA CARD CONTENT                   858  815 1.   815  858 1.                                                                                  
+ ***** DATA CARD CONTENT                                                                                                                              
+ ***** DATA CARD CONTENT      END                                                                                                                     
+ ***** DATA CARD CONTENT     READ  21         general file                                                                                           
+ ***** DATA CARD CONTENT      C MOLLER geometry for 11 GeV upgrade Beam energy range 0.8-11GeV Four quads set                                         
+ ***** DATA CARD CONTENT      C Quads: blue+red+blue+blue                                                                                             
+ ***** DATA CARD CONTENT      C Moller geometry with high field target. Common definitions of material/media                                          
+ ***** DATA CARD CONTENT      C Detector lift up 7cm, 90deg. bending angle in dipole 7.3deg                                                           
+ ***** DATA CARD CONTENT      C LIST                                                                                                                  
+ ***** DATA CARD CONTENT      C Moller Polarimeter Setup                                                                                              
+ ***** DATA CARD CONTENT      C Detectors: sets      GSET      - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Volumes:             GVOL      - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Rotation:           <RMATR20   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Material:            GPARMAT   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Medium:              GPARMED   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---   Coordinate system: Beam along Z                                                                                 
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      DIRDET  3                                                                                                               
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --    Rotation matrix: the number of the card (last 2 digits) is the number                                           
+ ***** DATA CARD CONTENT      C                        of the matrix                                                                                  
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      RMATR01  90.  90.   0.   0.  90.    0.     I is along Y,II along Z,III along X                                          
+ ***** DATA CARD CONTENT      RMATR02   0.   0.  90.   0.  90.   90.     I is along Z,II along X,III along Y                                          
+ ***** DATA CARD CONTENT      RMATR03  90.   0.   0.   0.  90.  270.  Z  I is along X,II along Z,III oppos Y                                          
+ ***** DATA CARD CONTENT      RMATR04  90.   0.  90. 270. 180.    0.     I is along X,II oppos Y,III oppos Z                                          
+ ***** DATA CARD CONTENT      RMATR05  90.   0. 180.   0.  90.   90.  nZ I is along X,II oppos Z,III along Y                                          
+ ***** DATA CARD CONTENT      RMATR06   0.   0.  90. 270.  90.    0.     I is along Z,II oppos Y,III along X                                          
+ ***** DATA CARD CONTENT      C RMATR07  90.   0.  80.  90.  10.  270.     Moller detector                                                            
+ ***** DATA CARD CONTENT      RMATR07  90.   0.  82.7  90.  7.0  270.     Moller detector                                                             
+ ***** DATA CARD CONTENT      C RMATR08  90.   0.  20.  90.  70.  270.     Moller target                                                              
+ ***** DATA CARD CONTENT      RMATR08  90.   0.  0.  90.  90.  270.     Moller target                                                                 
+ ***** DATA CARD CONTENT      RMATR09  90. 270.   0.   0.  90.  180.     I is oppos Y,II along Z,III oppos X                                          
+ ***** DATA CARD CONTENT      RMATR10  90.   0.  85.  90.   5.  270.     Hodoscope                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C -- New materials: mixtures                                                                                            
+ ***** DATA CARD CONTENT      C            #       name                g/cm3     Nmat    A1   Z1  W1    A2  Z2  W2                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      PARMXT01    70 'Iron low den - trgt$'   0.787      -1     55.85 26.  1.                                                 
+ ***** DATA CARD CONTENT      C           #       name              mat sen F Fmx Fan stmx      Elo      epsi    st(mu,lo)  user words                
+ ***** DATA CARD CONTENT      PARMED01   270 'Steel  mf$          '  70  0  1 80.  6. 0.0005     -1.   0.0001    -1.                                  
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---              Define magnet positions                                                                              
+ ***** DATA CARD CONTENT      C        !!!       If you move the magnet - update the values:                                                          
+ ***** DATA CARD CONTENT      C                  AREA ...                                                                                             
+ ***** DATA CARD CONTENT      C                  MAGNET ...                                                                                           
+ ***** DATA CARD CONTENT      C                  magnet volume positions                                                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C         type  mother  Xcen   Ycen   Zcen   rot Xsiz/2 Ysiz/2 Zsiz/2  field   flag1 flag2                              
+ ***** DATA CARD CONTENT      MAGNET01   1    'HALL'    0.     0.   75.0     0   5.08   5.08  18.37   0.680   0     0                                 
+ ***** DATA CARD CONTENT      MAGNET02   1    'HALL'    0.     0.  140.0     0   5.08   5.08  22.30   0.680   0     0                                 
+ ***** DATA CARD CONTENT      MAGNET03   1    'HALL'    0.     0.  208.5     0   5.08   5.08  18.37   1.435   0     0                                 
+ ***** DATA CARD CONTENT      MAGNET04   1    'HALL'    0.     0.  274.5     0   5.08   5.08  18.37   1.413   0     0                                 
+ ***** DATA CARD CONTENT      MAGNET05   9    'TARG'    0.     0.    0.      0  20.    20.    80.     0.0     0     0                                 
+ ***** DATA CARD CONTENT      MAGNET06   2    'HALL'    0.     0.  422.8     0   8.0   30.0   82.25   7.168   0     0                                 
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --               ======        Volumes     =======                                                                    
+ ***** DATA CARD CONTENT      C =====================================================================================                                 
+ ***** DATA CARD CONTENT      C          name   med  mother    X     Y     Z   rot  shape npar  par.....                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL01  'HALL'  215  '    '    0.    0.    0.    0  'BOX '  3   50. 150. 1800.                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Target chamber                                                                                                 
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL09  'TARG'   0  'HALL'    0.    0.    6.9  0  'TUBE'  3   0.     1.      1.                                      
+ ***** DATA CARD CONTENT      GPARVOL10  'BPIT' 209  'HALL'    0.    0.    0.   0  'TUBE'  3   0.     5.08  100.                                      
+ ***** DATA CARD CONTENT      GPARVOL11  'BPVT' 221  'BPIT'    0.    0.    0.   0  'TUBE'  3   0.     4.78  100.                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Helmholtz coils warm                                                                                           
+ ***** DATA CARD CONTENT      C GPARVOL15  'HLMZ' 211  'TARG'    0.    0.   -5.8  0  'TUBE'  3   7.80  11.8     1.6                                   
+ ***** DATA CARD CONTENT      C GVOLPOS01  'HLMZ'      'TARG'    0.    0.    5.8  0                                                                   
+ ***** DATA CARD CONTENT      C --     Helmholtz coils cold                                                                                           
+ ***** DATA CARD CONTENT      GPARVOL15  'HLMZ' 211  'HALL'    0.    0.   -5.7  0  'TUBE'  3   5.10  15.0     5.                                      
+ ***** DATA CARD CONTENT      GVOLPOS01  'HLMZ'      'HALL'    0.    0.   19.5  0                                                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Target                                                                                                         
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL20  'MTAT' 270  'BPVT'    0.    0.    6.9  0  'TUBE'  3   0.    1.5    0.002                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Beam pipe                                                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL30  'BPI1' 209  'HALL'    0.    0.  200.   0  'TUBE'  3   0.     5.08  100.                                      
+ ***** DATA CARD CONTENT      GPARVOL31  'BPV1' 221  'BPI1'    0.    0.    0.   0  'TUBE'  3   0.     4.78  100.                                      
+ ***** DATA CARD CONTENT      GPARVOL32  'BPI2' 209  'HALL'    0.    0.  312.15 0  'TUBE'  3   0.     5.08  12.15                                     
+ ***** DATA CARD CONTENT      GPARVOL33  'BPV2' 221  'BPI2'    0.    0.    0.   0  'TUBE'  3   0.     4.78  12.15                                     
+ ***** DATA CARD CONTENT      C GPARVOL34  'BPI3' 209  'HALL'    0.    0.  726.08 0  'TUBE'  3   0.     5.08 158.5                                    
+ ***** DATA CARD CONTENT      C GPARVOL35  'BPV3' 221  'BPI3'    0.    0.    0.   0  'TUBE'  3   0.     4.78 158.5                                    
+ ***** DATA CARD CONTENT      GPARVOL34  'BPI3' 209  'HALL'    0.    0.  726.08 0  'TUBE'  3   0.     3.177 158.5 ***2.5"pipe                         
+ ***** DATA CARD CONTENT      GPARVOL35  'BPV3' 221  'BPI3'    0.    0.    0.   0  'TUBE'  3   0.     2.877 158.5 ***                                 
+ ***** DATA CARD CONTENT      GPARVOL36  'BPF3'  10  'BPV3'    0.    0.  157.0  0  'TUBE'  3   1.905  4.78   1.5                                      
+ ***** DATA CARD CONTENT      GPARVOL37  'BPF4'  10  'BPV3'    0.    0. -157.0  0  'TUBE'  3   3.000  4.78   1.5                                      
+ ***** DATA CARD CONTENT      GPARVOL38  'BPI4'  10  'HALL'    0.    0. 1084.58 0  'TUBE'  3   0.     1.905 200.                                      
+ ***** DATA CARD CONTENT      GPARVOL39  'BPV4'  21  'BPI4'    0.    0.    0.   0  'TUBE'  3   0.     1.800 200.                                      
+ ***** DATA CARD CONTENT      GPARVOL40  'BPE4'  10  'HALL'    0.    0.  940.   0  'TUBE'  3   2.2    8.0    20.                                      
+ ***** DATA CARD CONTENT      GPARVOL41  'BPI5' 209  'HALL'    0.    0.  545.08 0  'TUBE'  3   0.0    3.175  22.5                                     
+ ***** DATA CARD CONTENT      GPARVOL42  'BPV5' 221  'BPI5'    0.    0.    0.   0  'TUBE'  3   0.0    3.000  22.5                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---     Dipole vacuum box                                                                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL45  'DBI1' 210  'HALL'    0.   -9.  422.8  0  'BOX '  3   6.0   16.5   98.5                                      
+ ***** DATA CARD CONTENT      GPARVOL46  'DBV1' 221  'DBI1'    0.    0.    0.   0  'BOX '  3   5.295 16.0   98.5                                      
+ ***** DATA CARD CONTENT      GPARVOL47  'DBW1' 210  'HALL'    0.   -9.  521.94 0  'BOX '  3  11.66  21.4    0.64                                     
+ ***** DATA CARD CONTENT      GPARVOL48  'DBW2' 221  'DBW1'    0.    9.    0.   0  'TUBE'  3   0.     3.0    0.64                                     
+ ***** DATA CARD CONTENT      GPARVOL49  'DBW3' 215  'DBW1'   -4.13 -7.0   0.   0  'BOX '  3   1.18   8.0    0.64                                     
+ ***** DATA CARD CONTENT      GPARVOL50  'DBW4' 215  'DBW1'    4.13 -7.0   0.   0  'BOX '  3   1.18   8.0    0.64                                     
+ ***** DATA CARD CONTENT      GPARVOL51  'DBT3'  27  'DBW3'    0.    0.    0.   0  'BOX '  3   1.18   8.0    0.005                                    
+ ***** DATA CARD CONTENT      GPARVOL52  'DBT4'  27  'DBW4'    0.    0.    0.   0  'BOX '  3   1.18   8.0    0.005                                    
+ ***** DATA CARD CONTENT      GPARVOL53  'DMS1' 210  'DBV1'    0.    0.    0.   0  'BOX '  3   3.    15.    96.2                                      
+ ***** DATA CARD CONTENT      GPARVOL54  'DMBH'  21  'DMS1'    0.    9.    0.   0  'TUBE'  3   0.     2.    96.2                                      
+ ***** DATA CARD CONTENT      GPARVOL55  'DMFR'  10  'DMBH'    0.    0.  -87.2  0  'TUBE'  3   1.27   2.     9.0                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Collimator                                                                                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL60  'DCOL' 213  'DBV1'   -4.0   9.  -92.   0  'BOX '  3   1.    4.00    3.0                                      
+ ***** DATA CARD CONTENT      GPARVOL61  'DSLO' 221  'DCOL'    0.    0.    0.   0  'BOX '  3   1.    1.50    3.0                                      
+ ***** DATA CARD CONTENT      GVOLPOS02  'DCOL'      'DBV1'    4.0   9.  -92.   0                                                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Magnets                                                                                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL69  'MQ1 ' 210  'HALL'    0.    0.   70.   0  'TUBE'  3   5.08 20.     18.37                                     
+ ***** DATA CARD CONTENT      GPARVOL70  'MQ2 ' 210  'HALL'    0.    0.  140.   0  'TUBE'  3   5.08 20.     22.30                                     
+ ***** DATA CARD CONTENT      GPARVOL71  'MQ3 ' 210  'HALL'    0.    0.  208.5  0  'TUBE'  3   5.08 20.     18.37                                     
+ ***** DATA CARD CONTENT      GPARVOL72  'MQ4 ' 210  'HALL'    0.    0.  274.2  0  'TUBE'  3   5.08 20.     18.37                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL73  'MDP1' 210  'HALL'  -16.   -9.  422.8  0  'BOX '  3  10.   40.     76.0                                      
+ ***** DATA CARD CONTENT      GPARVOL74  'MDP2' 210  'HALL'   16.   -9.  422.8  0  'BOX '  3  10.   40.     76.0                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Detector box                                                                                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C GPARVOL80  'MDBX'  13  'HALL'    0.  -57.1 724.   0  'BOX '  3  37.   47.1    61.2                                    
+ ***** DATA CARD CONTENT      GPARVOL80  'MDBX'  13  'HALL'    0.  -50.1 724.   0  'BOX '  3  37.   47.1    61.2  ***7cm up                           
+ ***** DATA CARD CONTENT      GPARVOL81  'MDBA'  15  'MDBX'    0.    1.1   1.8  0  'BOX '  3  18.5  29.8    40.0                                      
+ ***** DATA CARD CONTENT      C GPARVOL82  'MDBW'  15  'MDBX'    0.   10.0 -49.7  0  'PARA'  6   7.0  14.5    11.5                                    
+ ***** DATA CARD CONTENT      GPARVOL82  'MDBW'  15  'MDBX'    0.   8.5 -49.7  9  'PARA'  6   14.5  11.5  7.0 7.0 0. 0.                               
+ ***** DATA CARD CONTENT      C GPARVOL82  'MDBW'  15  'MDBX'    0.   8.5 -49.7  9  'PARA'  6   14.5  11.5  7.0 10.0 0. 0.                            
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Detector                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL90  'MDET'  15  'MDBA'    0.    0.    0.   7  'BOX '  3   9.2  17.0    34.0                                      
+ ***** DATA CARD CONTENT      GPARVOL91  'DLGB'   9  'MDET'    0.    0.  -11.   0  'BOX '  3   8.2  16.2    20.1                                      
+ ***** DATA CARD CONTENT      C GPARVOL101 'HOD1'  15  'MDET'    0.    0.  -32.0  0  'BOX '  3   8.0  12.0     0.5                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --  Syracuse hodoscope, SPACAL, auxill. artificial plane                                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL101 'HOD1'  15  'MDET'    0.    0.  -32.0  0  'BOX '  3   9.2  17.0     0.5                                      
+ ***** DATA CARD CONTENT      GPARVOL102 'HOD2'   9  'MDET'    0.    0.  -16.0  0  'BOX '  3   9.2  16.5    15.2                                      
+ ***** DATA CARD CONTENT      GPARVOL103 'HOD3'  15  'MDET'    0.    0.  -33.5  0  'BOX '  3   9.2  17.0     0.1                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Shielding                                                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      GPARVOL120 'S1LD'  13  'HALL'    0.  -29.  537.   0  'BOX '  3  30.  25. 14.0                                           
+ ***** DATA CARD CONTENT      C GPARVOL121 'S1H1'  15  'S1LD'   -4.1   9.5   0.   9  'PARA'  6  10.5 14.  1.6 7.3 0. 0.                               
+ ***** DATA CARD CONTENT      C GPARVOL122 'S1H2'  15  'S1LD'    4.1   9.5   0.   9  'PARA'  6  10.5 14.  1.6 7.3 0. 0.                               
+ ***** DATA CARD CONTENT      GPARVOL121 'S1H1'  15  'S1LD'   -4.1   9.5   0.   9  'PARA'  6   10.5 14. 1.6 10. 0. 0.                                 
+ ***** DATA CARD CONTENT      GPARVOL122 'S1H2'  15  'S1LD'    4.1   9.5   0.   9  'PARA'  6   10.5 14. 1.6 10. 0. 0.                                 
+ ***** DATA CARD CONTENT      C GPARVOL123 'S2LD'  13  'HALL'    0.   -8.9 610.   0  'BOX '  3  17.   3.5 50.0                                        
+ ***** DATA CARD CONTENT      GPARVOL123 'S2LD'  13  'HALL'    0.   -7.5 610.   0  'BOX '  3  17.   3.5 50.0 !!!***                                   
+ ***** DATA CARD CONTENT      C GPARVOL124 'S21B'   9  'HALL'    0.  -14.3 569.6  0  'BOX '  3  31.    1.9    3.8                                     
+ ***** DATA CARD CONTENT      GPARVOL124 'S21B'   9  'HALL'    0.  -13.3 620.   0  'BOX '  3  31.   1.9    3.8 !!!***                                 
+ ***** DATA CARD CONTENT      GPARVOL125 'S21H'  15  'S21B'    0.   -0.5   0.   0  'BOX '  3  31.   1.4    3.3                                        
+ ***** DATA CARD CONTENT      C GPARVOL126 'S3LD'  13  'HALL'    0.   -7.5 723.   0  'BOX '  3  20.    2.0    57.0  !!!***                            
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     Hodoscope                                                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C GPARVOL130 'HODM'  15  'HALL'    0. -27.5  572.  10  'BOX '  3   5.5   8.    0.25                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------   Detectors                                                                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --     MSGC                                                                                                           
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C PARVOL130 'MSBX'  15  'HALL'   0.  -26.3  566.5   7  'BOX '  3   8.0   9.0    11.0                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---          Hodoscope 1: Apperture left,right                                                                         
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      HOD1SLATS        2                                                                                                      
+ ***** DATA CARD CONTENT      HOD1MEDIUM     450                                                                                                      
+ ***** DATA CARD CONTENT      HOD1MOTHER   'HOD1'                                                                                                     
+ ***** DATA CARD CONTENT      HOD1GATE        30.                                                                                                     
+ ***** DATA CARD CONTENT      HOD1SIZE1        2. 15.5 0.5                                                                                            
+ ***** DATA CARD CONTENT      HOD1TYPE        2*1                                                                                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --                                                                                                                    
+ ***** DATA CARD CONTENT      HOD1POSX    4.3  -4.3                                                                                                   
+ ***** DATA CARD CONTENT      HOD1POSY    0.    0.                                                                                                    
+ ***** DATA CARD CONTENT      HOD1POSZ    0.    0.                                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---          Hodoscope 2: LG                                                                                           
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      HOD2SLATS        8                                                                                                      
+ ***** DATA CARD CONTENT      HOD2MEDIUM     438                                                                                                      
+ ***** DATA CARD CONTENT      HOD2MOTHER   'HOD2'                                                                                                     
+ ***** DATA CARD CONTENT      HOD2IDTYPE      46                                                                                                      
+ ***** DATA CARD CONTENT      HOD2GATE       100.                                                                                                     
+ ***** DATA CARD CONTENT      HOD2SIZE1        4.5  3.75   15.                                                                                        
+ ***** DATA CARD CONTENT      HOD2TYPE        8*1                                                                                                     
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --                                                                                                                    
+ ***** DATA CARD CONTENT      HOD2POSX    4.6    4.6    4.6    4.6   -4.6   -4.6   -4.6   -4.6                                                        
+ ***** DATA CARD CONTENT      HOD2POSY   11.25   3.75  -3.75 -11.25  11.25   3.75  -3.75 -11.25                                                       
+ ***** DATA CARD CONTENT      HOD2POSZ    8*0.                                                                                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---          Hodoscope 3: artificial - a plate in front of the apperture counters                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      HOD3SLATS        1                                                                                                      
+ ***** DATA CARD CONTENT      HOD3MEDIUM     450                                                                                                      
+ ***** DATA CARD CONTENT      HOD3MOTHER   'HOD3'                                                                                                     
+ ***** DATA CARD CONTENT      HOD3GATE       100.                                                                                                     
+ ***** DATA CARD CONTENT      HOD3SIZE1        9.2 17. 0.1                                                                                            
+ ***** DATA CARD CONTENT      HOD3TYPE         1                                                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --                                                                                                                    
+ ***** DATA CARD CONTENT      HOD3POSX   0.                                                                                                           
+ ***** DATA CARD CONTENT      HOD3POSY   0.                                                                                                           
+ ***** DATA CARD CONTENT      HOD3POSZ   0.                                                                                                           
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---          Hodoscope 4: 32 (in fact 30) - channel hodoscope                                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C HOD4SLATS       32                                                                                                    
+ ***** DATA CARD CONTENT      C HOD4MEDIUM     450                                                                                                    
+ ***** DATA CARD CONTENT      C HOD4MOTHER   'HODM'                                                                                                   
+ ***** DATA CARD CONTENT      C HOD4IDTYPE      41                                                                                                    
+ ***** DATA CARD CONTENT      C HOD4GATE        20.                                                                                                   
+ ***** DATA CARD CONTENT      C HOD4SIZE1       5.5  0.25  0.25                                                                                       
+ ***** DATA CARD CONTENT      C HOD4TYPE        32*1                                                                                                  
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C --                                                                                                                    
+ ***** DATA CARD CONTENT      C HOD4POSX   32*0.                                                                                                      
+ ***** DATA CARD CONTENT      C HOD4POSY   7.75  7.25  6.75  6.25  5.75  5.25  4.75  4.25  3.75  3.25                                                 
+ ***** DATA CARD CONTENT      C            2.75  2.25  1.75  1.25  0.75  0.25                                                                         
+ ***** DATA CARD CONTENT      C           -0.25 -0.75 -1.25 -1.75 -2.25 -2.75 -3.25 -3.75 -4.25 -4.75                                                 
+ ***** DATA CARD CONTENT      C           -5.25 -5.75 -6.25 -6.75 -7.25 -7.75                                                                         
+ ***** DATA CARD CONTENT      C HOD4POSZ   32*0.                                                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---                   Time 0 point                                                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      XYZTIME0     -9. 0. 0.                                                                                                  
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---  Absorbers                                                                                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      MEDABSORB1 97 1 2 3 4 7 8     all but muons and geantino                                                                
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---                   Beam                                                                                            
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      BEAMPART       3                particle  e neg                                                                         
+ ***** DATA CARD CONTENT      BEAMOMLIM     4.045  4.0450001  momentum limits                                                                         
+ ***** DATA CARD CONTENT      BEAMDISPE     0.0001            momentum sigma                                                                          
+ ***** DATA CARD CONTENT      BEAMSPECT     0   15*1.         momentum spectrum                                                                       
+ ***** DATA CARD CONTENT      BEAMXREFR     -90.             X of the YZ plane of the profile reference                                               
+ ***** DATA CARD CONTENT      C   Beam spot reference limits                                                                                          
+ ***** DATA CARD CONTENT      C                 Y           Z         SlopeY          SlopeZ                                                          
+ ***** DATA CARD CONTENT      BEAMYZLIM    -0.01 0.01  -0.01 0.01  -0.000  0.000   -0.000  0.000                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C      SlopeY=A0+A1*Y, + sigma(Gauss)                                                                                   
+ ***** DATA CARD CONTENT      C               A0          A1          sigma                                                                           
+ ***** DATA CARD CONTENT      C BEAMSLOPCOR   1.441E-3    0.698E-3     0.75E-4     Y Slope correlation                                                
+ ***** DATA CARD CONTENT      C               0.759E-3    0.592E-3     0.12E-3     Z Slope correlation                                                
+ ***** DATA CARD CONTENT      BEAMSLOPCOR   0            0             0.          Y Slope correlation                                                
+ ***** DATA CARD CONTENT                    0            0.            0.          Z Slope correlation                                                
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C BEAMDIMY      15                  dimension for Y                                                                     
+ ***** DATA CARD CONTENT      C BEAMDIMZ      10                  dimension for Z                                                                     
+ ***** DATA CARD CONTENT      C BEAMDIMY      .1                  dimension for Y                                                                     
+ ***** DATA CARD CONTENT      C BEAMDIMZ      .1                  dimension for Z                                                                     
+ ***** DATA CARD CONTENT      C BEAMDISTY    0.3 0.8 11*1. 0.8 0.3     Y profile                                                                      
+ ***** DATA CARD CONTENT      C BEAMDISTZ    0.8 9*1. 0.8              Z profile                                                                      
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      C                      Pileup                                                                                           
+ ***** DATA CARD CONTENT      C       flux/sec  +/-ns   part.type                                                                                     
+ ***** DATA CARD CONTENT      C PILEUP  4.E7      150.     3                                                                                          
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---                  Define the target volumes and the target area                                                    
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C   --- this is not really correct! has to be updated!                                                                  
+ ***** DATA CARD CONTENT      TRGVOL    'MTAT'                                                                                                        
+ ***** DATA CARD CONTENT      TRGPROB   0.01                                                                                                          
+ ***** DATA CARD CONTENT      TRGLIM    -1. 1. -1. 1.  3.  11.                                                                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ===   This detector is defined here, since it is the same for all configurations,                                     
+ ***** DATA CARD CONTENT      C ===   but it should be positioned in the data files to follow                                                         
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ------------------------------------------------------------------------                                              
+ ***** DATA CARD CONTENT      END                                                                                                                     
+ ***** DATA CARD CONTENT     READ  22         local update for beam momentum magnets etc                                                             
+ ***** DATA CARD CONTENT      C LIST                                                                                                                  
+ ***** DATA CARD CONTENT      C Moller Polarimeter Setup , update for ...                                                                             
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C Detectors: sets      GSET      - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Volumes:             GVOL      - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Rotation:           <RMATR20   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Material:            GPARMAT   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C Medium:              GPARMED   - shares the definitions in with the next level file                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---   Coordinate system: Beam along Z                                                                                 
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C ---              Define magnet positions... in MRS (Master Reference System)                                          
+ ***** DATA CARD CONTENT      C        !!!       If you move the magnet - update the values:                                                          
+ ***** DATA CARD CONTENT      C                  AREA ...                                                                                             
+ ***** DATA CARD CONTENT      C                  MAGNET ...                                                                                           
+ ***** DATA CARD CONTENT      C                  magnet volume positions                                                                              
+ ***** DATA CARD CONTENT      C MAGNET01   10=1.436                                                                                                   
+ ***** DATA CARD CONTENT      C MAGNET02   10=0.                                                                                                      
+ ***** DATA CARD CONTENT      C MAGNET03   10=0.241                                                                                                   
+ ***** DATA CARD CONTENT      C MAGNET04   10=1.479                                                                                                   
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C---        Beam                                                                                                        
+ ***** DATA CARD CONTENT      C                                                                                                                       
+ ***** DATA CARD CONTENT      C BEAMOMLIM     0.850  0.85001   momentum limits                                                                        
+ ***** DATA CARD CONTENT      C RMATR11  90.573   0.  90.     90.   0.573    0.    Solenoid field map around Y                                        
+ ***** DATA CARD CONTENT      C RMATR12  90.      0.  90.573  90.   0.573   90.    Solenoid field map around X                                        
+ ***** DATA CARD CONTENT      C RMATR11  90.287   0.  90.     90.   0.287    0.    Solenoid field map around Y                                        
+ ***** DATA CARD CONTENT      C RMATR12  90.      0.  90.287  90.   0.287   90.    Solenoid field map around X                                        
+ ***** DATA CARD CONTENT      C         type  mother  Xcen   Ycen   Zcen   rot Xsiz/2 Ysiz/2 Zsiz/2  field   flag1 flag2                              
+ ***** DATA CARD CONTENT      C MAGNET05   9    'HALL'    0.     0.    0.     0  20.    20.    80.     0.0     0     0                                
+ ***** DATA CARD CONTENT      OMBEAM     1                                                                                                            
+ ***** DATA CARD CONTENT      C MULS 0                                                                                                                
+ ***** DATA CARD CONTENT      C END                                                                                                                   
+ ***** DATA CARD CONTENT                                                                                                                              
+ ***** DATA CARD CONTENT      END                                                                                                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     LIST                                                                                                                    
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     TRIG   100000          number of events                                                                                 
+ ***** DATA CARD CONTENT     C CONTINUE 1                                                                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C SAVE  'KINE' 'VERT' 'OHIT'                                                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ==========   NTUPLES   ===========                                                                                    
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C          beam  kine  hits  LUND                                                                                       
+ ***** DATA CARD CONTENT     NTUPPROCO    1    -1    1     0                                                                                         
+ ***** DATA CARD CONTENT     C NTUPPROCO    1     0    0     1                                                                                       
+ ***** DATA CARD CONTENT     C NTUPLENO              3=7800                                                                                          
+ ***** DATA CARD CONTENT     NTUPLENO              3=2000                                                                                            
+ ***** DATA CARD CONTENT     NTUPWRHIT   0  write all events    if NE zero write only events with hits                                               
+ ***** DATA CARD CONTENT                                                                                                                             
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ==========   Geometry modifications =============                                                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C DEADVOL  99                                                                                                           
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ==========                                                                                                            
+ ***** DATA CARD CONTENT     CUTXYZ  0.005                                                                                                           
+ ***** DATA CARD CONTENT     C MAXXYZ 200000                                                                                                         
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C -----------   Ignore: neutrino, (K0L, pi0, eta)                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     IGNTYPE   4                                                                                                             
+ ***** DATA CARD CONTENT     C                (10   7  17)                                                                                           
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C -----------   Ignore photons!                                                                                         
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C IGNTYPE   2=1                                                                                                         
+ ***** DATA CARD CONTENT     C               Forbid to decay in LUND for:                                                                            
+ ***** DATA CARD CONTENT     C            pi0   eta   omega  eta'                                                                                    
+ ***** DATA CARD CONTENT     LUNDDECOFF   111                                                                                                        
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C     ===    "fixed" track (the useful one)                                                                             
+ ***** DATA CARD CONTENT     C OMITRAFIX      2                                                                                                      
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C -----------            Beam -------------------                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     OMBEAM     1                                                                                                            
+ ***** DATA CARD CONTENT     C  OMBEAM     1      beam interacts always                                                                              
+ ***** DATA CARD CONTENT     C  OMBEAM     2      beam may pass through, interactions are left to GEANT                                              
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ============================================================================                                          
+ ***** DATA CARD CONTENT     C  -------    Kinematics                                                                                                
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     OMKINE        4                                                                                                         
+ ***** DATA CARD CONTENT     C             0      primitive multiplicity                                                                             
+ ***** DATA CARD CONTENT     C             1      PYTHIA                                                                                             
+ ***** DATA CARD CONTENT     C             2      FRTIOF generator                                                                                   
+ ***** DATA CARD CONTENT     C             3      VENUS                                                                                              
+ ***** DATA CARD CONTENT     C             4      Exclusive production (turn NINCL to 0 ! ) Mott/Moller ...                                          
+ ***** DATA CARD CONTENT     C             5      LEPTO                                                                                              
+ ***** DATA CARD CONTENT     C             9      nothing                                                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ============================================================================                                          
+ ***** DATA CARD CONTENT     C ===             If OMKINE=4 : "Electron beam" - Moller/Bhabha,photoproduction                                         
+ ***** DATA CARD CONTENT     OMEXKINE      1                                                                                                         
+ ***** DATA CARD CONTENT     C             0      nothing (prints a message if OMKINE=4)                                                             
+ ***** DATA CARD CONTENT     C             1      Moller                                                                                             
+ ***** DATA CARD CONTENT     C             2      Mott                                                                                               
+ ***** DATA CARD CONTENT     C             3      Photoproduction by Bremstr. photons                                                                
+ ***** DATA CARD CONTENT     C             7      One particle                                                                                       
+ ***** DATA CARD CONTENT     C             8      User's program                                                                                     
+ ***** DATA CARD CONTENT     C             9      Bremsstrahlung producion of pi+N (SAID)                                                            
+ ***** DATA CARD CONTENT     C            10      radiative Moller                                                                                   
+ ***** DATA CARD CONTENT     C            11      Low q2 EPA                                                                                         
+ ***** DATA CARD CONTENT     C            12      Generic binary reaction                                                                            
+ ***** DATA CARD CONTENT     C            13      High X e-scattering                                                                                
+ ***** DATA CARD CONTENT     C            14      Inclusive e-scattering (Mott + QFS/DIS)                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ----------------------------------------------------------------------------                                          
+ ***** DATA CARD CONTENT     C ===          Limits on Moller:                                                                                        
+ ***** DATA CARD CONTENT     MOLLIMTHETA     70.0 110.0    theta range in CM  in degrees                                                             
+ ***** DATA CARD CONTENT     MOLLIMPHI      -20.0  20.0    phi   range in CM  in degrees                                                             
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     MOLLSHELL     0                                                                                                         
+ ***** DATA CARD CONTENT     C             0    scattering on a free e-                                                                              
+ ***** DATA CARD CONTENT     C             1    scattering on e- from L shell in Fe                                                                  
+ ***** DATA CARD CONTENT     C             2    scattering on e- from K shell in Fe                                                                  
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ----------------------------------------------------------------------------                                          
+ ***** DATA CARD CONTENT     C ===          Limits on Mott:                                                                                          
+ ***** DATA CARD CONTENT     MOTTIMTHETA     0.06    0.6   theta range in LAB in degrees                                                             
+ ***** DATA CARD CONTENT     MOTTIMPHI     -180.0  180.0   phi   range in LAB in degrees                                                             
+ ***** DATA CARD CONTENT     MOTTTARG     14               target particle                                                                           
+ ***** DATA CARD CONTENT     C            14               Quasielastic scattering on protons if the target is a heavy nucleus                       
+ ***** DATA CARD CONTENT     C            82               Scattering on Fe Nucleus                                                                  
+ ***** DATA CARD CONTENT     MOTTWEIGHT    0               event weight                                                                              
+ ***** DATA CARD CONTENT     C             0               weight=1 for all events                                                                   
+ ***** DATA CARD CONTENT     C             1               weights are slightly different (see Ntuple variable WGCROS)                               
+ ***** DATA CARD CONTENT     C             2               weight=cross-section (uniform simulation in the LAB angle)                                
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     MOTTRADIAT    1               type of Mott scattering                                                                   
+ ***** DATA CARD CONTENT     C             0               Regular Mott                                                                              
+ ***** DATA CARD CONTENT     C             1               Radiative Mott                                                                            
+ ***** DATA CARD CONTENT     MOTTRADLIM      0.2     0.8   Relative energy range for the scattered electrons due to radiatiion                       
+ ***** DATA CARD CONTENT     PARTICLE01   82  4  55.85  26. 1.E20  'Fe 56         $'       Fe nucleus definition                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ----------------------------------------------------------------------------                                          
+ ***** DATA CARD CONTENT     C ===          Limits on pion/kaon/proton photoproduction                                                               
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C limits   theta       P          phi                                                                                   
+ ***** DATA CARD CONTENT     PHOTOPKIN   20.0  40.0  0.5   8.   168. 192.                                                                            
+ ***** DATA CARD CONTENT     PHOTOPLEN   0.046     thickness of LH twenty cm in rad lengths                                                          
+ ***** DATA CARD CONTENT     PHOTOPROD   2  neg pion                                                                                                 
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ----------------------------------------------------------------------------                                          
+ ***** DATA CARD CONTENT     C ===          Limits on High X e-scattering:                                                                           
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C limits   theta      X         phi                                                                                     
+ ***** DATA CARD CONTENT     HIGHXKIN  30.  40.  1.35 1.65  150. 200.                                                                                
+ ***** DATA CARD CONTENT     HIGHXTAR  12.  atomic number of the target                                                                              
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ----------------------------------------------------------------------------                                          
+ ***** DATA CARD CONTENT     C ===          Limits on Inclusive e-scattering:                                                                        
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C limits   theta      P         phi            X                                                                        
+ ***** DATA CARD CONTENT     EINSCATKIN  18.0  36.0  1.0  8.0     0.  360.  0.55  0.99                                                               
+ ***** DATA CARD CONTENT     C EINSCATKIN  18.0  36.0  1.0  8.0   172.  188.  0.55  0.99                                                             
+ ***** DATA CARD CONTENT     C EINSCATKIN  32.5  37.5  2.0  2.01   180.  180.1                                                                       
+ ***** DATA CARD CONTENT     EINSCATMAT  1   target material number                                                                                  
+ ***** DATA CARD CONTENT     C          Mott  QFS   DIS                                                                                              
+ ***** DATA CARD CONTENT     EINSCATPR   0     0     2                                                                                               
+ ***** DATA CARD CONTENT     EINSCATSEP  0.020  0.020   energy separation for nucleon and delta                                                      
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C ------------------------------------------                                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C==============================================================================                                         
+ ***** DATA CARD CONTENT     C -----------------------------------------                                                                             
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     OMTRACK    1                                                                                                            
+ ***** DATA CARD CONTENT     OMHITS     1                                                                                                            
+ ***** DATA CARD CONTENT     OMDIGI     1                                                                                                            
+ ***** DATA CARD CONTENT     RUNG       1                                                                                                            
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C      init    kine   track   hits   digit  outp                                                                        
+ ***** DATA CARD CONTENT     C SWIT    1        2      1      0       0      2                                                                       
+ ***** DATA CARD CONTENT     SWIT    1        0      0      0       0      0                                                                         
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     VIEW 0 0                                                                                                                
+ ***** DATA CARD CONTENT     SETS 0 0                                                                                                                
+ ***** DATA CARD CONTENT     ANNI 0                                                                                                                  
+ ***** DATA CARD CONTENT     BREM 0                                                                                                                  
+ ***** DATA CARD CONTENT     COMP 0                                                                                                                  
+ ***** DATA CARD CONTENT     DCAY 0                                                                                                                  
+ ***** DATA CARD CONTENT     DRAY 0                                                                                                                  
+ ***** DATA CARD CONTENT     HADR 0                                                                                                                  
+ ***** DATA CARD CONTENT     LOSS 0                                                                                                                  
+ ***** DATA CARD CONTENT     MULS 0                                                                                                                  
+ ***** DATA CARD CONTENT     MUNU 0                                                                                                                  
+ ***** DATA CARD CONTENT     PAIR 0                                                                                                                  
+ ***** DATA CARD CONTENT     PFIS 0                                                                                                                  
+ ***** DATA CARD CONTENT     PHOT 0                                                                                                                  
+ ***** DATA CARD CONTENT     RAYL 0                                                                                                                  
+ ***** DATA CARD CONTENT     KINE 1                                                                                                                  
+ ***** DATA CARD CONTENT     TIME 2=-999999.                                                                                                         
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     ANNI 1                                                                                                                  
+ ***** DATA CARD CONTENT     BREM 1                                                                                                                  
+ ***** DATA CARD CONTENT     COMP 1                                                                                                                  
+ ***** DATA CARD CONTENT     DCAY 1                                                                                                                  
+ ***** DATA CARD CONTENT     DRAY 1                                                                                                                  
+ ***** DATA CARD CONTENT     HADR 1                                                                                                                  
+ ***** DATA CARD CONTENT     LOSS 1                                                                                                                  
+ ***** DATA CARD CONTENT     MULS 1                                                                                                                  
+ ***** DATA CARD CONTENT     MUNU 1                                                                                                                  
+ ***** DATA CARD CONTENT     PAIR 1                                                                                                                  
+ ***** DATA CARD CONTENT     PFIS 1                                                                                                                  
+ ***** DATA CARD CONTENT     PHOT 1                                                                                                                  
+ ***** DATA CARD CONTENT     RAYL 1                                                                                                                  
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C CUTS    0.05  0.02   0.05   0.05    0.05    0.05   0.05                                                               
+ ***** DATA CARD CONTENT     C CUTS    11=200.E-9                                                                                                    
+ ***** DATA CARD CONTENT     C CUTS    0.05    0.05    0.05    0.05    0.05                                                                          
+ ***** DATA CARD CONTENT     C CUTS    0.01    0.01    0.01    0.01    0.01                                                                          
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     C  RNDMSEQ   1                                                                                                          
+ ***** DATA CARD CONTENT     C  STOP                                                                                                                 
+ ***** DATA CARD CONTENT     MEDABSORB4  210        1  2  3  4  7      photons electrons hadrons                                                     
+ ***** DATA CARD CONTENT     MEDABSORB5  213        1  2  3  4  7      photons electrons hadrons                                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     MEDABSORB6  438        1  2  3  4  7      photons electrons hadrons                                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     MEDABSORB7   13        1  2  3  4  7      photons electrons hadrons                                                     
+ ***** DATA CARD CONTENT     C                                                                                                                       
+ ***** DATA CARD CONTENT     MAGNET05   9    'TARG'    0.     0.    0.      0  20.    20.    80.     0.75     0     0                                
+ ***** DATA CARD CONTENT     C   Beam spot reference limits                                                                                          
+ ***** DATA CARD CONTENT     C                 Y           Z        SlopeY          SlopeZ                                                           
+ ***** DATA CARD CONTENT     BEAMYZLIM      -0.01  0.01   -0.01  0.01  -0.000  0.000   -0.000  0.000                                                 
+ ***** DATA CARD CONTENT     C MOLLIMTHETA     60.0 120.0    theta range in CM  in degrees                                                           
+ ***** DATA CARD CONTENT     C MOLLIMPHI      -25.0  10.0    phi   range in CM  in degrees                                                           
+ ***** DATA CARD CONTENT     MOLLIMTHETA     65.0 115.0    theta range in CM  in degrees                                                             
+ ***** DATA CARD CONTENT     MOLLIMPHI      -35.0  35.0    phi   range in CM  in degrees                                                             
+ ***** DATA CARD CONTENT     TRIG 600000 events                                                                                                      
+ ***** DATA CARD CONTENT     TRIG 1000 events                                                                                                        
+ ***** DATA CARD CONTENT     BEAMOMLIM 10.9999 11.0001 momentum limits                                                                               
+ ***** DATA CARD CONTENT     MAGNET05 10=0.875                                                                                                       
+ ***** DATA CARD CONTENT     MAGNET01 1 'HALL' 0. 0. 75.0 0 5.08 5.08 18.37 -5.7 0 0 Q one                                                           
+ ***** DATA CARD CONTENT     MAGNET02 1 'HALL' 0. 0. 140.0 0 5.08 5.08 22.3 -5.6 0 0 Q one                                                           
+ ***** DATA CARD CONTENT     MAGNET03 1 'HALL' 0. 0. 208.5 0 5.08 5.08 18.37 2.4 0 0 Q one                                                           
+ ***** DATA CARD CONTENT     MAGNET04 1 'HALL' 0. 0. 274.5 0 5.08 5.08 18.37 5.2 0 0 Q one                                                           
+ ***** DATA CARD CONTENT     MAGNET06 2 'HALL' 0. 0. 422.8 0 8.001 30.001 82.25 13.9 0 0 Q one                                                       
+ ***** DATA CARD CONTENT     END                                                                                                                     
+
+ MZDIV.   Initialize Division  Constant  in Store  0
+          NW/NWMAX=   20003200000,  MODE/KIND=  1  2
+          Division 20 initialized.
+
+ MZLINK.  Initialize Link Area  /GCLINK/  for Store  0 NL/NS=    20    20
+
+ MZLINK.  Initialize Link Area  /GCSLNK/  for Store  0 NL/NS=   100   100
+ === OMRANIN: RANDOM NUMBER SEED for V113, sequence=1         10000001           0           0
+ === OMRANIN: RANDOM NUMBER SEED for V113, sequence=2         50000001           0           0
+ === OMRANIN: RANDOM NUMBER SEED for V113, sequence=3         90000001           0           0
+ --- OMSBEAM the beam profile is defined at X=  -90.0
+  Regular Moller  hist           -1
+
+ ===         Moeller  cross-section   65.00<theta CM< 115.00   -35.00<phi CM<  35.00 deg is   0.2046E-04 barn per one target electron
+ ===         Moeller  event rate/sec =  0.8449E+06 for 0.003cm Fe target, 1.microA
+ ===         Moeller  event rate/sec =  0.5443E+09 for 100.0cm H2 target, 1.microA
+
+ *** GSROTM ***: Parameters of matrix no.    7 changed:
+
+
+ Old values:     90.0000000        0.0000000       82.6999969       90.0000000        7.0000000      270.0000000
+ New values:     90.0000000        0.0000000       82.6999969       90.0000000        7.3000011      270.0000305
+
+    BPIT     1 HALL    0     0.00000     0.00000     0.00000  ONLY      HALL     0.00000     0.00000     0.00000
+    BPVT     1 BPIT    0     0.00000     0.00000     0.00000  ONLY      BPIT     0.00000     0.00000     0.00000
+    HLMZ     1 HALL    0     0.00000     0.00000    -5.70000  ONLY      HALL     0.00000     0.00000    -5.70000
+    HLMZ     2 HALL    0     0.00000     0.00000    19.50000  ONLY      HALL     0.00000     0.00000    19.50000
+    MTAT     1 BPVT    0     0.00000     0.00000     6.90000  ONLY      BPVT     0.00000     0.00000     6.90000
+    BPI1     1 HALL    0     0.00000     0.00000   200.00000  ONLY      HALL     0.00000     0.00000   200.00000
+    BPV1     1 BPI1    0     0.00000     0.00000     0.00000  ONLY      BPI1     0.00000     0.00000     0.00000
+    BPI2     1 HALL    0     0.00000     0.00000   312.14999  ONLY      HALL     0.00000     0.00000   312.14999
+    BPV2     1 BPI2    0     0.00000     0.00000     0.00000  ONLY      BPI2     0.00000     0.00000     0.00000
+    BPI3     1 HALL    0     0.00000     0.00000   726.08002  ONLY      HALL     0.00000     0.00000   726.08002
+    BPV3     1 BPI3    0     0.00000     0.00000     0.00000  ONLY      BPI3     0.00000     0.00000     0.00000
+    BPF3     1 BPV3    0     0.00000     0.00000   157.00000  ONLY      BPV3     0.00000     0.00000   157.00000
+    BPF4     1 BPV3    0     0.00000     0.00000  -157.00000  ONLY      BPV3     0.00000     0.00000  -157.00000
+    BPI4     1 HALL    0     0.00000     0.00000  1084.57996  ONLY      HALL     0.00000     0.00000  1084.57996
+    BPV4     1 BPI4    0     0.00000     0.00000     0.00000  ONLY      BPI4     0.00000     0.00000     0.00000
+    BPE4     1 HALL    0     0.00000     0.00000   940.00000  ONLY      HALL     0.00000     0.00000   940.00000
+    BPI5     1 HALL    0     0.00000     0.00000   545.08002  ONLY      HALL     0.00000     0.00000   545.08002
+    BPV5     1 BPI5    0     0.00000     0.00000     0.00000  ONLY      BPI5     0.00000     0.00000     0.00000
+    DBI1     1 HALL    0     0.00000    -9.00000   422.79999  ONLY      HALL     0.00000    -9.00000   422.79999
+    DBV1     1 DBI1    0     0.00000     0.00000     0.00000  ONLY      DBI1     0.00000     0.00000     0.00000
+    DBW1     1 HALL    0     0.00000    -9.00000   521.94000  ONLY      HALL     0.00000    -9.00000   521.94000
+    DBW2     1 DBW1    0     0.00000     9.00000     0.00000  ONLY      DBW1     0.00000     9.00000     0.00000
+    DBW3     1 DBW1    0    -4.13000    -7.00000     0.00000  ONLY      DBW1    -4.13000    -7.00000     0.00000
+    DBW4     1 DBW1    0     4.13000    -7.00000     0.00000  ONLY      DBW1     4.13000    -7.00000     0.00000
+    DBT3     1 DBW3    0     0.00000     0.00000     0.00000  ONLY      DBW3     0.00000     0.00000     0.00000
+    DBT4     1 DBW4    0     0.00000     0.00000     0.00000  ONLY      DBW4     0.00000     0.00000     0.00000
+    DMS1     1 DBV1    0     0.00000     0.00000     0.00000  ONLY      DBV1     0.00000     0.00000     0.00000
+    DMBH     1 DMS1    0     0.00000     9.00000     0.00000  ONLY      DMS1     0.00000     9.00000     0.00000
+    DMFR     1 DMBH    0     0.00000     0.00000   -87.20000  ONLY      DMBH     0.00000     0.00000   -87.20000
+    DCOL     1 DBV1    0    -4.00000     9.00000   -92.00000  ONLY      DBV1    -4.00000     9.00000   -92.00000
+    DCOL     2 DBV1    0     4.00000     9.00000   -92.00000  ONLY      DBV1     4.00000     9.00000   -92.00000
+    DSLO     1 DCOL    0     0.00000     0.00000     0.00000  ONLY      DCOL     0.00000     0.00000     0.00000
+    MQ1      1 HALL    0     0.00000     0.00000    70.00000  ONLY      HALL     0.00000     0.00000    70.00000
+    MQ2      1 HALL    0     0.00000     0.00000   140.00000  ONLY      HALL     0.00000     0.00000   140.00000
+    MQ3      1 HALL    0     0.00000     0.00000   208.50000  ONLY      HALL     0.00000     0.00000   208.50000
+    MQ4      1 HALL    0     0.00000     0.00000   274.20001  ONLY      HALL     0.00000     0.00000   274.20001
+    MDP1     1 HALL    0   -16.00000    -9.00000   422.79999  ONLY      HALL   -16.00000    -9.00000   422.79999
+    MDP2     1 HALL    0    16.00000    -9.00000   422.79999  ONLY      HALL    16.00000    -9.00000   422.79999
+    MDBX     1 HALL    0     0.00000   -50.10000   724.00000  ONLY      HALL     0.00000   -50.10000   724.00000
+    MDBA     1 MDBX    0     0.00000     1.10000     1.80000  ONLY      MDBX     0.00000     1.10000     1.80000
+    MDBW     1 MDBX    9     0.00000     8.50000   -49.70000  ONLY      MDBX     0.00000     8.50000   -49.70000
+    MDET     1 MDBA    7     0.00000     0.00000     0.00000  ONLY      MDBA     0.00000     0.00000     0.00000
+    DLGB     1 MDET    0     0.00000     0.00000   -11.00000  ONLY      MDET     0.00000     0.00000   -11.00000
+    HOD1     1 MDET    0     0.00000     0.00000   -32.00000  ONLY      MDET     0.00000     0.00000   -32.00000
+    HOD2     1 MDET    0     0.00000     0.00000   -16.00000  ONLY      MDET     0.00000     0.00000   -16.00000
+    HOD3     1 MDET    0     0.00000     0.00000   -33.50000  ONLY      MDET     0.00000     0.00000   -33.50000
+    S1LD     1 HALL    0     0.00000   -29.00000   537.00000  ONLY      HALL     0.00000   -29.00000   537.00000
+    S1H1     1 S1LD    9    -4.10000     9.50000     0.00000  ONLY      S1LD    -4.10000     9.50000     0.00000
+    S1H2     1 S1LD    9     4.10000     9.50000     0.00000  ONLY      S1LD     4.10000     9.50000     0.00000
+    S2LD     1 HALL    0     0.00000    -7.50000   610.00000  ONLY      HALL     0.00000    -7.50000   610.00000
+    S21B     1 HALL    0     0.00000   -13.30000   620.00000  ONLY      HALL     0.00000   -13.30000   620.00000
+    S21H     1 S21B    0     0.00000    -0.50000     0.00000  ONLY      S21B     0.00000    -0.50000     0.00000
+    HO11     1 HOD1    0     4.30000     0.00000     0.00000  ONLY      HOD1     4.30000     0.00000     0.00000
+    HO11     2 HOD1    0    -4.30000     0.00000     0.00000  ONLY      HOD1    -4.30000     0.00000     0.00000
+    HO21     1 HOD2    0     4.60000    11.25000     0.00000  ONLY      HOD2     4.60000    11.25000     0.00000
+    HO21     2 HOD2    0     4.60000     3.75000     0.00000  ONLY      HOD2     4.60000     3.75000     0.00000
+    HO21     3 HOD2    0     4.60000    -3.75000     0.00000  ONLY      HOD2     4.60000    -3.75000     0.00000
+    HO21     4 HOD2    0     4.60000   -11.25000     0.00000  ONLY      HOD2     4.60000   -11.25000     0.00000
+    HO21     5 HOD2    0    -4.60000    11.25000     0.00000  ONLY      HOD2    -4.60000    11.25000     0.00000
+    HO21     6 HOD2    0    -4.60000     3.75000     0.00000  ONLY      HOD2    -4.60000     3.75000     0.00000
+    HO21     7 HOD2    0    -4.60000    -3.75000     0.00000  ONLY      HOD2    -4.60000    -3.75000     0.00000
+    HO21     8 HOD2    0    -4.60000   -11.25000     0.00000  ONLY      HOD2    -4.60000   -11.25000     0.00000
+    HO31     1 HOD3    0     0.00000     0.00000     0.00000  ONLY      HOD3     0.00000     0.00000     0.00000
+
+ MZLINK.  Initialize Link Area  /GCHVIR/  for Store  0 NL/NS=     4     1
+
+ MZLINK.  Initialize Link Area  /GCDINA/  for Store  0 NL/NS=     4     4
+    mag1     0 HALL    0     0.00000     0.00000    75.00000  ONLY      HALL     0.00000     0.00000    75.00000
+    mag1     0 HALL    0     0.00000     0.00000   140.00000  ONLY      HALL     0.00000     0.00000   140.00000
+    mag1     0 HALL    0     0.00000     0.00000   208.50000  ONLY      HALL     0.00000     0.00000   208.50000
+    mag1     0 HALL    0     0.00000     0.00000   274.50000  ONLY      HALL     0.00000     0.00000   274.50000
+    mag1     0 HALL    0     0.00000     0.00000     6.90000  ONLY      TARG     0.00000     0.00000     0.00000
+    mag1     0 HALL    0     0.00000     0.00000   422.79999  ONLY      HALL     0.00000     0.00000   422.79999
+
+    magnet type mother     Xcen      Ycen      Zcen     rot   1/2 size: X       Y       Z   field/scale     flags 
+       1     1   HALL        0.00      0.00     75.00     0            5.08    5.08   18.37     -5.7000      0.0    0.0    0.0    0.0    0.0
+       2     1   HALL        0.00      0.00    140.00     0            5.08    5.08   22.30     -5.6000      0.0    0.0    0.0    0.0    0.0
+       3     1   HALL        0.00      0.00    208.50     0            5.08    5.08   18.37      2.4000      0.0    0.0    0.0    0.0    0.0
+       4     1   HALL        0.00      0.00    274.50     0            5.08    5.08   18.37      5.2000      0.0    0.0    0.0    0.0    0.0
+       5     9   HALL        0.00      0.00      6.90     0           20.00   20.00   80.00      0.8750      0.0    0.0    0.0    0.0    0.0
+       6     2   HALL        0.00      0.00    422.80     0            8.00   30.00   82.25     13.9000      0.0    0.0    0.0    0.0    0.0
+
+                    Targets:  1 pieces
+                                                      beam                        
+  no    Xcen     Ycen    Zcen   limits   medium prob overlp  shape parameters                   path 
+ ------------------------------------------------------------------------------------------------------------------------------
+   1     0.000   0.000   6.900  0.00  0.00  270  1.00 1.00   TUBE  0.000  1.500  0.002   HALL 01 BPIT 01 BPVT 01 MTAT 01
+ ------------------------------------------------------------------------------------------------------------------------------
+
+ === Trigger detectors:
+ no Nelements volumes
+
+ ---   GEANT3 ===> Detector data                         
+
+ ori   3  1  2  - beam, detector orientation in MRS
+
+    magnet type mother     Xcen      Ycen      Zcen     rot   1/2 size: X       Y       Z   field/scale     flags 
+ mag   1     1   HALL        0.00      0.00     75.00     0            5.08    5.08   18.37     -5.7000      0.0    0.0    0.0    0.0    0.0
+ mag   2     1   HALL        0.00      0.00    140.00     0            5.08    5.08   22.30     -5.6000      0.0    0.0    0.0    0.0    0.0
+ mag   3     1   HALL        0.00      0.00    208.50     0            5.08    5.08   18.37      2.4000      0.0    0.0    0.0    0.0    0.0
+ mag   4     1   HALL        0.00      0.00    274.50     0            5.08    5.08   18.37      5.2000      0.0    0.0    0.0    0.0    0.0
+ mag   5     9   HALL        0.00      0.00      6.90     0           20.00   20.00   80.00      0.8750      0.0    0.0    0.0    0.0    0.0
+ mag   6     2   HALL        0.00      0.00    422.80     0            8.00   30.00   82.25     13.9000      0.0    0.0    0.0    0.0    0.0
+
+          Rotation matrices for detectors
+
+          Parameters of the wire detectors
+ =============================================================================================================================
+      ID   det unit type  Xsize   Ysize   Zsize MRS: Xcen       Ycen       Zcen  rot matr  Wire dist  angle  Nwires   pitch effic backgr drift: vel.  T0  resol 2hit space slice
+ -----------------------------------------------------------------------------------------------------------------------------
+ =============================================================================================================================
+ RZMAKE. Unit   1006 Initializing with LREC=  1024, OPT= X?QC    
+
+ MZLINK.  Initialize Link Area  RZCL      for Store  0 NL/NS=    11     0
+ --- OMNTUPIN: output ntuple   1 OMNTUPO   ==> LUN= 27  file=      csimout.nt  lrec=    1024
+ IO,NTUPDET(IO)=           1           1
+          process  1     BEAM  ID=       2
+          process  2     KINE  ID=       2
+          process  3     HITS  ID=       2
+1************************************************************
+ *                                                          *
+ *    G E A N T  Version 3.2114      DATE/TIME 130207/1708  *
+ *                                                          *
+ *                      R U N      1                        *
+ *                                                          *
+ ************************************************************
+ *                                                          *
+ *      Data structure   Date   Time    GVERSN    ZVERSN    *
+ *      --------------   ----   ----    ------    ------    *
+ *                                                          *
+ *           INIT       130207  1708    3.2114     3.79     *
+ *                                                          *
+ *           KINE       130207  1708    3.2114     3.79     *
+ *                                                          *
+ *           HITS       130207  1708    3.2114     3.79     *
+ *                                                          *
+ *           DIGI       130207  1708    3.2114     3.79     *
+ *                                                          *
+ *     Random number seeds:          9876        54321      *
+ *     --------------------                                 *
+ *                                                          *
+ *----------------------------------------------------------*
+ *                                                          *
+ *              Standard TPAR for this run are              *
+ *              ------------------------------              *
+ *                                                          *
+ *  CUTGAM=  1.00 MeV  CUTELE=  1.00 MeV  CUTNEU= 10.00 MeV *
+ *  CUTHAD= 10.00 MeV  CUTMUO= 10.00 MeV                    *
+ *  BCUTE =  1.00 MeV  BCUTM =  1.00 MeV                    *
+ *  DCUTE =  1.00 MeV  DCUTM =  1.00 MeV  PPCUTM= 10.00 MeV *
+ *  IPAIR =        1.  ICOMP =        1.  IPHOT =        1. *
+ *  IPFIS =        1.  IDRAY =        1.  IANNI =        1. *
+ *  IBREM =        1.  IHADR =        1.  IMUNU =        1. *
+ *  IDCAY =        1.  ILOSS =        1.  IMULS =        1. *
+ *  IRAYL =        1.  ILABS =        0.  ISYNC =        0. *
+ *  ISTRA =        0.                                       *
+ *                                                          *
+ *                                                          *
+ *     Special TPAR for TMED  16   Vacuum,   nmf            *
+ *     -------------------------                            *
+ *  CUTGAM=  1.00 MeV  CUTELE=  1.00 MeV  CUTNEU= 10.00 MeV *
+ *  CUTHAD= 10.00 MeV  CUTMUO= 10.00 MeV                    *
+ *  BCUTE =  1.00 MeV  BCUTM =  1.00 MeV                    *
+ *  DCUTE =  1.00 MeV  DCUTM =  1.00 MeV  PPCUTM= 10.00 MeV *
+ *  IPAIR =        0.  ICOMP =        0.  IPHOT =        0. *
+ *  IPFIS =        0.  IDRAY =        0.  IANNI =        0. *
+ *  IBREM =        0.  IHADR =        0.  IMUNU =        0. *
+ *  IDCAY =        1.  ILOSS =        0.  IMULS =        0. *
+ *  IRAYL =        0.  ILABS =        0.  ISYNC =        0. *
+ *  ISTRA =        0.                                       *
+ *                                                          *
+ *                                                          *
+ *     Special TPAR for TMED 216   Vacuum,    mf            *
+ *     -------------------------                            *
+ *  CUTGAM=  1.00 MeV  CUTELE=  1.00 MeV  CUTNEU= 10.00 MeV *
+ *  CUTHAD= 10.00 MeV  CUTMUO= 10.00 MeV                    *
+ *  BCUTE =  1.00 MeV  BCUTM =  1.00 MeV                    *
+ *  DCUTE =  1.00 MeV  DCUTM =  1.00 MeV  PPCUTM= 10.00 MeV *
+ *  IPAIR =        0.  ICOMP =        0.  IPHOT =        0. *
+ *  IPFIS =        0.  IDRAY =        0.  IANNI =        0. *
+ *  IBREM =        0.  IHADR =        0.  IMUNU =        0. *
+ *  IDCAY =        1.  ILOSS =        0.  IMULS =        0. *
+ *  IRAYL =        0.  ILABS =        0.  ISYNC =        0. *
+ *  ISTRA =        0.                                       *
+ *                                                          *
+ *                                                          *
+ ************************************************************
+
+
+ === Read the field map of mag= 5 into map= 1 points=   6601 Bmax=    71.737 orientation 
+      proj=1 axis=  0  sym=  0  0 points=   41 limits=    0.00   20.00 step=  0.500
+      proj=2 axis=  3  sym=  0  0 points=  161 limits=    0.00   80.00 step=  0.500
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     100        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:       -0.006      -0.005       6.901
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                  3418         200     1023359
+              GRNDM                2818           0     1023359
+              RNDM                  600         200           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     200        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     10.9999
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:       -0.006       0.004       6.902
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                  7510         400     2203548
+              GRNDM                6304           0     2203548
+              RNDM                 1206         400           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     300        error code=  0
+     3-tracks,    1-vertices,    2-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:        0.001       0.001       6.899
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 11154         600     3048773
+              GRNDM                9348           0     3048773
+              RNDM                 1806         600           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     400        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0001
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:        0.009       0.007       6.900
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 15464         800     3946032
+              GRNDM               13058           0     3946032
+              RNDM                 2406         800           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     500        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:       -0.004       0.002       6.901
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 19348        1000     5069012
+              GRNDM               16342           0     5069012
+              RNDM                 3006        1000           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     600        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0001
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:       -0.009      -0.003       6.899
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 22874        1200     5788266
+              GRNDM               19268           0     5788266
+              RNDM                 3606        1200           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     700        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:        0.000       0.004       6.899
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 26210        1400     6735092
+              GRNDM               22004           0     6735092
+              RNDM                 4206        1400           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     800        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0001
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:        0.004      -0.006       6.899
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 30062        1600     7627801
+              GRNDM               25256           0     7627801
+              RNDM                 4806        1600           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=     900        error code=  0
+     3-tracks,    1-vertices,    0-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:        0.008      -0.001       6.899
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 33388        1800     8480880
+              GRNDM               27982           0     8480880
+              RNDM                 5406        1800           0
+              RLU                     0           0           0
+
+ ------------------------------------------------------------------------------------------------------------------------
+                    OMPRIEV: Print the event data, IEVENT=    1000        error code=  0
+     3-tracks,    1-vertices,    2-trajectories,     1ADB0-trigger mask,         0-bit mask, weight=0.100E+01
+  Beam:  track=  1  momentum:       0.0000      0.0000     11.0000
+  Target number  1  A= 55.8  primary vertex:   1  coordinates:       -0.002       0.003       6.900
+  Calls to GXYZ:       0
+ random number calls  seq:            1           2           3
+              all                 36966        2000     9172452
+              GRNDM               30960           0     9172452
+              RNDM                 6006        2000           0
+              RLU                     0           0           0
+
+
+
+
+ ========================================================================================================================
+ ========================================================================================================================
+
+                    End of job: OMGEANT3 
+ ========================================================================================================================
+
+
+     Number of simulated events at various stages:
+            1000 - calls to GUKINE 
+            1000 - events after the beam has been simulated
+            1000 - events after the inclusive kinematics
+            1000 - events after LUND-type generators
+            1000 - events with tracking started
+            1000 - events with digitisation started
+            1000 - events written to NTUPLE
+
+     Other counters:
+           40088 - calls to GUTRACK 
+          760763 - calls to GUSTEP 
+
+ RZEND. called for OMNTUPO
+ RZMAKE. Unit   1006 Initializing with LREC=  1024, OPT= X?C     
+ RZEND. called for HISOUT
+ === Write histograms:  events=     1000
+1         **** NUMBER OF EVENTS PROCESSED =      1000
+          **** RANDOM NUMBER GENERATOR AFTER LAST COMPLETE EVENT         9876       54321
+          **** TIME TO PROCESS ONE EVENT IS =    0.0045 SECONDS
+
+
+
+ MZEND.   Usage statistics for  2 dynamic stores.
+
+   Map of store  0 /GCBANK/
+   ------------------------
+
+   Division                                        Number of times
+              Kind                Max-size                Garb-coll.
+            Mode    Position      used   allowed   Wiped  user  auto Pushd Redcd
+
+    1 QDIV1    0 1      5203         0   3999968       0     0     0     0     0
+    2 QDIV2    1 1   3747388      5194   3999968    1000     0     0     0     0
+   19 system   1 8   3752397      4568   3999968       0     0     2     0     0
+   20 Constant 1 2   3999968    244723   3200000       0     1    32    95     0
+
+   Map of store  1 /PAWC/  
+   ------------------------
+
+   Division                                        Number of times
+              Kind                Max-size                Garb-coll.
+            Mode    Position      used   allowed   Wiped  user  auto Pushd Redcd
+
+    1 QDIV1    0 1         2         0    599585       0     0     0     0     0
+    2 QDIV2    1 1    599185     61499    599585       0     0     0     6     0
+   20 system   1 8    599585       111    599585       0     0     0     0     0
+ === OMRANOUT: RANDOM NUMBER STATUS for V113, sequence=1         10000001       36966           0
+ === OMRANOUT: RANDOM NUMBER STATUS for V113, sequence=2         50000001        2000           0
+ === OMRANOUT: RANDOM NUMBER STATUS for V113, sequence=3         90000001     9172452           0

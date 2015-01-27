@@ -1,0 +1,70 @@
+ MACRO detector file=[file] lun=1 cut=24 sim=0
+
+ opt stat
+ opt nbox 
+ opt grid
+
+	if [sim]>0 then
+		goto detector
+	endif
+
+ zone
+ h/fil [lun] ../ntup_his/[file].nt
+ exec  fill lun=lun[lun] id=1000
+
+  nsim=$HINFO(1030,'ENTRIES')
+  n1arm=$HINFO(1031,'ENTRIES')
+  n2arm=$HINFO(1033,'ENTRIES')
+  anp=$HINFO(1033,'MEAN')
+  anpr=$HINFO(1033,'RMS')
+  eanp=$SIGMA([anpr]/SQRT([n2arm]))
+  acc1= $SIGMA(REAL([n2arm])/REAL([nsim]))
+  eacc1=$SIGMA(SQRT([acc1]*(1.-[acc1])/[nsim]))
+  acc2=$SIGMA(REAL([n2arm])/REAL([n1arm]))
+  eacc2=$SIGMA(SQRT([acc2]*(1.-[acc2])/[n1arm]))
+  theta=$HINFO(1013,'RMS')
+  phi=$HINFO(1023,'RMS')
+  err=$SIGMA(100./SQRT([n2arm]))
+  tmean=$HINFO(1011,'MEAN')
+  mess Pass=[nsim]  Single=[n1arm]  Coins=[n2arm]
+  mess An.power=[anp]+/-[eanp]  Acc=[acc1]+/-[eacc1]
+  mess Theta=[theta]    Phi=[phi]  Stat.Err=[err]
+*  mess Single arm Theta mean=[tmean]
+  mess file=[file]
+*  clo [lun]
+  wait
+
+  detector:
+
+ opt nstat
+ null 0.5 9. -16. 16.
+ set pmci 3
+* nt/pl //lun[lun]/2.hitraxy.f(2,3,0,2)%hitraxy.f(1,3,0,2) nhit>0 ! ! ! s
+* ent=$HINFO(1000000,'ENTRIES')
+* mess Pass=[ent]
+ set pmci 2
+ nt/pl //lun[lun]/2.hitraxy.f(2,3,0,2)%hitraxy.f(1,3,0,2) nhit>0.and.$22 ! ! ! s
+ ent=$HINFO(1000000,'ENTRIES')
+ mess Single=[ent]
+ set pmci 1
+ nt/pl //lun[lun]/2.hitraxy.f(2,3,0,2)%hitraxy.f(1,3,0,2) nhit>0.and.$24 ! ! ! s
+ ent=$HINFO(1000000,'ENTRIES')
+ mess Coincidence Right=[ent]
+
+ wait
+
+ set pmci 3
+ nt/pl //lun[lun]/2.thetcm*180./3.1415%phicm*180./3.1415 nhit>0
+ ent=$HINFO(1000000,'ENTRIES')
+ mess Pass=[ent]
+ set pmci 2
+ nt/pl //lun[lun]/2.thetcm*180./3.1415%phicm*180./3.1415 nhit>0.and.$22 ! ! ! s
+ ent=$HINFO(1000000,'ENTRIES')
+ mess Single Arm=[ent]
+ set pmci 1
+ nt/pl //lun[lun]/2.thetcm*180./3.1415%phicm*180./3.1415 nhit>0.and.$24 ! ! ! s
+ ent=$HINFO(1000000,'ENTRIES')
+ mess Coincidence=[ent]
+ opt stat
+
+ RETURN

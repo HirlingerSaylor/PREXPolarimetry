@@ -1,0 +1,34 @@
+C LIST
+C Moller Polarimeter Setup , update for ...
+C
+C Detectors: sets      GSET      - shares the definitions in with the next level file
+C Volumes:             GVOL      - shares the definitions in with the next level file
+C Rotation:           <RMATR20   - shares the definitions in with the next level file
+C Material:            GPARMAT   - shares the definitions in with the next level file
+C Medium:              GPARMED   - shares the definitions in with the next level file
+C 
+C ---   Coordinate system: Beam along Z
+C
+C
+C ---              Define magnet positions... in MRS (Master Reference System)
+C        !!!       If you move the magnet - update the values:
+C                  AREA ...
+C                  MAGNET ...
+C                  magnet volume positions
+C
+C---        Beam
+C
+BEAMOMLIM     0.362  0.36201 momentum limits
+C
+C         
+MAGNET01  10=1.30
+MAGNET02  10=-2.5
+MAGNET03  10=0.72
+MAGNET04  10=0.73
+C
+C --     Collimator
+C
+GPARVOL61  'DSLO' 203  'DCOL'    0.    0.    0.   0  'BOX '  3   1.    2.00    3.0
+C
+C END
+

@@ -1,0 +1,27 @@
+<a name="halo">
+<h3>Beam halo</h3>
+</a>
+A simple model for simulating a beam halo is provided. The halo consist of:
+<ul>
+ <li> a flat distribution in transverse coordinates;
+ <li> a Gaussian distribution.
+</ul>
+The timing of halo particles is simulated uniformly in the time interval defined
+by the command PILEUP.
+<pre>
+HALOPART      5                      halo particle type
+C
+C origine:  X: min   max  Y: min  max  Z:min   max  
+HALOORIGIN    -320. -320.   -200. 200.   -150. 150.   
+C
+HALOFLAT     100.                    particles per sq centimeter
+C     center: flux/cm**2   Ycen  Ysigma  Zcen Zsigma (transv. plane)
+HALOGAUS     2.E4            0.  40.       0.  20.
+C            offset   corr       sigma
+HALOSLOPE      0.       0.       0.002     Y
+               0.       0.       0.002     Z
+C mom:       mean    corY  corY**2   corZ   corZ**2
+HALOPMEAN     250.    0.     0.        0.     0.     momentum
+HALOPSIGM      20.    0.     0.        0.     0.     sigma
+C
+</pre>

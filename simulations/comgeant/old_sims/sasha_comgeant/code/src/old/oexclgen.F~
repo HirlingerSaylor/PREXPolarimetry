@@ -1,0 +1,52 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OEXCLGEN(NTGEN)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *       Exclusive kinematics                                     *
+C     *                                                                *
+C     *    ==>Called by : OMKINE                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER NTGEN
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcunit.inc"
+#include "geant321/gcflag.inc"
+#include "omgeant/omcfla.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+C     ------------------------------------------------------------------
+C
+      NTGEN=0
+C
+      IF(IOMEXKIN.EQ.1) THEN
+         CALL OMOLLER(NTGEN,0)       ! Moller/Bhabha e-e- scattering
+      ELSE IF(IOMEXKIN.EQ.2) THEN
+         CALL OMOTT(NTGEN)           ! Mott   e-p  scattering
+      ELSE IF(IOMEXKIN.EQ.3) THEN
+         CALL OPHOTBRM(NTGEN)        ! Pion... photoproduction from Bremstr.
+      ELSE IF(IOMEXKIN.EQ.4) THEN
+         CALL OPHOTVEC(NTGEN)        ! Vector resonance photoproduction 
+      ELSE IF(IOMEXKIN.EQ.5) THEN
+         CALL OMOTTPB(NTGEN)         ! Mott   e-Lead  scattering (Bob's)
+      ELSE IF(IOMEXKIN.EQ.6) THEN
+         CALL OMOLLER(NTGEN,1)       ! Annihilation to 2 photons
+      ELSE IF(IOMEXKIN.EQ.7) THEN
+         CALL OMKINONE(NTGEN)        ! For tests: one particle in a range of theta, phi and p
+      ELSE
+         WRITE(LOUT,*) ' *** OEXCLGEN error: IOMEXKIN=',IOMEXKIN
+     +                ,' is out of range'
+      ENDIF
+C
+      RETURN
+      END

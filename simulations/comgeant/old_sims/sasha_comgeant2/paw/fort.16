@@ -1,0 +1,247 @@
+C                Special Lam,K0s
+PARTICLS01   41  3  0.4977  0.  0.892E-10 'K0shortdetectible  $'
+PARTICLS02   42  3  1.1156  0.  2.63E-10  'Lam0detectible     $'
+C                Special Sigma- (no decay, no hadron interaction)
+PARTICLS03   43  5  1.1974 -1.  1.479E-10 'Sigma- no dec,hadr $'
+LUNDSTORE    43=3112      LUND link
+LUNDSNAME    43='NEW1'    LUND link
+C                Special protons (no hadron interaction)
+PARTICLS04   44  5  0.9383  1.  1.E22     'Proton no hadr int $'
+LUNDSTORE    44=2212      LUND link
+LUNDSNAME    44='NEW1'    LUND link
+C                Charm
+C                Mesons
+PARTICLS05   35  4  1.8693  1.  1.062E-12 'D+                 $'
+PARTICLS06   36  4  1.8693 -1.  1.062E-12 'D-                 $'
+PARTICLS07   37  3  1.8645  0.  0.428E-12 'D0                 $'
+PARTICLS08   38  3  1.8645  0.  0.428E-12 'Anti D0 (anti-c)   $'
+PARTICLS09   39  4  1.9685  1.  0.467E-12 'Ds+                $'
+PARTICLS10   40  4  1.9685 -1.  0.467E-12 'Ds-                $'
+C
+PARTICLS11   55  4  2.010   1.  1.E-19    'D+*                $'
+PARTICLS12   56  4  2.010  -1.  1.E-19    'D-*                $'
+PARTICLS13   57  3  2.007   0.  1.E-19    'D0*                $'
+PARTICLS14   58  3  2.007   0.  1.E-19    'Anti D0*(anti-c)   $'
+PARTICLS15   59  4  2.110   1.  1.E-19    'Ds+*               $'
+PARTICLS16   60  4  2.110  -1.  1.E-19    'Ds-*               $'
+C
+C                Baryons
+PARTICLS17   71  4  2.285   1.  0.200E-12 'LamC+              $'
+PARTICLS18   72  4  2.465   1.  0.350E-12 'XiC+               $'
+PARTICLS19   73  3  2.470   0.  0.100E-12 'XiC0               $'
+PARTICLS20   74  3  2.705   0.  0.080E-12 'OmC0               $'
+C
+PARTICLS21   75  4  2.453   2.  1.0E-19   'SigC++             $'
+PARTICLS22   76  4  2.454   1.  1.0E-19   'SigC+              $'
+PARTICLS23   77  3  2.452   0.  1.0E-19   'SigC0              $'
+C
+PARTICLS24   81  4  2.285  -1.  0.200E-12 'anti-LamC+         $'
+C
+C                Special hyperons - decays to Spec.Lam ...
+PARTICLS25   51  5  1.32132 -1.  1.639E-10 'Xi- spec dec      $'
+PARTICLS26   52  5  1.67245 -1.  0.822E-10 'Omega- spec dec   $'
+C
+C                SPACAL Hyperons decaying 100% neutral
+PARTICLS27   53  4  1.18937 +1. 7.99e-11  'Sigma+2            $'
+PARTICLS28   54  4  1.19744 -1. 1.48e-10  'Sigma-2            $'
+C
+C
+C---             Special  K0,Lambda decays
+C
+PARDECAS01   41      809 100.
+PARDECAS02   42     1409 100.
+C
+C                Charm decays 
+C                                  ========== 0.8437 totally ==========
+PARDECAS03   35           D_positive
+                    100807   .054150     K_L pi_p pi_z                           
+                    160807   .054150     K_S pi_p pi_z                           
+                    120808   .091000     K_m pi_p pi_p                           
+                    100405   .035000     K_L mu_p nu                             
+                    160405   .035000     K_S mu_p nu                             
+                  10080809   .035000     K_L pi_p pi_p pi_m                      
+                  16080809   .035000     K_S pi_p pi_p pi_m                      
+                  10080707   .034750     K_L pi_p pi_z pi_z                      
+                  16080707   .034750     K_S pi_p pi_z pi_z                      
+                    100402   .033000     K_L pos nu                              
+                    160402   .033000     K_S pos nu                              
+                  12080807   .064000     K_m pi_p pi_p pi_z                      
+                1008080907   .027000     K_L pi_p pi_p pi_m pi_z                 
+                1608080907   .027000     K_S pi_p pi_p pi_m pi_z                 
+                  12080402   .042000     K_m pi_p pos nu                         
+                  12080405   .032000     K_m pi_p mu_p nu                        
+                    101011   .007750     K_L K_L K_p                             
+                    101611   .007750     K_L K_S K_p                             
+                    161011   .007750     K_S K_L K_p                             
+                    161611   .007750     K_S K_S K_p                             
+                      1008   .013700     K_L pi_p                                
+                      1608   .013700     K_S pi_p                                
+                1208080809   .008200     K_m pi_p pi_p pi_p pi_m                      
+                1208080707   .022000     K_m pi_p pi_p pi_z pi_z                 
+                   8080907   .019000     pi_p pi_p pi_m pi_z                     
+                  10070402   .008000     K_L pi_z pos nu                         
+                  16070402   .008000     K_S pi_z pos nu                         
+                  10070405   .007500     K_L pi_z mu_p nu                        
+                  16070405   .007500     K_S pi_z mu_p nu                        
+                    111208   .011300     K_p K_m pi_p
+                  11120807   .027000     K_p K_m pi_p pi_z
+C
+PARDECAS04   36           D_negative
+                    100907   .054150     K_L pi_m pi_z                           
+                    160907   .054150     K_S pi_m pi_z                           
+                    110909   .091000     K_p pi_m pi_m                           
+                    100406   .035000     K_L mu_m nu                             
+                    160406   .035000     K_S mu_m nu                             
+                  10090908   .035000     K_L pi_m pi_m pi_p                      
+                  16090908   .035000     K_S pi_m pi_m pi_p                      
+                  10090707   .034750     K_L pi_m pi_z pi_z                      
+                  16090707   .034750     K_S pi_m pi_z pi_z                      
+                    100403   .033000     K_L elec  nu                            
+                    160403   .033000     K_S elec nu                             
+                  11090907   .064000     K_p pi_m pi_m pi_z                      
+                1009090807   .027000     K_L pi_m pi_m pi_p pi_z                 
+                1609090807   .027000     K_S pi_m pi_m pi_p pi_z                 
+                  11090403   .042000     K_p pi_m elec nu                        
+                  11090406   .032000     K_p pi_m mu_m nu                        
+                    101012   .007750     K_L K_L K_m                             
+                    101612   .007750     K_L K_S K_m                             
+                    161012   .007750     K_S K_L K_m                             
+                    161612   .007750     K_S K_S K_m                             
+                      1009   .013700     K_L pi_m                                
+                      1609   .013700     K_S pi_m                                
+                1109090908   .008200     K_p pi_m pi_m pi_m pi_p                      
+                1109090707   .022000     K_p pi_m pi_m pi_z pi_z                 
+                   9090807   .019000     pi_m pi_m pi_p pi_z                     
+                  10070403   .008000     K_L pi_z elec nu                        
+                  16070403   .008000     K_S pi_z elec nu                        
+                  10070406   .007500     K_L pi_m nu                             
+                  16070406   .007500     K_S pi_z mu_m nu                        
+                    111209   .011300     K_p K_m pi_m
+                  11120907   .027000     K_p K_m pi_m pi_z
+C
+C                                  ==========  totally 0.9104 ==========
+PARDECAS05   37           D_zero
+                  12080707   .150000     K_m pi_p pi_z pi_z                      
+                    120807   .138000     K_m pi_p pi_z                           
+                1008090707   .053000     K_L pi_p pi_m pi_z pi_z                 
+                1608090707   .053000     K_S pi_p pi_m pi_z pi_z                 
+                  10080907   .049000     K_L pi_p pi_m pi_z                      
+                  16080907   .049000     K_S pi_p pi_m pi_z                      
+                  12080809   .081000     K_m pi_p pi_p pi_m                      
+                    100809   .026500     K_L pi_p pi_m                           
+                    160809   .026500     K_S pi_p pi_m                           
+                1208080907   .043000     K_m pi_p pi_p pi_m pi_z                 
+                      1208   .040100     K_m pi_p                                
+                    120402   .038000     K_m pos nu                              
+                    120405   .032000     K_m mu_p nu                             
+                  10090402   .014000     K_L pi_m pos nu                         
+                  16090402   .014000     K_S pi_m pos nu                         
+                  10090405   .014000     K_L pi_m mu_p nu                        
+                  16090405   .014000     K_S pi_m mu_p nu                        
+                  12070402   .016000     K_m pi_z pos nu                         
+                  12070405   .016000     K_m pi_z mu_p nu                        
+                    080907   .016000     pi_p pi_m pi_z
+                  08080909   .008300     pi_p pi_p pi_m pi_m
+                0808090907   .019000     pi_p pi_p pi_m pi_m pi_z
+C
+PARDECAS06   38           anti_D_zer
+                  11090707   .150000     K_p pi_m pi_z pi_z                      
+                    110907   .138000     K_p pi_m pi_z                           
+                1009080707   .053000     K_L pi_m pi_p pi_z pi_z                 
+                1609080707   .053000     K_S pi_m pi_p pi_z pi_z                 
+                  10090807   .049000     K_L pi_m pi_p pi_z                      
+                  16090807   .049000     K_S pi_m pi_p pi_z                      
+                  11090908   .081000     K_p pi_m pi_m pi_p                      
+                    100908   .026500     K_L pi_m pi_p                           
+                    160908   .026500     K_S pi_m pi_p                           
+                1109090807   .043000     K_p pi_m pi_m pi_p pi_z                 
+                      1109   .040100     K_p pi_m                                
+                    110403   .038000     K_p elec nu                             
+                    110604   .032000     K_p mu_m nu                             
+                  10080403   .014000     K_L pi_p elec nu                        
+                  16080403   .014000     K_S pi_p elec nu                        
+                  10080406   .014000     K_L pi_p mu_m nu                        
+                  16080406   .014000     K_S pi_p mu_m nu                        
+                  11070403   .016000     K_p pi_z elec nu                        
+                  11070406   .016000     K_p pi_z mu_m nu                        
+                    080907   .016000     pi_p pi_m pi_z
+                  08080909   .008300     pi_p pi_p pi_m pi_m
+                0808090907   .019000     pi_p pi_p pi_m pi_m pi_z
+C
+PARDECAS07   55           D_pos_star
+                  3507      0.31         D_p pi_z
+                  3708      0.68         D_z pi_p
+                  3501      0.01         D_p gamma
+C
+PARDECAS08   56           D_neg_star
+                  3607      0.31         D_n pi_z
+                  3809      0.68         D_z pi_n
+                  3601      0.01         D_n gamma
+C
+PARDECAS09   57           D_zer_star
+                  3707      0.64         D_z pi_z
+                  3701      0.36         D_z gamma
+C
+PARDECAS10   58           anti_D_zer_star
+                  3807      0.64         D_z pi_z
+                  3801      0.36         D_z gamma
+C
+PARDECAS11   71           Lambda_c
+                      1614   .0105      prot K_S
+                      1014   .0105      prot K_L
+                     81214   .044       prot K_m pi_p
+                   8091614   .012       prot K_S pi_m pi_p
+                   8091014   .012       prot K_L pi_m pi_p
+                   7081214   .040       prot K_m pi_p pi_z
+                 707081214   .010       prot K_m pi_p pi_z
+                       818   .008       Lambda pi_p
+                     70818   .032       Lambda pi_p pi_z
+                   8090818   .027       Lambda pi_p pi_m pi_p
+                       820   .0087      Sigma_z pi_p
+                     70820   .016       Sigma_z pi_p pi_z
+                   8090820   .0092      Sigma_z pi_p pi_m pi_p
+                       719   .0087      Sigma_p pi_z
+                     90819   .030       Sigma_p pi_p pi_m
+                   7090819   .030       Sigma_p pi_p pi_m pi_z
+                     80821   .016       Sigma_m pi_p pi_p
+                     40218   .045       Lambda pos neutr
+                     40518   .045       Lambda mu  neutr
+                     81613   .030       neutron K_S pi_p
+                     81013   .030       neutron K_L pi_p
+                   7081613   .030       neutron K_S pi_p pi_z
+                   7081013   .030       neutron K_L pi_p pi_z
+                   8081213   .030       neutron K_m pi_p pi_p
+C
+PARDECAS12   81           aLambda_c
+                      1615   .0105      aprot K_S
+                      1015   .0105      aprot K_L
+                     91115   .044       aprot K_p pi_m
+                   8091615   .012       aprot K_S pi_m pi_p
+                   8091015   .012       aprot K_L pi_m pi_p
+                   7091115   .040       aprot K_p pi_m pi_z
+                 707091115   .010       aprot K_p pi_m pi_z
+                       826   .008       aLambda pi_m
+                     70926   .032       aLambda pi_m pi_z
+                   9080926   .027       aLambda pi_m pi_p pi_m
+                       928   .0087      aSigma_z pi_m
+                     70928   .016       aSigma_z pi_m pi_z
+                   9080928   .0092      aSigma_z pi_m pi_p pi_m
+                       727   .0087      aSigma_m pi_z
+                     90827   .030       aSigma_m pi_p pi_m
+                   7090827   .030       aSigma_m pi_p pi_m pi_z
+                     90929   .016       aSigma_p pi_m pi_m
+                     40326   .045       aLambda ele neutr
+                     40626   .045       aLambda mu  neutr
+                     81625   .030       aneutron K_S pi_m
+                     91025   .030       aneutron K_L pi_m
+                   7091625   .030       aneutron K_S pi_m pi_z
+                   7091025   .030       aneutron K_L pi_m pi_z
+                   9091125   .030       aneutron K_p pi_m pi_m
+C
+C
+C---             Special  Xi, Sigma ....
+C
+PARDECAS13   51      942 100.
+PARDECAS14   52     1242 100.
+PARDECAS15   53     1308 100.
+PARDECAS16   54     1309 100.

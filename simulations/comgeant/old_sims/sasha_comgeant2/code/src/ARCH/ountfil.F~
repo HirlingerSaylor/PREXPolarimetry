@@ -1,0 +1,62 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OUNTFIL(NTFLA)
+C
+C     ******************************************************************
+C     *   Used for e- scattering NTUPLE:                               *
+C     *                                                                *
+C     *   Users routine                                                *
+C     *   Fill the user's part of the NTUPLE                           *
+C     *                                                                *
+C     *   INPUT :  NTFLA - flag (optional)                             *
+C     *                                                                *
+C     *   Usage:                                                       *
+C     *   1) fill the appropriate COMMON (see ountbini.F)              *
+C     *                                                                *
+C     *    ==>Called by : OMNTUPEV                                     *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER  NTFLA
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+#include "omgeant/omcdpar.inc"
+#include "omgeant/omcnthit.inc"
+#include "omgeant/omcunit.inc"
+#include "moller/cntescat.inc"
+#include "omgeant/ranma2.inc"
+#include "moller/csnaprnd.inc"
+#include "moller/comnfla.inc"
+C
+      COMMON/CUOMNTH/ ZHIT(MXHITNT)
+      REAL            ZHIT
+C
+      INTEGER i,irec,j
+      SAVE irec
+      DATA irec/0/
+C
+C     ------------------------------------------------------------------
+C
+C--- All data should be filled in the kinematics routines
+C
+      NEWOR=7
+C
+      DO i=1,NHIT
+         ZHIT(i)=XHIT(3,i)
+      ENDDO
+C
+C---   Write a record in a direct access file 
+C
+      IF(ISAVRND.NE.0) THEN
+         irec=irec+1
+         write(6,*) ' try to write record ',irec
+         WRITE(LUNOMG(5),REC=irec) IEVSEED,ISEEDEV
+      ENDIF
+C
+ 999  RETURN
+      END

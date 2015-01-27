@@ -1,0 +1,121 @@
+<a name="Output">
+<h2>Data output</h2>
+</a>
+There are three ways to write out the simulated data:
+<ol>
+ <li> <a name="#trident output"><b>ZBOOK output for TRIDENT</b></a> can be read by
+   <a href="http://vsnhd1.cern.ch/offline/trident/">TRIDENT</a> (the
+   reconstruction program of WA89). A special
+   ZBOOK bank is filled and written out. The contents of KINE and VERT banks
+   are stored and also the hit information including the hit coordinates and
+   the results of digitisation. The structure of the bank is documented in the code.
+   This ZBOOK bank has 2 links. A bank at the
+   first link may contain the 'LG' information (see <a href="#Hits">Hits</a>),
+   a bank at the second link may contain the trigger information.
+ <li> <a name="#zebra output"><b>ZEBRA output</b></a>. One may write down any
+   set of GEANT banks using the SAVE command from GEANT, in the ZEBRA FZ
+   format:<br>
+   <pre>
+   SAVE  'bnk1' 'bnk2' ....
+   </pre>
+   where bnk1 .. are the names of the banks.<p>
+   <h3> General output for hits </h3>
+   One may add
+   a special hit bank to the GEANT output using the command:
+   <pre>
+   SAVE 'KINE' 'VERT' 'OHIT'
+   </pre>
+   If this command is set then a new ZEBRA bank JOHIT is filled. Additionally
+   to the hits in detectors hits in all sensitive media are stored. The  
+   conditions for storing the hits in detectors are the same as for
+   the regular GEANT hit banks - the timing is checked.
+   The
+   format of this bank look as follows:
+   <pre>
+                             OHIT format
+
+
+C---      JOHITS    - a hit bank (special format - INTEGER/REAL values)
+C                     booked only if NSAVE>0
+C                IQ(JOHITS+1) =ntrj number of trajectories (itrj=1,ntrj)
+C                johtj=LQ(JOHITS-itrj)
+C                    IQ(johtj+1) = itra (see JKINE)
+C                    IQ(johtj+2) = nhits - number of stored hits (ihit=1,nhits)
+C                        johth=LQ(johtj-ihit)
+C                          
+C           Q(johth+1:3) - X,Y,Z of the center of the trajectory in the
+C                                   sens. volume. in MRS (main ref. system)
+C                             For detectors:
+C                   4:6  - X,Y,Z of the enterance point (DRS)
+C                   7:9  -       of the exit point
+C                            For media
+C                   4:6  - X,Y,Z of the enterance point (MRS)
+C                   7:9  - 0
+C                 10:11  - energy depositions
+C                    12  - momentum
+C                    13  - =0 if this hit is caused by the "original"
+                              track
+                           =IPART if the hit is caused by some products
+                                  of the original track
+                     14  - delay time from the "time zero" point,
+                           the minimum flight time to this detector
+                           is subtracted
+                     15  - icode
+                           a) detector:      icode=IDTYEP*1000
+                                   types: 1  -  MWPC
+                                         11  -  DC
+                                         21  - m-strips
+                                         26  - MSGC
+                           b) sens. medium:       =NUMED
+                     16  - a) detector:   IDTRID identifier
+                           b) sens. med:  0
+                   17:19 - COS X,Y,Z of the track at the enterance point (MRS)<p>
+   </pre>
+ <li> <a name="#ntuple output"><b>NTUPLE output</b></a>.
+   One may write down to a disk a column-wise ntuple (CWN)
+   (see <a href="http://consult.cern.ch/writeups/hbook">HBOOK</a>) 
+   which may contain several ID:
+   <ul>
+    <li> ID=1 - written once per job;
+    <li> ID=1 - written once per event;
+    <li> ID=3 - written once per event (not filled at the moment, but reserved);
+   </ul>
+   <p>
+   These "ID"s contain information as follows:
+   <ul>
+    <li> ID=1 - information on detectors;
+    <li> ID=2 - information on the beam;
+    <li> ID=2 - LUND event;
+    <li> ID=2 - information on geant tracks;
+    <li> ID=2 - information on hits;
+    <li> ID=2 - information on digitisations;
+   </ul>
+   <p>
+   <b>Note 1</b>
+   since there is a limit in hbook of 50k columns per ID, and because of
+   a high multiplicity generated in compass hadron
+   simulation with pileup, a few per cent of events may go beyond the limit
+   and be truncated. In order to avoid such a case
+   in future the hits may be optionally put to a different ID (=3). It will have 
+   a drawback, namely it will be more difficult to analyse the ntuple with
+   PAW, if one has to get access to different IDs at once.
+   Still it will be easy to read and analyse the ntuple from a fortran
+   program.
+   <p>
+   <b>Note 2</b>
+   it is forseen that some of the ntuple information (say the LUND record)
+   can be read in by GEANT
+   and used for simulation. 
+   However this feature has not been yet implemented. 
+   <p>
+   there are several ways to use the ntuple:
+   <ul>
+    <li> <b>with PAW</b>-type program, or interactive GEANT. In this case one can
+      make distributions of different variables using a comis routine (see an
+      example in data/examples/cntpr.f)
+    <li> <b>from FORTRAN(or C)</b>. One may/should use a set of routines from
+          COMGEANT in order to define the variables: omnt?ini.F and the
+      appropriate COMMON blocks.\
+      To be continued ...
+   </ul>
+</ol>

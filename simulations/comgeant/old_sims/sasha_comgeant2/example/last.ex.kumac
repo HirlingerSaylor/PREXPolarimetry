@@ -1,0 +1,11 @@
+*** Begin of history file: Tue Nov 27 14:51:12 2007
+exec run_ener e=0.85 nev=2000 suf=0 sim=0 nq=0 dq=0.001
+h/fil 2 /scratch/glamazdi/ntup-his/run_enerh_0.85_0_1000.nt
+hi/li
+ldir
+nt/pl //lun2/2.hitraxy.f(2,3,0,2)%hitraxy.f(1,3,0,2) nhit>0.and.hitraxy.f(-8,3,0,2)>0
+null -10 10 -20 20
+nt/pl //lun2/2.hitraxy.f(2,3,0,2)%hitraxy.f(1,3,0,2) nhit>0 ! ! ! s
+nt/pl //lun2/2.hitraxy.f(2,3,0,3)%hitraxy.f(1,3,0,3) nhit>0 ! ! ! s
+exit
+*** End   of history file: Wed Nov 28 10:20:27 2007

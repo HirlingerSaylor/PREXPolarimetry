@@ -1,0 +1,42 @@
+MACRO m_opt_ini
+
+* == Initialize the Moller magnet calculation
+
+*  if $VDIM(par_mag,1)=0 then
+     ve/cr par_mag(8,4) r
+*    --- these field are for 3.4GeV                   
+     ve/in par_mag(1:5,1) 100.  10.16  45.05 0. 1.020   
+     ve/in par_mag(1:5,2) 208.5 10.16  36.22 0. 1.762
+     ve/in par_mag(1:5,3) 274.2 10.16  36.22 0. 0.907
+     ve/in par_mag(1:5,4) 422.8 11.0  164.5  0. 6.024
+
+     do i=1,4
+       a2=par_mag(2,[i])/2.
+       if [i]=4 then
+         a2=1.
+       endif
+       a3=par_mag(3,[i])
+       a=$SIGMA([a3]/[a2]*3.E-4)
+       ve/in par_mag(4,[i]) [a]
+     enddo
+
+     ve/cr par_col(5,7) r
+     ve/in par_col(1:5,1) 100.  0. 5.1   0.    5.1
+     ve/in par_col(1:5,2) 208.5 0. 5.1   0.    5.1
+     ve/in par_col(1:5,3) 274.2 0. 5.1   0.    5.1
+     ve/in par_col(1:5,4) 324.  3. 5.3  -1.    1.
+     ve/in par_col(1:5,5) 520.  3. 5.3  -24.   2.
+     ve/in par_col(1:5,6) 696.2 2. 6.0  -62.5  0. 
+     ve/in par_col(1:5,7) 700.9 2. 6.0  -99.  -39.0
+*  endif
+
+  ve/cr nfl(10) i 3
+  ve/cr par_p(5) r
+*               
+  ve/in par_p 3.4 0. 0. 0. 0. 
+
+RETURN
+
+     
+
+

@@ -1,0 +1,20 @@
+MACRO mag_set11 e0=11.0 
+* Moller polarimeter magnets setting for 11GeV 
+* Dipole bending angle=7.3deg
+* Three Quads setting
+ve/cr mag(4) r
+sigma q1=-1.3867+2.8815*[e0]-0.67411*[e0]**2+0.034499*[e0]**3
+ve/in mag(1) q1
+m1=q1
+sigma q2=0.10702-0.30604*[e0]+0.16891*[e0]**2-0.013407*[e0]**3 
+ve/in mag(2) q2
+m2=q2
+sigma q3=1.0193-0.38508*[e0]+0.15503*[e0]**2-0.0074826*[e0]**3 
+ve/in mag(3) q3
+m3=q3
+sigma dp=0.42346E-03+1.2701*[e0]
+ve/in mag(4) dp
+m4=dp
+mess Q1=[m1]  Q2=[m2]  Q3=[m3]  DP=[m4] kG 
+*ve/pr mag
+RETURN

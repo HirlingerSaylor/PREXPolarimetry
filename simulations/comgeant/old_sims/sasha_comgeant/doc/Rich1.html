@@ -1,0 +1,172 @@
+
+<A name="rch1det"> <B>RICH1</B> </A>
+<!-- Changed by: Massimo Lamanna,  8-Apr-1998 -->
+
+
+<p align=left> RICH1 - geometry and simulation description <br>
+Last update 24.11.97
+</p>
+
+<br><hr>
+
+
+<UL> 
+<LI> <A HREF="#geom"> RICH1 geometry description </A>
+<LI> <A HREF="#oper"> Simulation of the RICH1 operation  </A>
+<LI> <A HREF="#ntu"> RICH1 ntuple </A>
+</UL>
+
+<br><hr>
+
+
+
+
+<H1><A NAME="geom">  RICH1 geometry description </A></H1>
+<P>
+
+Special routine cgeplug2.F which describes RICH1 geometry and material properties is called when volume RCH1 has no daughters (see fort.21 geometry file).
+<p>
+ Primitive description of RICH1 components (gas radiator volume, mirrors and 
+photon detectors planes) is given by following FFREAD cards:
+<pre>
+C
+C --- RICH-1 parameters (for explanation see src/include/omgeant/richntu.inc)
+C
+C            CH1POS(3)       GAS(3)        GAP1      WIN1(3)          WIN2(3)
+C                                                           
+RCH1MAIN   175. 335. 290. 145.5 310. 270.   56.   2.  160. 120.    2.5 335. 255.
+C           MIRFLAG             ALMR(6)                 GAP2
+RICH1MIR       0      660. 661. 75.97 97.     60. 120.   22.
+C         PHDFLAG  PHOTDET(3)  APHOT     PHDTP(3)      YANGLE  ZANGLE  GAS1L
+RCH1PHOT     0    0.  0.  0.   8.594  354.92 0. 200.18    0.    0.     0.
+C         HOLFLAG     BHOLE(5) (BHOLE(1)=GAS(1) if HOLFLAG=1)
+RCH1HOLE    0       143.  0.  4.  0.  5.
+C RCH1HOLE    2        25.  0.  5.  0.  5.
+C
+</pre>
+where
+<pre>
+C      MRS - COMGEANT reference system,
+C      MIRS - "mirror" reference system, with origin at (X,0,0) in MRS, where X
+C      is x coordinate of mirror centre of curvature in MRS.
+C
+c CH1POS(3) -  RCH1 dimensions (BOX shape, cgeomplug2 is called if
+c RCH1 has no daughter)
+c GAS(3) - main gas volume dimensions (X, Y, Z)
+c GAP1 -  Gap between upstream sides of GASM and CHR1
+c WIN1(3) - entrance window dimensions (BOX)
+c WIN2(3) - exit window dimension (BOX)
+c MIRFLAG - mirror wall optional flag (not used at the moment)
+c ALMR(6) - mirror wall dimensions (SPHE shape, single big mirror at the moment)
+c GAP2 - min distance between face of the mirror and downstr. GASM
+c PHDETFLG - photon detector optional flag (not used at the moment)
+c PHOTDET(3) - photon detector additional parameters
+c APHOT -  photon detector inclination angle 
+c PHDTP - photon detector position in MIRS
+c YANGLE - not used 
+c ZANGLE - not used
+c GAS1L - not used
+c HOLFLAG = 0 - no hole around beam axis
+c         = 1 - hole (radiator gas without Cherenkov properties) 
+c               in radiator gas and in mirror wall
+c         = 2 - hole only in mirror wall (gas with Cherenkov props)  
+c BHOLE(5) - hole (CONE shape) parameters
+</pre>
+
+RICH1 gas radiator (C<sub>4</sub>F<sub>10</sub>) has medium number 471 (sensitive), mirror (Borosilicate glass) has medium number 79, RICH1 gas without Cherenkov properties (no light production and transportation) has medium number 75, entrance and exit windows (carbon at the moment) have medium number 78.
+This can be changed by changing FFREAD cards (fort.21) <pre>GPARMED64-67</pre>
+<p>
+At the moment there is no detailed description of the mirror wall - just two 
+big solid mirrors.
+
+Some geometry parameters (positions of RICH elements in MRS) can be
+printed during initialization via setting ISWIT(6) to 1.
+          
+<br><hr>
+
+<H1><A NAME="oper"> Simulation of the RICH1 operation </A></H1>
+<P>
+
+At the moment we have only rough description of Cherenkov photons generation, tracking, reflection and detection (these processes are activated by setting <pre>CKOV  1</pre>flag (fort.15) to 1). Furthermore, we will have Cherenkov photons taken into account (stored for tracking and so on) only if NTUFLG flag is set to 1 or 2 (<pre>RICH1NTU  1(2)</pre> FFREAD command in fort.15).
+<p>
+For each track we store (see src/include/omgeant/richntu.inc file for details) entrance ( upstream side of WIN1) and exit ( downstream side of WIN2) points , momentum components, full momentum, total energy and particle type IPART in temporary buffer.
+<p>
+For each detected Cherenkov photon we store (see richntu.inc and cherphot.F routine)  reflection and detecton points, detection point in photon detector reference system, number of photon detector and photon energy in temporary buffer.
+
+<br><hr>
+
+
+
+
+<H1><A NAME="ntu"> RICH1 ntuple </A></H1>
+<P>
+After all photons produced by certain track have been tracked we can fill ntuple (unit 29, name rich1.ntp, LREC=1024) if NTUFLG is set to 2 by <pre> RICH1NTU  2
+</pre> FFREAD card (see rich1ntu.F). 
+<p> 
+For each detected photon we store 25 variables (real):
+<pre>
+1 ('ev') - event number
+2 ('tr') - track number of mother particle
+3 ('pt') - IPART of mother particle, or 200+IPART if mother particle
+  is a product of interaction. (see COMGEANT User's Guide ONEWKINE flag) 
+4-6 ('x1'-'z1')   - X, Y, Z OF MOTHER PARTICLE WHEN IT ENTERS RICH1(WIN1)
+7-9 ('px'-'pz')   - Px, Py, Pz          - // -
+10 ('pp')         - P                   - // -
+11 ('ep')         - E                   - // -
+12-14 ('x2'-'z2') - X, Y, Z OF MOTHER PATICLE WHEN IT LEAVES RICH1(WIN2)
+15 ('io') - flag for mother paricle: 0. - don't know IN and OUT parameters,
+   1. - know IN parameters, 2 - know IN and OUT parameters. This flag can be 
+   equal to zero if mother particle didn't pass entrance window or 
+    mother particle is a product of secondary interaction. 
+16-18 ('xm'-'zm') - POINT OF DETECTION IN MRS 
+19,20 ('xd',yd') - X (Y in MRS), Y (Z in MRS) coordinates of the 
+      detection point in DRS of photon detector
+21 ('dn') - number of photon detector(cathode) 1-16
+
+         ___________________________________
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  1 |  | 3  |  | 5  |  | 7  |  |
+         |  |____|  |____|  |____|  |____|  |
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  2 |  | 4  |  | 6  |  | 8  |  |
+         |  |____|  |____|  |____|  |____|  |
+         |__________________________________| 
+
+                           Z
+                                ^ X (beam)                          
+                           ^   /
+                           |  /                        
+                           | /
+            Y <------------|/               
+
+
+         ___________________________________
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  9 |  | 11 |  | 13 |  | 15 |  |
+         |  |____|  |____|  |____|  |____|  |
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  | 10 |  | 12 |  | 14 |  | 16 |  |
+         |  |____|  |____|  |____|  |____|  |
+         |__________________________________| 
+
+
+
+22 ('et') - photon energy (GeV)
+23-25 ('xr'-'xr') - point of reflection in MRS
+</pre>
+
+This code intended mainly for RICH1 optimization purposes, so it's recommended 
+to switch off mechanisms which produces secondaries (delta-rays, ...). The problems raise because 
+we want to store mother particle characteristics (already "reconstructed")
+ and photon characteristics in one ntuple. This will be changed for general simulation code.  
+
+<p>
+
+To be continued...
+
+<p align=right> Vadim Alexakhin (alex@nu.jinr.ru)</p>
+omp

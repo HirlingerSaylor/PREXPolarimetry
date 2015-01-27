@@ -1,0 +1,115 @@
+<a name="Debugging">
+<h2>Debugging tools (printout dumps)</h2>
+</a>
+
+<P>Geant foresees a mechanism to enable/disable the print-out of information
+(on standard output) at the execution time mostly for debugging purposes.
+Here there is a description of the mechanism and its implementation. All
+these dumps are controlled by the integer IDEBUG&nbsp;variable sitting
+in the GCFLAG&nbsp;common block (file include/geant321/gcflag.inc): if
+this variable is set to 0 it means no output, 1 means output enabled. The
+variable can be set via FFREAD&nbsp;cards or (in the interactive version)
+with the command DEBUG&nbsp;ON. To allow different types of dumps, a mask
+is provided (the integer vector ISWIT&nbsp;of lenght 10 sitting in the
+same common). ISWIT(K)=0 means again no output, whilst higher values of
+ISWIT (1,2,3...) stands for more complex/long outputs. The value of K&nbsp;controls
+the set of routines interested by the dump. ISWIT&nbsp;can be either preset
+via FFREAD&nbsp;cards or by the command ISWIT&nbsp;in the interactive version.</P>
+
+<P>This is the (provisional) list of used ISWIT&nbsp;positions with their
+meaning:</P>
+
+<UL>
+<LI>Initialization:&nbsp;ISWIT(1)</LI>
+
+<UL>
+<LI>omgbatch/ompro/oginit.F</LI>
+
+<LI>omgbatch/ompro/omgpart.F</LI>
+
+<LI>omgbatch/ompro/omdetwri.F</LI>
+
+<LI>omgbatch/ompro/omstarg.F</LI>
+
+<LI>omgbatch/ompro/omstrig.F</LI>
+</UL>
+
+<LI>Kinematics:&nbsp;ISWIT(2)</LI>
+
+<UL>
+<LI>generators/fritiof/fritgen.F</LI>
+</UL>
+
+<UL>
+<LI>omgbatch/ompro/gukine.F</LI>
+<LI>omgbatch/ompro/omkine.F</LI>
+<LI>omgbatch/geacor/gdecay.F</LI>
+<LI>omgbatch/ompro/mu1.F</LI>
+</UL>
+
+<LI>Tracking:&nbsp;ISWIT(3)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gustep.F</LI>
+
+<LI>omgbatch/ompro/gutrack.F</LI>
+
+<LI>omgbatch/ompro/gufld.F</LI>
+
+<LI>omgbatch/ompro/guswim.F</LI>
+</UL>
+
+<LI>Hits:&nbsp;ISWIT(4)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gutrev.F</LI>
+
+<LI>omgbatch/ompro/omsensv.F</LI>
+</UL>
+
+<LI>Digitization:&nbsp;ISWIT(5)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gudici.F</LI>
+</UL>
+
+<UL>
+<LI>omgbatch/ompro/omdwire.F</LI>
+
+<LI>omgbatch/ompro/omtrig.F</LI>
+</UL>
+
+<LI>Obsolete WA89:&nbsp;ISWIT(6)</LI>
+
+<LI>Hodoscopes?:&nbsp;ISWIT(7)</LI>
+
+<UL>
+<LI>omgbatch/ompro/guout.F</LI>
+
+<LI>omgbatch/ompro/gutrev.F</LI>
+
+<LI>omgbatch/ompro/omhodo.F</LI>
+</UL>
+
+<LI>Obsolete WA89:&nbsp;ISWIT(8)</LI>
+
+<LI>Magnetic Fields:&nbsp;ISWIT(9)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gufld.F</LI>
+
+<LI>fields/magnets/omagfld*.F (here ISWIT(9)=K for <A HREF="#magnets">magnet
+K</A> only)</LI>
+
+<LI>fields/magnets/omagini*.F</LI>
+</UL>
+
+<LI>Decays (should be moved to Kinematics #2?):&nbsp;ISWIT(10)</LI>
+
+<UL>
+<LI>omgbatch/geacor/gdecay.F</LI>
+
+<LI>omgbatch/ompro/omdec2s.F</LI>
+</UL>
+</UL>
+

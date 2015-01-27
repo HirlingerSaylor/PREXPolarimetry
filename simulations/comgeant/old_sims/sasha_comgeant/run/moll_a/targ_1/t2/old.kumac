@@ -1,0 +1,43 @@
+*** Begin of history file: Tue Jan 30 14:04:13 2007
+molla 90 90 0 0
+beammom 11.0 11.001 0.
+magf 4 14.1
+magf 1 -5.6
+magf 3  4.5
+exec plot_setup proj=1
+exec eve 10
+exec plot_setup proj=2
+exec eve 10
+magf 3  5.0
+exec eve 10
+exec plot_setup proj=1
+exec eve 10
+exec plot_setup proj=2
+exec eve 10
+magf 3  6.0
+exec eve 10
+exec eve 10
+magf 2 -1.0
+magf 3  5.8
+exec plot_setup proj=2
+exec eve 10
+magf 2 -3.0
+exec eve 10
+exec plot_setup proj=2
+help
+exec eve 10
+shell
+magf 3  6.0
+exec plot_setup proj=2
+exec eve 100
+exec plot_setup proj=1
+exec eve 100
+beammom 10.8 10.801 0.
+exec plot_setup proj=1
+exec eve 100
+exec plot_setup proj=2
+exec eve 100
+beammom 2.4 2.401 0.
+shell
+exit
+*** End   of history file: Tue Jan 30 15:21:43 2007

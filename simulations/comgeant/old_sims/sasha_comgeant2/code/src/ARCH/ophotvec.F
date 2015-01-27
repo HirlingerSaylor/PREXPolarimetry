@@ -1,0 +1,221 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OPHOTVEC(NTGEN)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *      Photoproduction of a vector resonance                     *
+C     *                                                                *
+C     *    ==>Called by : OEXCLGEN                                     *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER NTGEN
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "omgeant/omcbeam.inc"
+#include "omgeant/omceven.inc"
+#include "omgeant/omcgen.inc"
+#include "omgeant/cescatt.inc"
+#include "moller/cntescat.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+      REAL     RNDM
+      EXTERNAL RNDM
+C
+      INTEGER   nbuf,itrtbm,itrttg,itrtvm
+     +         ,it,nt
+     +         ,i,j,iptypp(2)
+     +         ,ntry,itry
+      REAL      plab0(4,2)           ! initial, LAB frame
+     +         ,plab(4,2)            ! final  , LAB     
+     +         ,pcm0(4,2)            ! initial, CM     
+     +         ,pcm0r(4,2)           ! initial, CM, rotated that beam is along Z
+     +         ,pcmr(4,2)            ! final  , CM, rotated that beam is along Z
+     +         ,pcm(4,2)             ! final  , CM     
+     +         ,bet(4)               ! LAB ==> CM 
+     +         ,rot(3,3)             ! rotation CM_beam_along_Z ==> CM
+     +         ,pcmt0,pcmt           ! full momenta in CM for the initial and final states
+     +         ,tt,tt0               ! tt - t-variable
+     +         ,tlim(2)              ! kinematical limits on t-variable
+     +         ,ct,st,phi,pp,elab
+     +         ,abeam,chbeam,tlbeam
+     +         ,atarg,chtarg,tltarg
+     +         ,avm,chvm,tlvm
+     +         ,ab2,at2,av2,ecm
+     +         ,ubuf(10)
+      CHARACTER nambeam*20,namtarg*20,namvm*20
+C
+      REAL rmetric(4)
+      SAVE rmetric
+      DATA rmetric/-1.,-1.,-1.,1./
+C
+C     ------------------------------------------------------------------
+C
+      NTGEN=0
+C
+C
+      ITYPRS=ITYPREST
+C
+C---     Types of particles for beam and target
+C
+      CALL GFPART(IBEAMPAR,nambeam,itrtbm,abeam,chbeam,tlbeam,ubuf,nbuf)
+      IF(itrtbm.EQ.0) THEN
+         WRITE(LOUT,1000) IEVENT,'beam ',IBEAMPAR
+         IEOTRI=1
+         GO TO 999
+      ENDIF
+C
+      CALL GFPART(IPHOTVMT,namtarg,itrttg,atarg,chtarg,tltarg,ubuf,nbuf)
+      IF(itrttg.EQ.0) THEN
+         WRITE(LOUT,1000) IEVENT,'target',IPHOTVMT
+         IEOTRI=1
+         GO TO 999
+      ENDIF
+C
+      CALL GFPART(IPHOTVMP,namvm,itrtvm,avm,chvm,tlvm,ubuf,nbuf)
+      IF(itrtvm.EQ.0) THEN
+         WRITE(LOUT,1000) IEVENT,'vmeson',IPHOTVMP
+         IEOTRI=1
+         GO TO 999
+      ENDIF
+C
+      iptypp(1)=IPHOTVMP
+      iptypp(2)=IPHOTVMT
+      ab2=abeam**2
+      at2=atarg**2
+      av2=avm**2
+C
+      DO i=1,3
+        plab0(i,1)=PBEAM(i)
+        plab0(i,2)=0.
+      ENDDO
+      plab0(4,1)=SQRT(ab2+PBEAM(1)**2+PBEAM(2)**2+PBEAM(3)**2)
+      plab0(4,2)=atarg
+C
+C---     Fermi motion (quasielastic scattering): change the reference frame that
+C        the target proton is at rest 
+C
+      IF(ABS(atarg-0.938).LT.0.5.AND.AMATTAR.GT.1.5.AND.
+     +   FERMIMOM.GT.0.00001) THEN
+C
+C---          Generate the target momentum
+C---          Assumed Fermi distribution: dn/(dpx dpy dpz) = const(p), or dn/dp = p**2*const 
+C
+         CALL OMFERMI(atarg,FERMIMOM,plab0(1,2))
+C
+      ENDIF
+C
+      ecm=0.
+      DO i=1,4
+         ecm=ecm+(plab0(i,1)+plab0(i,2))**2*rmetric(i)
+      ENDDO
+      ecm=SQRT(ecm)
+C
+C---    Is there enough energy?
+C
+      IF(ecm.LT.avm+atarg) GO TO 999
+C
+      elab=(plab0(4,1)+plab0(4,2))
+      DO i=1,3
+         bet(i)=(plab0(i,1)+plab0(i,2))/elab
+      ENDDO
+      bet(4)=elab/ecm
+C
+C---    Boost to the CM frame
+C
+      DO it=1,2
+         CALL GLOREN(bet(1),plab0(1,it),pcm0(1,it))
+      ENDDO
+      pcmt0=SQRT(pcm0(1,1)**2+pcm0(2,1)**2+pcm0(3,1)**2)
+C
+C--     Fill the rotation matrix
+C
+      CALL OMROTS(pcm0(1,1),rot(1,1))
+C
+      DO it=1,2
+         pcm0r(1,it)=0.
+         pcm0r(2,it)=0.
+         pcm0r(3,it)=pcmt0
+         pcm0r(4,it)=pcm0(4,it)
+      ENDDO
+C
+C---    Final momenta
+C
+      pcmr(4,1)=(ecm**2+av2-at2)/2./ecm
+C
+      IF(pcmr(4,1).LE.avm) GO TO 999
+C
+      pcmt=SQRT(pcmr(4,1)**2-av2)  ! final CM momentum
+C
+C---    t - distribution ==> cos(theta)
+C
+      IF(PHOTVMTT.GT.0.0001) THEN
+         tt0=av2+ab2-2.*pcmr(4,1)*pcm0r(4,1)
+         pp=2.*pcmt*pcmt0
+         tlim(1)=tt0-pp
+         tlim(2)=tt0+pp
+C     
+         itry=0
+ 20      itry=itry+1
+         IF(itry.GT.100000) THEN
+            WRITE(LOUT,*) 'too many tries: itry=',itry,tlim,PHOTVMTT
+            GO TO 999
+         ENDIF
+         tt=PHOTVMTT*ALOG(EXP(tlim(1)/PHOTVMTT)
+     +     +RNDM(tt)*(EXP(tlim(2)/PHOTVMTT)-EXP(tlim(1)/PHOTVMTT)))
+         ct=(tt-tt0)/pp
+         IF(ABS(ct).GT.1.) GO TO 20
+      ELSE 
+         ct=1.-2.*RNDM(ct)
+      ENDIF
+C
+      phi=TWOPI*RNDM(ct)
+      st=SQRT(1.-ct**2)
+      pcmr(1,1)=pcmt*st*COS(phi)
+      pcmr(2,1)=pcmt*st*SIN(phi)
+      pcmr(3,1)=pcmt*ct
+      DO i=1,3
+         pcmr(i,2)=-pcmr(i,1)
+      ENDDO
+      pcmr(4,2)=SQRT(pcmt**2+at2)
+      DO i=1,3
+         bet(i)=-bet(i)
+      ENDDO
+C
+      DO it=1,2
+         CALL OMROTV(pcmr(1,it),rot(1,1),pcm(1,it))
+         pcm(4,it)=pcmr(4,it)
+         CALL GLOREN(bet(1),pcm(1,it),plab(1,it))
+         CALL GSKINE(plab(1,it),iptypp(it),IVRTPRIM,0,0,nt)
+C
+C--- Polarization (along the beam) of the vector meson (helicity conservation)
+C
+         IF(it.EQ.1.AND.nt.GT.0) THEN
+            IF(NTRPOL.LT.MXTRPOL) THEN
+               NTRPOL=NTRPOL+1
+               ITRPOL(NTRPOL)=nt
+               pp=SQRT(plab0(1,1)**2+plab0(2,1)**2+plab0(3,1)**2)
+               IF(RNDM(pp).LT.0.5) pp=-pp
+               DO i=1,3
+                  POLTREV(i,NTRPOL)=plab0(i,1)/pp
+               ENDDO
+            ENDIF
+          ENDIF
+      ENDDO
+C
+C
+      NTGEN=2
+C
+ 999  RETURN
+ 1000 FORMAT(' *** Error: event=',I8,' no ',A6,' particle ',I6)  
+      END

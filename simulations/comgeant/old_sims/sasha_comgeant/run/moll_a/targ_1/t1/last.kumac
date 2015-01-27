@@ -1,0 +1,50 @@
+*** Begin of history file: Mon May 15 16:13:58 2006
+prlast
+exec plot_setup proj=2 z1=-15 z2=15 y2=10 y1=-10
+exec plot_setup proj=1 z1=-15 z2=15 y2=10 y1=-10
+exec plot_setup proj=1 z1=-40 z2=200 y2=50 y1=-90
+exec plot_setup proj=1 z1=-40 z2=900 y2=50 y1=-90
+molla 90. 90.001 0. 0.01
+exec eve n=100
+exec plot_setup proj=1 z1=500 z2=600 y2=-10 y1=-40
+exec eve n=10
+exec plot_setup proj=1 z1=550 z2=600 y2=-10 y1=-40
+exec eve n=10
+exec plot_setup proj=1 z1=350 z2=600 y2=5 y1=-40
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+exec eve n=10
+molla 90. 90.001 -5. -5.01
+exec eve n=10
+molla 90. 90.001 -2. -2.01
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+exec eve n=10
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+molla 90. 90.001 -1. -1.01
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+exec eve n=1
+molla 70. 90.00 -3. -3.01
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+exec eve n=100
+molla 70. 90.00 -3. 3.0
+exec plot_setup proj=1 z1=300 z2=600 y2=5 y1=-40
+exec eve n=100
+exit
+*** End   of history file: Mon May 15 16:19:18 2006

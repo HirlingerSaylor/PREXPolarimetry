@@ -1,0 +1,139 @@
+      SUBROUTINE TRAP(KCASE)
+      IMPLICIT NONE
+      INTEGER KCASE
+C
+C---    Parameters of a trapezoid
+C       KCASE=0 90 deg, insert into the side
+C            =1 - side of the Bigbite - rectang bases
+C             p y z     p z
+      REAL xx(2,2,2),yy(2,2),dz,dy1,dy2,xyzcen(3),radeg,tsl,tslp
+     +    ,xypc(2,2),dxy(2),xc(2,2),xxo(2,2),yyo(2),dy(2,2),xyc(2)
+     +    ,xyoc(2)
+      REAL par(11)
+C
+      INTEGER i,j,k
+      DATA xx/8*0./
+      DATA yy/4*0./
+C
+      radeg=2.*ACOS(0.)/180.
+C
+      IF(KCASE.EQ.0) THEN
+         xxo(1,1)=0.
+         xxo(2,1)=80.4
+         xxo(1,2)=0.
+         xxo(2,2)=43.4
+         yyo(1)=0.
+         yyo(2)=101.6
+C
+         dz=26.
+         dy(1,1)=11.
+         dy(2,1)=yyo(2)
+         dy(1,2)=dy(1,1)+22.
+         dy(2,2)=dy(1,2)+10.
+C
+         DO i=1,2
+            DO j=1,2
+               DO k=1,2
+                  tsl=(xxo(k,2)-xxo(k,1))/(yyo(2)-yyo(1))
+                  xx(k,j,i)=xxo(k,1)+tsl*dy(j,i)
+               ENDDO
+               yy(j,i)=yyo(1)+dy(j,i)
+            ENDDO
+         ENDDO
+C
+      ELSE IF(KCASE.EQ.1) THEN
+         xxo(1,1)=0.
+         xxo(2,1)=80.4+xxo(1,1)
+         xxo(1,2)=xxo(1,1)
+         xxo(2,2)=43.4+xxo(1,2)
+         yyo(1)=83.2-125.
+         yyo(2)=101.6+yyo(1)
+C
+         dz=26.
+         dy(1,1)=0.
+         dy(2,1)=11.
+         dy(1,2)=0.
+         dy(2,2)=dy(2,1)+22.
+
+         dy(1,2)=0.
+         dy(2,2)=11.
+         dy(1,1)=0.
+         dy(2,1)=dy(2,2)+22.
+C
+         DO i=1,2
+            DO j=1,2
+               DO k=1,2
+                  tsl=(xxo(k,2)-xxo(k,1))/(yyo(2)-yyo(1))
+                  xx(k,j,i)=xxo(k,1)+tsl*dy(j,i)
+               ENDDO
+               yy(j,i)=yyo(1)+dy(j,i)
+            ENDDO
+         ENDDO
+      ELSE IF(KCASE.EQ.2) THEN
+         xxo(1,1)=0.
+         xxo(2,1)=80.4+xxo(1,1)
+         xxo(1,2)=xxo(1,1)
+         xxo(2,2)=43.4+xxo(1,2)
+         yyo(1)=83.2-125.
+         yyo(2)=101.6+yyo(1)
+C
+         dz=26.
+         dy(1,1)=11.+22.+10.
+         dy(2,1)=101.6
+         dy(1,2)=101.5
+         dy(2,2)=101.6
+
+         dy(1,2)=11.+22.+10.
+         dy(2,2)=101.6
+         dy(1,1)=101.5
+         dy(2,1)=101.6
+C
+         DO i=1,2
+            DO j=1,2
+               DO k=1,2
+                  tsl=(xxo(k,2)-xxo(k,1))/(yyo(2)-yyo(1))
+                  xx(k,j,i)=xxo(k,1)+tsl*dy(j,i)
+               ENDDO
+               yy(j,i)=yyo(1)+dy(j,i)
+            ENDDO
+         ENDDO
+      ENDIF
+C
+      xyoc(1)=(xxo(1,1)+xxo(2,1)+xxo(1,2)+xxo(2,2))/4.
+      xyoc(2)=(yyo(1)+yyo(2))/2.
+C
+      DO i=1,2
+         DO j=1,2
+            xc(j,i)=(xx(1,j,i)+xx(2,j,i))/2.
+         ENDDO
+         xypc(1,i)=(xc(1,i)+xc(2,i))/2.
+         xypc(2,i)=(yy(1,i)+yy(2,i))/2.
+      ENDDO
+      DO i=1,2
+         dxy(i)=xypc(i,2)-xypc(i,1)
+         xyc(i)=(xypc(i,2)+xypc(i,1))/2.
+      ENDDO
+C
+      WRITE(6,1000) xx
+      WRITE(6,1000) yy
+      WRITE(6,1000) xypc
+      WRITE(6,*) 'Center=',xyc,xyoc,xyc(1)-xyoc(1),xyc(2)-xyoc(2)
+      par(1)=dz/2.
+      par(2)=ATAN(SQRT(dxy(1)**2+dxy(2)**2)/dz)/radeg
+      par(3)=ACOS(dxy(1)/SQRT(dxy(1)**2+dxy(2)**2))/radeg
+      IF(dxy(2).LT.0.) par(3)=360.-par(3)
+C
+      DO i=1,2
+         k=(i-1)*4+3
+         par(k+1)=(yy(2,i)-yy(1,i))/2.
+         par(k+2)=(xx(2,1,i)-xx(1,1,i))/2.
+         par(k+3)=(xx(2,2,i)-xx(1,2,i))/2.
+         tslp=(xc(2,i)-xc(1,i))/par(k+1)/2.
+         par(k+4)=ATAN(tslp)/radeg
+      ENDDO
+C
+      WRITE(6,1000) par
+ 1000 FORMAT(11F10.5)
+C
+      END
+

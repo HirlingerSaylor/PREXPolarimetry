@@ -1,0 +1,77 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OMKINONE(NTGEN)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *   Simulateone particle to test spectrometers                   *
+C     *                                                                *
+C     *    ==>Called by : OMKINE                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER NTGEN,IFL
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "omgeant/omcfla.inc"
+#include "omgeant/omceven.inc"
+#include "omgeant/omcgen.inc"
+#include "moller/cescatt.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+      REAL     RNDM
+      EXTERNAL RNDM
+C
+      INTEGER   i1,i2,i3,i,itrp,nbuf,nt
+      REAL      amp,chp,tlp,ubuf(20),p
+     +         ,ct,ct1,ct2,st,phi,plab(4)
+C
+      CHARACTER namp*20
+C
+C     ------------------------------------------------------------------
+C
+      NTGEN=0
+C
+      i1=IDIRDET(1)
+      i2=IDIRDET(2)
+      i3=IDIRDET(3)
+C
+C---     Types of particles for beam and target
+C
+      IF(IPARONE.LE.0) GO TO 999
+      itrp=0
+      CALL GFPART(IPARONE,namp,itrp,amp,chp,tlp,ubuf,nbuf)
+      IF(itrp.EQ.0) THEN
+         WRITE(LOUT,1000) itrp
+ 1000    FORMAT(' *** OMKINONE error: no particle ',I6)
+         GO TO 999
+      ENDIF
+C     
+      p=PAVONE(1)*(1.+(2.*RNDM(p)-1.)*DPAVONE(1))
+      ct1=COS(PAVONE(2)-DPAVONE(2))
+      ct2=COS(PAVONE(2)+DPAVONE(2))
+      ct=ct1+(ct2-ct1)*RNDM(ct)
+      st=SQRT(1.-ct**2)
+      phi=PAVONE(3)+DPAVONE(3)*(2.*RNDM(phi)-1.)
+      plab(i2)=p*st*COS(phi)
+      plab(i3)=p*st*SIN(phi)
+      plab(i1)=p*ct
+      plab(4)=SQRT(p**2+amp**2)
+C
+      CALL GSKINE(plab(1),IPARONE,IVRTPRIM,0,0,nt)
+C
+      NTGEN=1
+C
+C      WRITE(6,*) 'pcm=',pcm
+C
+ 999  RETURN
+      END

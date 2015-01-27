@@ -1,0 +1,39 @@
+<a name="Random">
+<h2>Random numbers</h2>
+</a>
+OMGEANT uses the
+<a href="http://wwwcn.cern.ch/asdoc/shortwrupsdir/v113/top.html">RANMAR</a>
+random runber generatior from
+<a href="http://wwwcn1.cern.ch/asd/cernlib/libraries.html">CERNLIB</a>.
+Random number generatiors from GEANT (GRNDM) and LUND (RLU) as well as
+the old CERNLIB generator RNDM are replaced with the calls to RANMAR.
+Three independent sequences are used:
+<ol>
+ <li> for the beam and inclusive production
+ <li> for LUND (FRITIOF, JETSET ...)
+ <li> for GEANT (decays, processes ...)
+</ol>
+Therefore one can simulate identical initial kinematics (before
+decays) with different setups.
+
+One can redefine the seeds using the card:
+<pre>
+RNDMSEQ n
+</pre>
+where 0&lt;n&lt;1000000 - is an arbitrary number which changes the seeds
+for all 3 sequences used. <p>
+
+A snapshot of the random numbers are stored in a file <i>omg_random.dat</i>
+at the end of the job. This file can be used to continue the task from the
+current position. In order to continue the FF command should be used:
+<pre>
+CONTINUE  1
+</pre>
+
+Unfortunately this mechanism provides 2 rndm.o to the linker (one from
+omgbatch.a 
+--the modified source sits in 
+<A HREF="../omgbatch/ompro/rndm.F">omgbatch/ompro/rndm.F</A>--
+and the original from packlib): on some platforms it can make the linker
+complain (e.g. Sun-Solaris 2.5) and additional linker option have to be
+provided by hand to the linker (e.g. -z muldefs on Sun-Solaris 2.5).

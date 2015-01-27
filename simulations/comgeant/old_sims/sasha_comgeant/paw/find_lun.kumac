@@ -1,0 +1,75 @@
+MACRO find_lun file=xxx
+*
+* ===     finds the file xxx (attachs if it is not attached)
+* ===     returns the logical unit to klunf(1) 
+*
+
+  if $VDIM(klunf)<1 then
+    ve/cr klunf(1) i
+  else
+    ve/in klunf(1) 0 
+  endif
+
+  output_lp 95 tmp.t1
+  ld //
+  close 95
+  output_lp 6
+
+  if $VDIM(lluf)<80 then
+    ve/cr lluf(80) i
+    ve/cr mluf(100) i
+  else
+    ve/in lluf 80*0
+    ve/in mluf 100*0
+  endif
+
+  shell 'cat tmp.t1 | grep LUN | cut -c7-8 > tmp.t3'
+  shell 'if ! test -s tmp.t3 ; then rm -f tmp.t3 ; fi'
+
+  if $FEXIST(tmp.t3)>0 then
+    ve/read lluf tmp.t3
+    n=$VLEN(lluf)
+    
+    do i=1,[n]
+       k=lluf([i])
+       if [k]>0 .and. [k]<80 then
+         ve/in mluf([k]) [i]
+       endif
+    enddo
+    lnext=0
+    do i=21,80
+      m=mluf([i])
+      if [m]=0 then
+        lnext=[i]
+        goto endc1
+      endif
+    enddo
+    endc1:
+    shell 'rm -f tmp.t3'
+  else
+    lnext=21
+  endif
+
+  cmn='cat tmp.t1 | grep '//[file]//' | cut -c7-8 > tmp.t2'
+  shell [cmn]
+  shell 'if ! test -s tmp.t2 ; then rm -f tmp.t2 ; fi'
+  shell 'rm -f tmp.t1'
+  
+  if $FEXIST(tmp.t2)>0 then
+    ve/read klunf(1:1) tmp.t2
+    shell 'rm -f tmp.t2'
+  else
+    if $FEXIST([file]) then
+      h/fil [lnext] [file]
+      ve/in klunf(1) [lnext]
+      mess Attach file to LUN [lnext] [file]
+    endif
+  endif
+*  ve/pri klunf
+
+
+RETURN
+
+
+
+

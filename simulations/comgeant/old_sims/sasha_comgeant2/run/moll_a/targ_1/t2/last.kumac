@@ -1,0 +1,39 @@
+*** Begin of history file: Tue Jan 30 18:37:28 2007
+exec 11set e0=10.0
+exec 11set e0=10.0
+molla 90 90 0 0
+molla 90 90 0 0
+beammom 10.0 10.001 0.
+exec 11set e0=10.0
+magf 1 -5.4837
+magf 2 0.530618
+magf 3 5.1889
+magf 4 12.7014
+exec plot_setup proj=1
+exec eve 1
+exec eve 10
+exec plot_setup proj=2
+exec eve 10
+beammom 11.0 11.001 0.
+exec 11set e0=11.0
+magf 1 -5.33934
+magf 2 -0.666027
+magf 3 -5.58271
+magf 4 13.9715
+exec plot_setup proj=2
+exec eve 10
+magf 3 5.58271
+exec plot_setup proj=2
+exec eve 10
+beammom 7.0 7.001 0.
+exec 11set e0=7.0
+magf 1 -2.41443
+magf 2 1.64273
+magf 3 3.35368
+magf 4 8.89112
+exec plot_setup proj=2
+exec eve 10
+exec plot_setup proj=1
+exec eve 10
+exit
+*** End   of history file: Tue Jan 30 18:45:10 2007

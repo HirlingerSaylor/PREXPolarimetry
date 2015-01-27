@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>M1m</title>
+<!-- Changed by: Massimo Lamanna, 29-Mar-1998 -->
+</head>
+
+<body>
+
+This was originally the HMC LoI Magnet (a box field,
+typically 1 T over 1 m used to measure the momentum 
+of the large angle particles from the polarised target.
+
+Then it has been modeled from the OAFM (Open Axial
+Field Magnet) the ISR magnet recently used by Obelix
+experiment at LEAR. Since this magnet has been considered
+not interesting for us, the very heavy implementation
+has been commented out to speed up things.
+
+Now the implemented magnet is a dipole under
+consideration in the collaborations. Note that the name OAFM
+to define this are has been changed into SM1M (SM1H).
+
+This is activated by the following card:
+
+<PRE>
+C        Xcen  Ycen  Zcen   rot    bfield bscale kflag
+MAGNET4  350.    0.    0.    0     1.      1.    3    SM1m
+C
+</PRE>
+
+Note that:
+<UL>
+<LI> The position at 350 cm from the polarised target is
+     presently the "official" position
+<LI> bfield is used only in connection of klag=0 to provide
+     a box field (along the z direction) on the AREA connected
+     to magnet 4
+<LI> bscale is a factor to scale up/down  the field
+<LI> kflag
+     <UL>
+     <LI> 0 box field
+     	<UL>
+             <LI> bfield = Bz (vertical) in the box
+     	     <LI> bscale = half of the box size
+	</UL>
+     <LI> 1 SM1M description via polinomial (not yet implemented)
+     <LI> 2 SM1M measured map (the measurement takes into account
+          the axial symmetry --ok to 5% level-- on a 5X5cm2 grid). Off
+          axis the measured points go up to 160 cm from the axis.
+          From 150 cm to 200 cm a 1/r^3 law is chosen. At larger
+          distances the field is 0 (probably not yet realistic)
+     <LI> 3 free to later use
+     </UL>
+</UL>
+
+The relevant routines are:
+<UL>
+<LI><A HREF=../code/src/field/magnets/omagini4.F> 
+field/magnets/omagini4.F </A>
+called by omgbatch/ompro/omgini.F???. It initialize the relevant
+array. In the case kflag=2 it transform the map in cartesian
+coordinates and interpolate it on a 1X1X1 cm3 grid.
+<LI><A HREF=../code/src/field/magnets/omagfld4.F> 
+field/magnets/omagfld4.F </A>
+called by omgbatch/ompro/gufld.F. It provides the field to the
+tracking.
+</UL>
+
+There is the plan to add new measurements or calculation of the
+field in presence of the new support (to be built) and with the
+extra poles to close the gap (for the p-beam programme).
+
+The mechanics is described in the following way 
+(still provisional in particular the yoke)
+using the usual COMGEANT mechanisms. 201 is air with magnetic
+field for the container SM1M;
+295 is iron with magnetic field for poles and yoke.
+(Obsolete. It gives the shape of the OAFM).
+
+<PRE>
+C
+C--- SM1M 
+C
+PARVOL101 'SM1M' 201 'HALL' 350.  0.     0. 0  'BOX ' 3  190. 400. 400.
+C Upper pole?
+PARVOL102 'OAU1' 295 'SM1M'   0.  0.  85.5 0  'CONE' 5  10.5 20.  50.  20.  80.
+PARVOL103 'OAU2' 295 'SM1M'   0.  0.  106. 0  'TUBE' 3  20.  80.  10.
+PARVOL104 'OAU3' 295 'SM1M'   0.  0.  128. 0  'TUBE' 3  20.  90.  12.
+PARVOL105 'OAU4' 295 'SM1M'   0.  0.  152. 0  'TUBE' 3  20. 110.  12.
+PARVOL106 'OAU5' 295 'SM1M'   0.  0.  176. 0  'TUBE' 3  20. 120.  12.
+PARVOL107 'OAU6' 295 'SM1M'   0.  0.  218. 0  'TUBE' 3  20. 140.  30.
+C Lower pole?	   
+PARVOL108 'OAD1' 295 'SM1M'   0.  0. -85.5 0  'CONE' 5  10.5 20.  80.  20.  50.
+PARVOL109 'OAD2' 295 'SM1M'   0.  0. -106. 0  'TUBE' 3  20.  80.  10.
+PARVOL110 'OAD3' 295 'SM1M'   0.  0. -128. 0  'TUBE' 3  20.  90.  12.
+PARVOL111 'OAD4' 295 'SM1M'   0.  0. -152. 0  'TUBE' 3  20. 110.  12.
+PARVOL112 'OAD5' 295 'SM1M'   0.  0. -176. 0  'TUBE' 3  20. 120.  12.
+PARVOL113 'OAD6' 295 'SM1M'   0.  0. -218. 0  'TUBE' 3  20. 140.  30.
+C Upper Yoke		   
+PARVOL114 'OYU1' 295 'SM1M'   0.  0.  252. 0  'TUBE' 3  20. 130.   4.
+PARVOL115 'OYU2' 295 'SM1M'   0.  0.  286. 0  'CONE' 5  30.  20. 160. 20.   20.
+C Lower Yoke		   	    	       
+PARVOL116 'OYD1' 295 'SM1M'   0.  0. -252. 0  'TUBE' 3  20. 130.   4.
+PARVOL117 'OYD2' 295 'SM1M'   0.  0. -286. 0  'CONE' 5  30.  20.  20. 20.  160.
+C Return Yoke
+PARVOL118 'OYR1' 295 'SM1M'   0.    250.    0. 0  'BOX ' 3  100. 50. 280.
+PARVOL119 'OUR2' 295 'SM1M'   0.    150.  330. 0  'BOX ' 3  50. 120.  50.
+PARVOL120 'OUR3' 295 'SM1M'   0.    150. -330. 0  'BOX ' 3  50. 120.  50.
+C
+</PRE>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

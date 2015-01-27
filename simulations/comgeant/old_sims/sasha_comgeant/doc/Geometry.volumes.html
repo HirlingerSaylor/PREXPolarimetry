@@ -1,0 +1,94 @@
+<a name="volumes">
+<h3>Volume definition</h3>
+</a>
+
+One may define "detector" volumes (see <a href="#detectors">detectors</a>) and
+other volumes. These "other" volumes 
+ are defined using the FFREAD commands of a type as follows:
+<pre>
+C --                       Additional volumes
+C                          ..................
+C         name   med  mother    X     Y     Z  rot  shape npar  par.....
+C --     RICH-1 behind MAG1
+PARVOL41 'CER1'   4  'HALL'   300.    0.    0.  1  'TRD2'  5  150. 250.  160. 220. 150.
+PARVOL42 'C1W1'  35  'CER1'     0.    0. -149.5 0  'BOX '  3  149. 159.  0.05
+PARVOL43 'C1W2'  24  'CER1'     0.    0. -149.  0  'BOX '  3  149. 159.  0.15
+PARVOL44 'C1M1'  23  'CER1'     0.    0.  140.  0  'BOX '  3  240. 210.  0.2
+PARVOL45 'C1W3'  35  'CER1'     0.    0.  149.  0  'BOX '  3  249. 219.  0.05
+PARVOL46 'C1W4'  24  'CER1'     0.    0.  149.5 0  'BOX '  3  249. 219.  0.1
+</pre>
+The number XX in PARVOLXX is used only to distinguish the FFREAD commands.
+The full number of volumes is at the moment limited to 400. Different key names
+can be used to define a volume:
+<pre>
+GPARVOLXX or GPARVOLXXX where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=200 for general geometry files 
+PARVOLXX  or PARVOLXXX  where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=170 for other   geometry files 
+UPARVOLXX               where 01&lt;=XX&lt;=30, reserved for the user 
+</pre>
+The parameters 3-7 specify the mother volume and the position where to
+place the current volume. So, this command does not define multiple volumes
+- every volume is presented only once.
+All volume positions are defined as 'ONLY' (see GSPOS).
+<p>
+It is recommended to use the FFREAD volume definitions whenever possible.
+However it may happen that some extra features of GEANT geometry definitions
+have to be used (say 'MANY'). In order to make such definitions using
+external FORTRAN routines there is a limited number of 'volume plugs'
+forseen. A volume plug may be any volume defined with ..PARVOL.. cards
+and which has no daughter volumes. For all these volumes a set of routines
+is called:
+<pre>
+      CALL CGEPLUG1(cn,ierr)
+      .....................
+      CALL CGEPLUG9(cn,ierr)
+</pre>
+where 'cn' is CHARACTER*4 name of the volume to be checked. Dummies of CGEPLUGX
+routines exist in the OMGEANT dummy library.
+If one wants to 
+define a volume, say RICH and fill it with some complex structure one should 
+use a FF command of the type:
+<pre>
+PARVOL41 'RICH'   4  'HALL'   300.    0.    0.  1  'TRD2'  5  150. 250.  160. 220. 150.
+</pre>
+and choose one of the CGEPLUGX routines, say CGEPLUG2 (upon agreement with other users).
+The routine should look like that:
+<pre>
+C
+      SUBROUTINE CGEPLUG2(CNAM,IRET)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *  Geometry plug 2 - COMPASS RICH1                               *
+C     *    INPUT:  CNAM - the name of the volume                       *
+C     *   OUTPUT:  ierr=0 - nothing happened                           *
+C     *                >0 - something is plugged in                    *
+C     *                <0 - error                                      *
+C     *           It should check that CNAM is the proper name, and    *
+C     *           in this case plug in some extra volumes              *
+C     *                                                                *
+C     *    ==>Called by : OMGEOM                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER   IRET
+      CHARACTER CNAM*4
+C
+      CHARACTER*4 vmother
+C
+C---     Check the volume name
+C
+      IRET=0
+      vmother='RICH'
+      IF(CNAM.NE.vmother) GO TO 999
+C
+C---       Fill the volume CNAM
+C
+      IRET=1
+ .........  the code .............
+C
+ 999  CONTINUE
+      RETURN
+      END
+</pre>
+

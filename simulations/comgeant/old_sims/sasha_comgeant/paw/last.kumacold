@@ -1,0 +1,134 @@
+*** Begin of history file: Thu Feb  7 11:53:37 2013
+exec run_energy nev=1000
+shell
+exec run_energy nev=1000
+shell
+exec  fill lun=lun1 id=1000
+ld //
+h/fil 1 csimout.nt
+ld //
+exec  fill lun=lun1 id=1000
+ve/pr par
+exec  fill lun=lun1 id=1000 cut=1
+ve/pr par
+exec  fill lun=lun1 id=1000 cut=1
+exec  fill lun=lun1 id=1000
+exec  fill lun=lun1 id=1000
+hi/pl 1010
+hi/pl 1011
+hi/pl 1010
+hi/pl 1011
+exec  fill lun=lun1 id=1000
+hi/pl 1010
+hi/pl 1011
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+hi/pl 1003
+hi/pl 1003
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+ve/li
+ve/pr yy
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  fill lun=lun1 id=1000
+exec  run_eneggy nev=1000
+exec  run_energy nev=1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec  run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>6000..and.siglg.f(2,5,8)>6000..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,500)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>15  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,55)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,60)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>60..and.siglg.f(2,5,8)>60..and.apnum.f(0,0,60)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>80..and.siglg.f(2,5,8)>80..and.apnum.f(0,0,80)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>80..and.siglg.f(2,5,8)>80..and.apnum.f(0,0,80)>2.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>100..and.siglg.f(2,5,8)>100..and.apnum.f(0,0,100)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>150..and.siglg.f(2,5,8)>150..and.apnum.f(0,0,150)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>150..and.siglg.f(2,5,8)>150..and.apnum.f(0,0,150)>1.8  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+h/fil 1 ../ntup_his/test_-5.7_-5.6_2.4_5.2.nt
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+nt/pl //lun1/2.siglg.f(2,1,8) siglg.f(2,1,4)>50..and.siglg.f(2,5,8)>50..and.apnum.f(0,0,50)>1.5  -1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=1000
+exec run_energy nev=10000
+hi/pl 1011
+hi/pl 1013
+exec run_energy nev=100000
+q
+*** End   of history file: Thu Feb  7 16:57:50 2013

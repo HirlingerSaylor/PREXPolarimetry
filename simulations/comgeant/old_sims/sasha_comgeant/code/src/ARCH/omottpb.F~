@@ -1,0 +1,154 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OMOTTPB(NTGEN)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *       Kinematics for Mott scattering on lead (Bob's)           *
+C     *                                                                *
+C     *    ==>Called by : OMKINE                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER NTGEN
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "omgeant/omcbeam.inc"
+#include "omgeant/omceven.inc"
+#include "omgeant/omcgen.inc"
+#include "moller/cescatt.inc"
+#include "moller/cntescat.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+      REAL     RNDM
+      EXTERNAL RNDM
+C
+      INTEGER   nbuf,itrtbm,itrttg,itrtut
+     +         ,it,nt
+     +         ,i,iptypp(3)
+      INTEGER   ityptg,ideb,ierr
+      DOUBLE PRECISION denb,dthet,dibeam,dq3sq,dqsq,deprime,dcrsec
+     +                ,dffsq,dyield
+      REAL      plab0(4)           ! initial, LAB frame
+     +         ,plab(4)            ! final  , LAB     
+     +         ,pref(4)            ! final,   in CM of the target, rotated that Pbeam is along Z'
+     +         ,atarg
+     +         ,ab2,pb2
+     +         ,abeam
+     +         ,phi,tet
+     +         ,ct,st,sp,cp
+     +         ,t1,t2,ubuf(10)
+     +         ,rot(3,3)
+     +         ,ptote,chbeam,tlbeam
+      CHARACTER nambeam*20
+C
+C     ------------------------------------------------------------------
+C
+      NTGEN=0
+C
+C
+      ITYPRS=ITYPREST
+C
+C---     Types of particles for beam and target
+C
+      CALL GFPART(IBEAMPAR,nambeam,itrtbm,abeam,chbeam,tlbeam,ubuf,nbuf)
+C
+      ityptg=0
+      IF(ABS(AMATTAR-12.).LT.1.) THEN
+         ityptg=2
+      ELSE IF(ABS(AMATTAR-27.).LT.2.) THEN
+         ityptg=4
+      ELSE IF(ABS(AMATTAR-208.).LT.2.) THEN
+         ityptg=6
+      ENDIF
+C
+      IF(ityptg.EQ.0) THEN
+         IEORUN=1
+         WRITE(LOUT,1000) AMATTAR
+ 1000    FORMAT(/' *** Error in OMOTTPB - the target atomic weight='
+     +         ,F6.1,'  does not match the defined C,Al and Pb')
+         GO TO 999
+      ENDIF
+      atarg=AMATTAR
+C
+      iptypp(1)=IBEAMPAR
+      ab2=abeam**2
+C
+      DO i=1,3
+        plab0(i)=PBEAM(i)
+      ENDDO
+      plab0(4)=SQRT(ab2+PBEAM(1)**2+PBEAM(2)**2+PBEAM(3)**2)
+C
+C---     Rotation, that the beam goes along Z
+C
+      CALL OMROTS(plab0(1),rot(1,1))
+C
+C---    Mott production in LAB
+C
+      phi=PI/180.*(RNDM(phi)*(PHIMOT(2)-PHIMOT(1))+PHIMOT(1))
+      sp=SIN(phi)
+      cp=COS(phi)
+C
+      t1=PI/180.*THETMOT(1)
+      t2=PI/180.*THETMOT(2)
+C
+      WGCROS=1.
+      tet=RNDM(cp)*(t2-t1)+t1
+C
+      st=SIN(tet)
+      ct=COS(tet)
+C
+      ideb=0
+      denb=plab0(4)
+      dthet=tet*180./PI
+      dibeam=1.
+      CALL ENSCATT(ideb,ityptg,denb,dthet,dibeam,
+     +      dq3sq,dqsq,deprime,dcrsec,dffsq,dyield,ierr)
+C
+      IF(ierr.NE.0) THEN
+         WRITE(LOUT,*) ' *** Error from ENSCATT ',ierr
+      ENDIF
+C
+C      WRITE(6,*) ityptg,denb,dthet,dibeam
+C      WRITE(6,*) deprime,dcrsec,ierr
+C
+      WGCROS=REAL(dcrsec)
+      ptote=REAL(deprime)
+C
+C      WRITE(6,*) 'ENSCAT',ideb,ityptg,denb,dthet,dibeam,dq3sq
+C     +      ,dqsq,deprime,dcrsec,dffsq,dyield,ierr
+C      WRITE(6,*) WGCROS
+      pref(4)=SQRT(ptote**2+ab2)
+      pref(1)=ptote*st*cp
+      pref(2)=ptote*st*sp
+      pref(3)=ptote*ct
+C
+C---        Turn back to X,Y,Z in the frame with the initial target at resr 
+C
+      CALL OMROTV(pref(1),rot(1,1),plab(1)) ! rotate the momenta to LAB
+      plab(4)=pref(4)
+C
+C---      NTUPLE variables
+C
+      IETYPE=2
+      THETCM=tet
+      PHICM=phi
+      ANPOWER=0.
+C
+      CALL GSKINE(plab(1),iptypp(1),IVRTPRIM,0,0,nt)
+C
+      NTGEN=1
+C
+C      WRITE(6,*) 'pcm=',pcm
+C
+ 999  RETURN
+      END

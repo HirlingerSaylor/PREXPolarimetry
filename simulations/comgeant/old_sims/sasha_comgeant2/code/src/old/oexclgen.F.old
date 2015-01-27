@@ -1,0 +1,119 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OEXCLGEN(NTGEN)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *       Kinematics                                               *
+C     *                                                                *
+C     *    ==>Called by : OMKINE                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER NTGEN
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "omgeant/omcbeam.inc"
+#include "omgeant/omceven.inc"
+#include "omgeant/omcgen.inc"
+#include "moller/cescatt.inc"
+#include "moller/cntescat.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+      INTEGER   itart,ntrymx
+     +         ,nbuf,itrtbm,itrttg,itrtut
+     +         ,it,nt
+     +         ,i,iptypp(2)
+      REAL      eecm,pecm
+     +         ,pcm(4,2),plab(4,2),betal(4),ubuf(20)
+     +         ,chbeam,tlbeam,atarg,chtarg,tltarg
+     +         ,ab2,at2,pb2,eb2,elab,elab2,tecm2,tecm
+     +         ,abeam,am12
+     +         ,phi,tet
+     +         ,ct,st,sp,cp
+      CHARACTER nambeam*20,namtarg*20
+C
+      REAL HRNDM1,RNDM
+C
+      SAVE itart,ntrymx
+      DATA itart/3/
+      DATA ntrymx/50/
+C
+C     ------------------------------------------------------------------
+C
+      NTGEN=0
+C
+      ITYPRS=ITYPREST
+C
+C---     Types of particles for beam and target
+C
+      CALL GFPART(IBEAMPAR,nambeam,itrtbm,abeam,chbeam,tlbeam,ubuf,nbuf)
+      CALL GFPART(itart,namtarg,itrttg,atarg,chtarg,tltarg,ubuf,nbuf)
+      iptypp(1)=3
+      iptypp(2)=3
+C
+      ab2=abeam**2
+      at2=atarg**2
+      pb2=PBEAM(1)**2+PBEAM(2)**2+PBEAM(3)**2
+      eb2=pb2+ab2
+      elab=SQRT(eb2)+atarg
+      elab2=elab**2
+      tecm2=elab2-pb2
+      tecm=SQRT(tecm2)
+      betal(1)=0.
+      betal(2)=0.
+      betal(3)=-SQRT(pb2)/elab
+      betal(4)=elab/tecm
+C
+C---    Moller production in CM
+C
+      eecm=tecm/2.
+      pecm=SQRT(eecm**2-ab2)
+C
+      phi=PI/180.*(RNDM(pecm)*(PHIMOL(2)-PHIMOL(1))+PHIMOL(1))
+      sp=SIN(phi)
+      cp=COS(phi)
+      tet=HRNDM1(IDMOLTET)*PI/180.
+      st=SIN(tet)
+      ct=COS(tet)
+C
+C---      NTUPLE variables
+C
+      IETYPE=1
+      THETCM=tet
+      PHICM=phi
+      WGCROS=1.
+      ANPOWER=st**2*(8.-st**2)/(4.-st**2)**2
+C
+      pcm(1,1)=pecm*st*cp
+      pcm(2,1)=pecm*st*sp
+      pcm(3,1)=pecm*ct
+      pcm(4,1)=eecm
+C
+      DO i=1,3
+         pcm(i,2)=-pcm(i,1)
+      END DO
+      pcm(4,2)=eecm
+C
+      DO it=1,2
+         CALL GLOREN(betal,pcm(1,it),plab(1,it))
+         CALL GSKINE(plab(1,it),iptypp(it),IVRTPRIM,0,0,nt)
+      END DO
+      NTGEN=2
+C
+C      WRITE(6,*) 'pcm=',pcm
+C
+      RETURN
+      END
+
+
+

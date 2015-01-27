@@ -1,0 +1,171 @@
+MACRO mag_plot same=0 m0=24 m1=20 m2=22 m3=24 col=1 dxk=0 dyk=0 plth=1 msiz=0.1 txt=' ' ign0=1
+*
+* ---  Plots the results of m_opt simulation
+*
+
+
+    ne=$VLEN(enerv)
+    if [ne]=0 then
+      goto eend
+    endif
+
+    wy=2
+    if [plth]=0 then
+      wy=1
+    endif
+
+    ve/cop daccv daccv1
+    ve/cop edaccv edaccv1
+    ve/cop daccv danpv1
+    ve/cop edaccv edanpv1
+    nn=$VDIM(accev)
+    ve/cr dmaccev([nn]) r
+    ve/cr edmaccev([nn]) r
+    ve/cr dmanpov([nn]) r
+    ve/cr edmanpov([nn]) r
+
+*    if $VDIM(difm,1)<2 then
+*      ve/cr difm(2,4) r
+*    endif
+
+    do ie=1,[ne]
+      e=enerv([ie])
+      ac=accev([ie])
+      do i=1,2
+         do j=1,4
+           q1=diniv([ie],[i],[j])
+           q=diniv([ie],3,[j])
+*           mess [ie],[i],[j],[q],[q1]
+           a=[q1]-[q]
+           a=$SIGMA(ABS([a]))
+           if [a]<0.00001 then
+             goto el1
+           endif
+*           eq=$SIGMA(SQRT(0.01**2+([q]*0.01)**2))
+           eq=0.01
+           fc=$SIGMA([eq]/[a])
+*           mess [ie],[i],[j],[a],[fc]
+           dac=daccv([ie],[i],[j])
+           ddac=$SIGMA(ABS([ac]-[dac]))
+           ign=0
+           if [ign0]>0 .AND. [ddac]<0.0001 then
+             ign=1
+           endif
+
+           dac=$SIGMA([dac]*[fc])
+           edac=edaccv([ie],[i],[j])
+           edac=$SIGMA([edac]*[fc])
+           ve/in daccv1([ie],[i],[j]) [dac]
+           ve/in edaccv1([ie],[i],[j]) [edac]
+           qm=dmaccev([ie])
+           dac1=$SIGMA(ABS([dac]))
+           if [ign]=0 .AND. [dac1]>[qm] then
+             ve/in dmaccev([ie]) [dac1]
+             ve/in edmaccev([ie]) [edac]
+           endif
+
+           dac=danpv([ie],[i],[j])
+           dac=$SIGMA([dac]*[fc])
+           edac=edanpv([ie],[i],[j])
+           edac=$SIGMA([edac]*[fc])
+           ve/in danpv1([ie],[i],[j]) [dac]
+           ve/in edanpv1([ie],[i],[j]) [edac]
+           qm=dmanpov([ie])
+           dac1=$SIGMA(ABS([dac]))
+           if [ign]=0 .AND. [dac1]>[qm] then
+             ve/in dmanpov([ie]) [dac1]
+             ve/in edmanpov([ie]) [edac]
+           endif
+           el1:
+         enddo
+      enddo
+    enddo
+
+* exitm
+    set pmci [col]
+
+    if [same]=0 then
+      ve/cr xyl(2,2,2)
+      zone 1 [wy]
+      x1=enerv(1)
+      x1=[x1]-0.2
+      x2=$SIGMA(vmax(enerv))
+      x2=[x2]+0.2
+      y1=0
+*      y2=$SIGMA(vmax(accev))
+*      y2=[y2]+0.1
+      y2=1.
+      ve/in xyl(1:2,1:2,1) [x1] [x2] [y1] [y2]
+      if [plth]=1 then
+        null [x1] [x2] [y1] [y2]
+        atit 'Beam energy, GeV' 'Acceptance '
+      endif
+    else
+      zone 1 [wy] 1 s
+      mess S1
+      x1=xyl(1,1,1)
+      x2=xyl(2,1,1)
+      y1=xyl(1,2,1)
+      y2=xyl(2,2,1)
+      if [plth]=1 then
+        null [x1] [x2] [y1] [y2] ab
+      endif
+    endif
+    if [plth]=1 then
+      gr/hpl/err enerv accev errv eaccev [ne] [m0] [msiz] ' ' 
+      x=$SIGMA([x1]*0.7+[x2]*0.3)
+      y=$SIGMA([y1]*0.8+[y2]*0.2+[dyk])
+      txt1=' acceptance '//[txt]
+      gr/hpl/key [x] [y] [m0] [txt1] 
+
+      gr/hpl/err enerv anpov errv eanpov [ne] [m1] [msiz] ' ' 
+      txt1=' analyzing power '//[txt]
+      gr/hpl/key [x] [y] [m0] [txt1] 
+    endif
+
+ exitm
+    if [same]=0 then
+      y1=3.
+      y1=$SIGMA(min([y1],vmin(q1mav)))
+      y1=$SIGMA(min([y1],vmin(q2mav)))
+      y1=$SIGMA(min([y1],vmin(q3mav)))
+      y1=[y1]-0.5
+      y2=-3.
+      y2=$SIGMA(max([y2],vmax(q1mav)))
+      y2=$SIGMA(max([y2],vmax(q2mav)))
+      y2=$SIGMA(max([y2],vmax(q3mav)))
+      y2=[y2]+0.1
+      ve/in xyl(1:2,1:2,2) [x1] [x2] [y1] [y2]
+      null [x1] [x2] [y1] [y2] 
+      atit 'Beam energy, GeV' 'Fields in Moller quads, kGs'
+    else
+      zone 1 [wy] [wy] s
+      x1=xyl(1,1,2)
+      x2=xyl(2,1,2)
+      y1=xyl(1,2,2)
+      y2=xyl(2,2,2)
+      null [x1] [x2] [y1] [y2] ab
+    endif
+    gr/hpl/err enerv q1mav errv errv [ne] [m1] [msiz]
+    x=$SIGMA([x1]*0.7+[x2]*0.3+[dxk])
+    y=$SIGMA([y1]*0.8+[y2]*0.2)
+    gr/hpl/key [x] [y] [m1] 'Q1' 
+    gr/hpl/err enerv q2mav errv errv [ne] [m2] [msiz]
+    y=$SIGMA([y1]*0.85+[y2]*0.15)
+    gr/hpl/key [x] [y] [m2] 'Q2' 
+    gr/hpl/err enerv q3mav errv errv [ne] [m3] [msiz]
+    y=$SIGMA([y1]*0.90+[y2]*0.10)
+    gr/hpl/key [x] [y] [m3] 'Q3' 
+    y=$SIGMA([y1]*0.75+[y2]*0.25)
+    text [x] [y] [txt] 0.27 0. C
+
+    set pmci 1
+
+    eend:
+RETURN
+
+
+
+
+
+

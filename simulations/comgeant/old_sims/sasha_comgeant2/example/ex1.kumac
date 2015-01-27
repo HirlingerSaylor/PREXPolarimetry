@@ -1,0 +1,44 @@
+*** Begin of history file: Mon Jan 25 17:42:40 2010
+exec run_energy
+exec detector file=test1
+exec detector file=test4
+exec detector file=test4 nn=22
+nt/pl //lun22/2.thetcm*180./3.1415%phicm*180./3.1415
+nt/pl //lun21/2.thetcm*180./3.1415%phicm*180./3.1415
+nt/pl //lun21/2.thetcm*180/3.1416%(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02
+nt/pl //lun21/2.(vert(2,1)+vert(1,1))/1.41 $24.and.abs(vert(2,1)-vert(1,1))<0.02 ! ! !
+nt/loop //lun22/2 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5.and.cntpr.f(4)>-1 10 1
+2dh 302 'X-Y' 5 -0.1 0.1 5 -0.1 0.1
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24 -302
+h/pri 301
+h/pri 302
+idopt 301 tabl
+idopt 302 tabl
+h/pri 301
+h/pri 302
+h/fil 23 /home/glamazdi/ntup_his/test9.nt
+2dh 311 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+2dh 312 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+nt/pl //lun23/2.vert(2,1)%vert(1,1) $24 -312
+idopt 311 tabl
+idopt 312 tabl
+h/pri 311
+h/pri 312
+h/pl 1000000 lego
+h/pl 1000000 lego
+h/pl 1000000 cont
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.(vert(2,1)+vert(1,1))<0.01 ! ! !
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+2dh 311 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+2dh 312 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+2dh 311 'X-Y' 10 -0.6 0.6 10 -0.3 0.3
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+2dh 311 'X-Y' 10 -0.06 0.06 10 -0.03 0.03
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+h/pl 311 lego
+idopt 311 tabl
+h/pri 311
+exit
+*** End   of history file: Tue Jan 26 14:36:09 2010

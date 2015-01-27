@@ -1,0 +1,225 @@
+LIST
+C KEYS
+C  -------  Read the geomtery file 
+C NOLI
+C LIST
+READ  17         materials
+READ  21         general file
+READ  22         local update for beam momentum magnets etc
+C
+NOLI
+READ 16          particle definitions
+LIST
+C
+TRIG   100000          number of events
+C CONTINUE 1
+C
+C
+C SAVE  'KINE' 'VERT' 'OHIT'
+C
+C
+C ==========   NTUPLES   ===========
+C
+C          beam  kine  hits  LUND
+NTUPPROCO    1    -1    1     0
+C NTUPPROCO    1     0    0     1
+C NTUPLENO              3=7800
+NTUPLENO              3=2000
+NTUPWRHIT   0  write all events    if NE zero write only events with hits
+
+C
+C ==========   Geometry modifications =============
+C
+C DEADVOL  99
+C
+C ==========  
+CUTXYZ  0.005
+C MAXXYZ 200000  
+C
+C -----------   Ignore: neutrino, (K0L, pi0, eta)
+C
+IGNTYPE   4
+C                (10   7  17)
+C
+C -----------   Ignore photons!
+C
+C IGNTYPE   2=1
+C               Forbid to decay in LUND for:
+C            pi0   eta   omega  eta'
+LUNDDECOFF   111   
+C
+C     ===    "fixed" track (the useful one)
+C OMITRAFIX      2
+C
+C -----------            Beam -------------------
+C
+OMBEAM     1 
+C  OMBEAM     1      beam interacts always
+C  OMBEAM     2      beam may pass through, interactions are left to GEANT
+C
+C ============================================================================
+C  -------    Kinematics
+C
+OMKINE        4
+C             0      primitive multiplicity
+C             1      PYTHIA
+C             2      FRTIOF generator
+C             3      VENUS
+C             4      Exclusive production (turn NINCL to 0 ! ) Mott/Moller ...
+C             5      LEPTO
+C             9      nothing
+C
+C ============================================================================
+C ===             If OMKINE=4 : "Electron beam" - Moller/Bhabha,photoproduction
+OMEXKINE      1
+C             0      nothing (prints a message if OMKINE=4)
+C             1      Moller
+C             2      Mott
+C             3      Photoproduction by Bremstr. photons
+C             7      One particle 
+C             8      User's program 
+C             9      Bremsstrahlung producion of pi+N (SAID)
+C            10      radiative Moller
+C            11      Low q2 EPA
+C            12      Generic binary reaction
+C            13      High X e-scattering
+C            14      Inclusive e-scattering (Mott + QFS/DIS)
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on Moller:
+MOLLIMTHETA     70.0 110.0    theta range in CM  in degrees
+MOLLIMPHI      -20.0  20.0    phi   range in CM  in degrees
+C 
+MOLLSHELL     0
+C             0    scattering on a free e-
+C             1    scattering on e- from L shell in Fe
+C             2    scattering on e- from K shell in Fe
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on Mott:
+MOTTIMTHETA     0.06    0.6   theta range in LAB in degrees
+MOTTIMPHI     -180.0  180.0   phi   range in LAB in degrees
+MOTTTARG     14               target particle
+C            14               Quasielastic scattering on protons if the target is a heavy nucleus 
+C            82               Scattering on Fe Nucleus
+MOTTWEIGHT    0               event weight 
+C             0               weight=1 for all events 
+C             1               weights are slightly different (see Ntuple variable WGCROS) 
+C             2               weight=cross-section (uniform simulation in the LAB angle) 
+C
+MOTTRADIAT    1               type of Mott scattering
+C             0               Regular Mott
+C             1               Radiative Mott
+MOTTRADLIM      0.2     0.8   Relative energy range for the scattered electrons due to radiatiion
+PARTICLE01   82  4  55.85  26. 1.E20  'Fe 56         $'       Fe nucleus definition
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on pion/kaon/proton photoproduction
+C
+C limits   theta       P          phi
+PHOTOPKIN   20.0  40.0  0.5   8.   168. 192.  
+PHOTOPLEN   0.046     thickness of LH twenty cm in rad lengths 
+PHOTOPROD   2  neg pion
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on High X e-scattering:
+C
+C limits   theta      X         phi
+HIGHXKIN  30.  40.  1.35 1.65  150. 200.  
+HIGHXTAR  12.  atomic number of the target
+C
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on Inclusive e-scattering:
+C
+C limits   theta      P         phi            X
+EINSCATKIN  18.0  36.0  1.0  8.0     0.  360.  0.55  0.99    
+C EINSCATKIN  18.0  36.0  1.0  8.0   172.  188.  0.55  0.99    
+C EINSCATKIN  32.5  37.5  2.0  2.01   180.  180.1  
+EINSCATMAT  1   target material number
+C          Mott  QFS   DIS
+EINSCATPR   0     0     2
+EINSCATSEP  0.020  0.020   energy separation for nucleon and delta
+C
+C ------------------------------------------
+C
+C==============================================================================
+C -----------------------------------------
+C
+OMTRACK    1
+OMHITS     1
+OMDIGI     1
+RUNG       1 
+C
+C
+C      init    kine   track   hits   digit  outp
+C SWIT    1        2      1      0       0      2
+SWIT    1        0      0      0       0      0
+C
+C
+C
+C
+VIEW 0 0
+SETS 0 0
+ANNI 0
+BREM 0
+COMP 0
+DCAY 0
+DRAY 0
+HADR 0
+LOSS 0
+MULS 0
+MUNU 0
+PAIR 0
+PFIS 0
+PHOT 0
+RAYL 0
+KINE 1
+TIME 2=-999999.
+C
+ANNI 1
+BREM 1
+COMP 1
+DCAY 1
+DRAY 1
+HADR 1
+LOSS 1
+MULS 1
+MUNU 1
+PAIR 1
+PFIS 1
+PHOT 1
+RAYL 1
+C
+C CUTS    0.05  0.02   0.05   0.05    0.05    0.05   0.05
+C CUTS    11=200.E-9
+C CUTS    0.05    0.05    0.05    0.05    0.05
+C CUTS    0.01    0.01    0.01    0.01    0.01
+C
+C
+C  RNDMSEQ   1
+C  STOP
+MEDABSORB4  210        1  2  3  4  7      photons electrons hadrons
+MEDABSORB5  213        1  2  3  4  7      photons electrons hadrons
+C
+MEDABSORB6  438        1  2  3  4  7      photons electrons hadrons
+C
+MEDABSORB7   13        1  2  3  4  7      photons electrons hadrons
+C
+MAGNET05   9    'TARG'    0.     0.    0.      0  20.    20.    80.     0.75     0     0
+C   Beam spot reference limits
+C                 Y           Z        SlopeY          SlopeZ
+BEAMYZLIM      -0.01  0.01   -0.01  0.01  -0.000  0.000   -0.000  0.000 
+C MOLLIMTHETA     60.0 120.0    theta range in CM  in degrees
+C MOLLIMPHI      -25.0  10.0    phi   range in CM  in degrees
+MOLLIMTHETA     65.0 115.0    theta range in CM  in degrees
+MOLLIMPHI      -35.0  35.0    phi   range in CM  in degrees
+TRIG 600000 events
+TRIG 1000 events
+BEAMOMLIM 10.9999 11.0001 momentum limits
+MAGNET05 10=0.875
+MAGNET01 1 'HALL' 0. 0. 75.0 0 5.08 5.08 18.37 -5.7 0 0 Q one
+MAGNET02 1 'HALL' 0. 0. 140.0 0 5.08 5.08 22.3 -5.6 0 0 Q one
+MAGNET03 1 'HALL' 0. 0. 208.5 0 5.08 5.08 18.37 2.4 0 0 Q one
+MAGNET04 1 'HALL' 0. 0. 274.5 0 5.08 5.08 18.37 5.2 0 0 Q one
+MAGNET06 2 'HALL' 0. 0. 422.8 0 8.001 30.001 82.25 13.9 0 0 Q one

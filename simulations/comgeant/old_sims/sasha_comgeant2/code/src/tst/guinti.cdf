@@ -1,0 +1,421 @@
+* $Header: /afs/cern.ch/exp/compass/src/cvs/comgeant/code/src/omginter/kuip/guinti.cdf,v 1.1.1.1 1997/06/02 17:39:56 fdr Exp $
+* $Log: guinti.cdf,v $
+* Revision 1.1.1.1  1997/06/02 17:39:56  fdr
+* Comgeant Monte-Carlo
+*
+* Revision 3.4  1997/05/11 19:45:44  gen
+* NTUPLE commands added
+*
+* Revision 3.3  1997/05/02 15:25:20  gen
+* Chudakov: pipeup, halo, NTUPLE output, some improvements
+*
+* Revision 3.2.0.1  1996/11/07 19:23:31  las
+* First CVS version.
+*
+*CMZ :          30/10/96  21.28.32  by  E.Chudakov
+*-- Author :    E.Chudakov   13/10/95
+*#if defined OMGEANT_VERSION
+*      CHARACTER*80 VersionString
+*      DATA VersionString /
+*     & '$Id: guinti.cdf,v 1.1.1.1 1997/06/02 17:39:56 fdr Exp $'/
+*#endif
+>NAME GUINTI
+>MENU OMGEANT
+>GUIDANCE
+Commands for OMGEANT
+
+>MENU DRAW
+>GUIDANCE
+Drawing commands
+>COMMAND DDIGI
+>guidance
+Draw digitizings
+>PARAMETERS
++
+IUSET 'Name of the detector SET' C D='*   '
+IUDET 'Name of the detector' C D='*   '
+IUNI 'Number of the unit' I D=0
+>GUIDANCE
+Plots the digitisations in wire chambers (DDIGI [set] [det] [unit])
+>ACTION OMXDRAW
+
+>COMMAND SPARATT
+>PARAMETERS
++
+IPAR 'Particle number' I R=1:8
+MODE 'Mode of the line (=0 - skip these particles)' I
+COLOR 'Color of the line' I
+>GUIDANCE
+Set the line mode and color for drawing trajectories of different particles
+          ITRTYP  PARTICLE  | mode | color |       HIGZ         |
+          -------------------------------------------------------
+              1   gammas    |  3   |  4    | dotted      blue   |
+              2   electrons |  1   |  2    | solid       red    |
+              3   neutral   |  4   |  1    | dot-dashed  black  |
+              4   hadrons   |  1   |  2    | solid       red    |
+              5   muons     |  2   |  3    | dashed      green  |
+              6   geantino  |  1   |  1    | dot-dashed  black  |
+              7   cerenkov  |  3   |  6    | dotted     magenta |
+>ACTION OMXCNTR
+
+
+>COMMAND ITX
+>guidance
+Draw a text (ITX X Y text)
+>PARAMETERS
+X    'X - coordinate' R D=10.
+Y    'Y - coordinate' R D=10.
+TEXT 'Text to be drawn' C D=' '
+>ACTION OMXDRAW
+
+>MENU \CONTROL
+>GUIDANCE
+Control flags and commands
+>COMMAND TKINE1
+>GUIDANCE
+ Parameters of 1-st class of particles to simulate
+>PARAMETERS
+tkin1 'Type of simulated particle ' I D=8
+tkin2 'Number of simulated particles of this type' I D=1
+tkin3 'P minimum /GeV ' R D=1.
+tkin4 'P maximum /GeV ' R D=100.
+tkin5 'Pt mean /GeV '   R D=0.
+>ACTION OMXCNTR
+
+>COMMAND TKINE2
+>GUIDANCE
+ Parameters of 2-nd class of particles to simulate
+>PARAMETERS
+tkin1 'Type of simulated particle ' I D=8
+tkin2 'Number of simulated particles of this type' I D=1
+tkin3 'P minimum /GeV ' R D=1.
+tkin4 'P maximum /GeV ' R D=100.
+tkin5 'Pt mean /GeV '   R D=0.
+>ACTION OMXCNTR
+
+>COMMAND TKINE3
+>GUIDANCE
+ Parameters of 3-rd class of particles to simulate
+>PARAMETERS
+tkin1 'Type of simulated particle ' I D=8
+tkin2 'Number of simulated particles of this type' I D=1
+tkin3 'P minimum /GeV ' R D=1.
+tkin4 'P maximum /GeV ' R D=100.
+tkin5 'Pt mean /GeV '   R D=0.
+>ACTION OMXCNTR
+
+>COMMAND TKINE4
+>GUIDANCE
+ Parameters of 4-th class of particles to simulate
+>PARAMETERS
+tkin1 'Type of simulated particle ' I D=8
+tkin2 'Number of simulated particles of this type' I D=1
+tkin3 'P minimum /GeV ' R D=1.
+tkin4 'P maximum /GeV ' R D=100.
+tkin5 'Pt mean /GeV '   R D=0.
+>ACTION OMXCNTR
+
+>COMMAND TKINE5
+>GUIDANCE
+ Parameters of 5-th class of particles to simulate
+>PARAMETERS
+tkin1 'Type of simulated particle ' I D=8
+tkin2 'Number of simulated particles of this type' I D=1
+tkin3 'P minimum /GeV ' R D=1.
+tkin4 'P maximum /GeV ' R D=100.
+tkin5 'Pt mean /GeV '   R D=0.
+>ACTION OMXCNTR
+
+>COMMAND OPDET
+>PARAMETERS
++
+IUSET 'Name of the detector SET' C D='*   '
+IUDET 'Name of the detector' C D='*   '
+>GUIDANCE
+Prints user information on detectors (OPDET [set] [det])
+>ACTION OMXCNTR
+
+>COMMAND OPRIPA
+>PARAMETERS
++
+IPAR  'the particle number, =0 - all' I D=0
+>GUIDANCE
+Prints the particle data (OMPRIPA [ipar])
+>ACTION OMXCNTR
+
+>COMMAND OPRIEV
+>PARAMETERS
++
+IFLAG 'Flag - what to print' I D=0
+ECUT  'Cut on the energy' R D=0.
+>GUIDANCE
+Prints the event data (OMPRIEV [iflag] [cut])
+           iflag=0 - the header only
+                =1 - list of tracks with Ekin>ECUT
+>ACTION OMXCNTR
+
+>COMMAND OPHITS
+>PARAMETERS
++
+IUSET 'Name of the detector SET' C D='*   '
+IUDET 'Name of the detector' C D='*   '
+ITRA  'Track number, =0 - all' I D=0
+OPT   'Option: what to print' C D=' '
+>GUIDANCE
+Prints hits (OPHITS [set] [det] [itra] [opt])
+       OPT=' ' - call GEANT routine GPHITS (all tracks)
+           'D' - prints GEANT banks from OMGEANT, include the reference 
+                 to digitisations
+>ACTION OMXCNTR
+
+>COMMAND OPDIGI
+>PARAMETERS
++
+IUSET 'Name of the detector SET' C D='*   '
+IUDET 'Name of the detector' C D='*   '
+ITRA  'Track number, =0 - all' I D=0
+OPT   'Option: what to print' C D=' '
+>GUIDANCE
+Prints digitizings (OPDIGI [set] [det] [itra] [opt] )
+       OPT=' ' - call GEANT routine GPDIGI (all tracks)
+           'G' - prints GEANT banks from OMGEANT
+           'O' - prints OMGEANT banks (all detectors)
+>ACTION OMXCNTR
+
+>COMMAND OPOHIT
+>guidance
+Prints the local hit bank JOHITS
+>PARAMETERS
++
+ITRA  'Track number, =0 - all' I D=0
+>GUIDANCE
+Prints local hit bank (OPOHIT [itra])
+>ACTION OMXCNTR
+
+>COMMAND OPTRIG
+>PARAMETERS
++
+IFLA  'Flag (not used at the moment) ' I D=0
+>GUIDANCE
+Prints the trigger detectors hits (OPTRIG [ifla])
+>ACTION OMXCNTR
+
+>COMMAND OPLUND
+>PARAMETERS
++
+IFLA  'flag for LULIST' I D=1
+>GUIDANCE
+Prints the LUND structure using LULIST(ifla) (OPLUND [ifla])
+>ACTION OMXCNTR
+
+>COMMAND PHYGET
+>guidance
+Read a PHYNIX event (/PHTRAC/) from LUN=21
+>ACTION OMXCNTR
+
+>COMMAND NTOPROC
+>guidance
+  Defines the flags which control the filling of the output NTUPLE
+  - similar to the FFREAD command NTUPPROCO
+>PARAMETERS
++
+BEAM  '!=0 - fill the beam ntuple  ' I D=0
+KINE  '!=0 - fill the kinematics ntuple  ' I D=0
+HITS  '!=0 - fill the hits ntuple  ' I D=0
+>GUIDANCE
+  KINE=-1  - write all the vertices and tracks 
+  KINE=-2  - write only the vertex #1 and the tracks stemming from it  
+  KINE=n>0 - write only the track #n and all descendent tracks and verices 
+>ACTION OMXCNTR
+
+>COMMAND NTOOPEN
+>guidance
+  Opens the output NTUPLE: see NTOPROC
+>ACTION OMXCNTR
+
+>COMMAND NTOCLOSE
+>guidance
+  Close the output NTUPLE
+>ACTION OMXCNTR
+
+>COMMAND NTIPROC
+>guidance
+  Defines the flags which control reading of the input NTUPLE
+  - similar to the FFREAD command NTUPPROCI.
+  If the data are read it is merged with the currently simulated
+  data.
+>PARAMETERS
++
+BEAM  '!=0 - read the beam ntuple  ' I D=0
+KINE  '!=0 - read the kinematics ntuple  ' I D=0
+HITS  '!=0 - read the hits ntuple  ' I D=0
+LUND  '!=0 - read the LUND ntuple  ' I D=0
+>GUIDANCE
+  LUND=1   - instead of simulating a LUND event - take it from the NTUPLE 
+>ACTION OMXCNTR
+
+>COMMAND NTIOPEN
+>guidance
+  Opens the input NTUPLE: see NTIPROC
+>ACTION OMXCNTR
+
+>COMMAND NTICLOSE
+>guidance
+  Close the input NTUPLE
+>ACTION OMXCNTR
+
+>COMMAND GETSEED
+>guidance
+  Reads a set of random generator seeds to re-generate a particular event.
+  One has to define the filename (direct access unformatted file, written by COMGEANT,
+  and the serial event (entry) number.
+>PARAMETERS
+EVENT ' serial event (entry) number in the file ' I D=0 R=1:999999999
+IPRI  ' <>0 - print the seed values '   I D=0
+NAME  ' filename (up to 80 characters)' C D='none'
+>ACTION OMXCNTR1
+
+>MENU \OPLOT
+>GUIDANCE
+Plot/print different values
+
+>COMMAND PMAGF
+>GUIDANCE
+  Plots 1 or 2-dimensional plot of the magnetic field in magnets 1-5
+  One may choose a field projection to plot.
+  The field component can be protted versus X,Y or Z
+    (or any pair for 2-dim plots).
+>PARAMETERS
+ID   'ID of the histogram. Should be booked ' I
+MAG  'Number of the magnet' I R=1:5 D=1
+XH   'Projection X of the 1/2-dim histogram (X/Y/Z=1/2/3)' I R=1:3 D=1
+YH   'Projection Y of the   2-dim histogram (X/Y/Z=1/2/3)' I R=1:3 D=2
+X    'X-coordinate (in the magnet reference frame)' R D=0.
+Y    'Y-coordinate' R D=0.
+Z    'Z-coordinate' R D=0.
+AX   ' The plotted value: B=BX*AX+BY*AY+BZ*AZ' R D=0.
+AY   ' The plotted value: B=BX*AX+BY*AY+BZ*AZ' R D=0.
+AZ   ' The plotted value: B=BX*AX+BY*AY+BZ*AZ' R D=1.
+>ACTION OMXPLOT
+
+>COMMAND PRIMAG
+>GUIDANCE
+  Prints the magnetic field in a given point
+>PARAMETERS
+X    'X coordinate of the point' R D=0.
+Y    'Y coordinate of the point' R D=0.
+Z    'Z coordinate of the point' R D=0.
+>ACTION OMXCNTR1
+
+>COMMAND PRIMED
+>GUIDANCE
+  Prints for a given point: medium, volume names
+>PARAMETERS
+X    'X coordinate of the point' R D=0.
+Y    'Y coordinate of the point' R D=0.
+Z    'Z coordinate of the point' R D=0.
+>ACTION OMXCNTR1
+
+>COMMAND PSCATRAJ
+>GUIDANCE
+  Fills a histogram with the amount of material in RL/.. along
+  the length of a track for the next event simulated. If this
+  flag is set then only one track is simulated for the next event.
+>PARAMETERS
+ID   'ID of the histogram. Should be booked ' I
+PARA 'Type of the value histogrammed: 0 - RL, 1 - Int.len.' I R=0:1 D=0
+TYPE 'Particle type' I R=1:20 D=14
+X    'X-coordinate of the track start' R D=0.
+Y    'Y-coordinate' R D=0.
+Z    'Z-coordinate' R D=0.
+PX   'PX - of the momentum' R D=300.
+PY   'PY - of the momentum' R D=0.
+PZ   'PZ - of the momentum' R D=0.
+>ACTION OMXPLOT
+
+>COMMAND PDEVIATION
+>GUIDANCE
+  Fills histograms with track deviation from a straight line
+  measured at the exit from a specified detector
+>PARAMETERS
+IDT  'IDTRID identifier of the plane ' I
+ID1  'ID of the histogram for slope deviations. Should be booked ' I
+ID2  'ID of the histogram for position deviations.' I
+ID3  'ID of the 2-dim histogram for slope-position deviations.' I
+>ACTION OMXPLOT
+
+>MENU \MODIFICATION
+>GUIDANCE
+
+Modifications of some preset values
+
+>COMMAND MAGFIELD
+>GUIDANCE
+  Changes the values of the field (AMAGPAR(5-7,mag))
+>PARAMETERS
+MAF    'the magnet number ' I
+FIELD  'Field kGs' R D=-9999.
++
+FLAG1  'For dipole: flag1=1 - longitudinal component included' R D=-9999.
+FLAG2  'flag2' R D=-9999.
+>ACTION OMXCNTR1
+
+>COMMAND MAGSIZE
+>GUIDANCE
+  Changes the dimensions of the magnetic field (PMOLMAG(2-4,mag)
+  Negative values are ignored.
+>PARAMETERS
+MAF    'the magnet number ' I
+X      'Full size in X' R D=-999.
+Y      'Full size in Y' R D=-999.
+Z      'Full size in Z' R D=-999.
+>ACTION OMXCNTR1
+
+>COMMAND MOLLANGL
+>GUIDANCE
+  Changes the range of Moller scattering angles in CM
+>PARAMETERS
+THETMIN    'theta minimum' R D=0.
+THETMAX    'theta maximum' R D=0.
+PHIMIN     'phi minimum' R D=0.
+PHIMAX     'phi maximum' R D=0.
+>ACTION OMXCNTR1
+
+>COMMAND MOTTANGL
+>GUIDANCE
+  Changes the range of Mott scattering angles in Lab
+>PARAMETERS
+THETMIN    'theta minimum' R D=0.
+THETMAX    'theta maximum' R D=0.
+PHIMIN     'phi minimum' R D=0.
+PHIMAX     'phi maximum' R D=0.
+>ACTION OMXCNTR1
+
+>COMMAND BEAMMOM
+>GUIDANCE
+  Redefines the beam momentum (it the beam is defined as a gaussiqan
+>PARAMETERS
+B1    'minimum momentum GeV/c' R 
+B1    'minimum momentum GeV/c' R 
+SB    'sigma of the distribution' R 
+>ACTION OMXCNTR1
+ 
+>COMMAND CHERFAC
+>GUIDANCE
+  Redefines the multiplicity for Cherenkov photons
+>PARAMETERS
+FAC    'A factor for Cherenkov photons multiplicity' R D=369.81E9
+>ACTION OMXCNTR1
+
+>COMMAND KINONE
+>GUIDANCE
+  Parameters of the single particle to generate (OMKINONE)
+>PARAMETERS
+IPAR    'A factor for Cherenkov photons multiplicity' I R=1:200
+MOM     'Central momentum, GeV' R R=0.:200.
+THET    'Central theta angle (to Z axis), rad' R R=0.:3.1416
+PHI     'Central phi   angle (proj onto XY, angle to X), rad' R R=0.:6.29
+DMOM    'Momentum width: p=p0+/-dp , GeV' R R=0.:200.
+DTHET   'Theta    width, rad' R R=0.:3.1416
+DPHI    'Phi      width, rad' R R=0.:6.29
+>ACTION OMXCNTR1

@@ -1,0 +1,39 @@
+<a name="Files">
+<h2>Input/Output files</h2>
+</a>
+<ul>
+ <li> <b>Used </b> logical units:
+   <ul>
+    <li> 1 - input data
+    <li> 2 - output data
+    <li> 9 - for temporary use (inside one routine)
+    <li> 15 - input FFREAD
+    <li> 17 - input the field map for the SM1h ("Torino") magnet
+    <li> 18 - input the field map for the SM1m magnet
+    <li> 19 - input the field map for the SM2 (SFM) magnet
+    <li> 20 - input the field map for the PT magnet
+    <li> 21 - printing out detector information
+    <li> 22 - printing out detector information
+    <li> 25 - input file with LUND events (M.Lamanna)
+    <li> 26 - input  NTUPLE
+    <li> 27 - output NTUPLE
+   </ul>
+ <li> <b>INPUT</b>: OMGEANT reads in the user's FFREAD file from fort.15
+   This file may/should trigger reading in of other files using the FFREAD
+   command READ, for example:
+  <pre>
+   NOLI
+   C  == Read the general geometry data:
+   READ 8
+   C  == Read the specific geometry data:
+   READ 16
+   ..... other user's commands
+  </pre>
+   providing the proper links to these logical units (8 and 16 in this case).
+   Thus one can redefine values set in general geometry files and add new
+   definitions.
+ <li> <b>Convention</b>:
+   In order to avoid clashes with logical units the user should use
+   numbers higher than 40. The numbers lower may be used by COMGEANT
+   in future.
+</ul>

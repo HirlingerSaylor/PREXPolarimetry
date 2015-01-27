@@ -1,0 +1,90 @@
+<a name="Banks">
+<h2>OMGEANT banks</h2>
+</a>
+OMGEANT fills the standard GEANT ZEBRA banks for hits and digitisings.
+It also writes several ZEBRA banks of its own. 
+The pointers to these banks are stored in the COMMON:
+<pre>
++KEEP,OMCBANK.
+C
+C---  Pointers to ZEBRA banks
+C
+      INTEGER    MXJOADR
+      PARAMETER (MXJOADR=32)
+C
+      COMMON/OMCBANK/ JOKTRA,JOTDIG,JOKINP(10),JOKOUT(10),JOMTMP(10)
+C
+      INTEGER         JOKTRA,JOTDIG,JOKINP,JOKOUT,JOMTMP
+      INTEGER         JOADR(MXJOADR),JOHITS
+      EQUIVALENCE    (JOADR(1),JOKTRA),(JOHITS,JOMTMP(1))
+C
+</pre>
+   
+The banks are filled with the following information:<p>
+<a name="joktra">
+<b>JOKTRA</b>
+</a>
+<p>
+   contains additional information on every JKINE track.
+   The bank is booked and filled booked at the tracking stage. 
+<pre>
+C
+C              joktrk=LQ(JOKTRA-1) - tracking flags
+C              jokhit=LQ(JOKTRA-2) - hit flags
+C              joktrj=LQ(JOKTRA-3) - trajectory numbers (or 0)
+C              jokjtr=LQ(JOKTRA-4) - track numbers for trajectories
+C              jokusf=LQ(JOKTRA-5) - flags for "useful" tracks
+C              jokdeb=LQ(JOKTRA-6) - bank for debugging
+C                       itr=1,NTRACK
+C                IQ(joktrk+itr) =0   - no tracking is done
+C                               =1   - the tracking started
+C                               =2   - the tracking of the MAIN track finished
+C                           (the secondaries with the same ITRA may follow)
+C                IQ(jokhit+itr) =0   - no hits in the detectors
+C                               =1   - no hits in the coordinate detectors
+C                               =2   - hits in the coordinate detectors
+C                               =3   - digitizings in the coordinate detectors
+C                IQ(joktrj+itr) =itj (or 0) - the trajectory number
+C                IQ(jokusf+itr) >0 - for useful tracks
+C                       itj=1,NTRAJEC
+C                IQ(jokjtr+itj) =itr - initial number
+C
+C                jdeb=LQ(jokdeb-itr)      - bank for debugging
+C                     jstop=LQ(jdeb-1)    - bank for process codes for the last
+C                                                                     step
+</pre>   
+<p>
+<a name="jotdig">
+<b>JOTDIG</b>
+</a>
+is a bank bank containing both hit coordinates and digitisings in the
+coordinate detectors, stored in a format close to the output format used
+by TRIDENT (geometrical reconstruction for OMEGA experiments).
+The bank is booked at the digitisation stage.
+<pre>
+C
+C             notw=IQ(JOTDIG+1) - number of words/hit in "jotd"
+C               (=10) (=8 before the <a href="#vers32">version 3.2</a>)
+C             jotd=LQ(JOTDIG-1)
+C                      itr=1,NTRACK
+C            notrd=IQ(jotd+itr) - number of "hits" for this track
+C            jotrd=LQ(jotd-itr) - pointer to the digit. bank with hits
+C                      i=1,notrd
+C            words for the "hit" no "i":
+C             Q(jotrd+notw*(i-1)+1) - iddet   - the plane number
+C                               +2) - idtype  - the type of the detector
+C                               +3) - 0 if the hit is caused by the main
+C                                       track
+C                                   = ipart (type) if it is caused
+C                                          by secondaries from this track
+C                                         (results of interactions)
+C             Q(jotrd+notw*(i-1)+4) - Y (MRS) (if the beam goes along X)
+C                               +5) - Z (MRS)
+C             Q(jotrd+notw*(i-1)+6) - dig1
+C             Q(jotrd+notw*(i-1)+7) - dig2
+C             Q(jotrd+notw*(i-1)+8:10) - COS Y,Z,X (MRS) (if the beam goes along X)
+C                                        at the enterance point of the detector 
+C             Q(jotrd+notw*(i-1)+11)   - the serial number of this hit on
+C                                        the trajectory
+</pre>
+ 

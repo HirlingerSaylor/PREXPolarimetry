@@ -1,0 +1,316 @@
+<a name="detectors">
+<h3>Detectors definition</h3>
+</a>
+
+In GEANT there is no link from the JSET banks to the instances of the
+detectors. In other words, if one looks for a detector with a certain
+ISET,IDET numbers within the JSET... structure s/he has no clue how
+many instanses there are, unless one looks into the JVOLUM structure.
+One may define a detector, say a wire
+chamber, and position several copies (instances) of this chamber.
+These instances are geometrically identical (for GEANT) but may
+be slightly different otherwise, say in their efficiencies. Therefore
+it is convenient to store some information on the instances into
+the same JSET structure. In OMEANT there are two types of detectors:
+those which have some internal structure different instance-wise,
+each instance is called "unit", and those which have no internal
+structure and no additional information is stored (hodoscopes, for example).
+<p>
+GEANT identifies a detector using a path of significant volumes and their
+copy (instance) numbers. Therefore a detector index may have several dimensions.
+In order to simplify the numbering of detectors OMGEANT uses only one-dimension
+index, so a detector should be identified with only one pair - the volume name
+and the instance number.
+<p>
+Only plane detectors are supported at the moment.
+A detector should be defined
+as a volume filled with a sensitive medium.  
+A plane coordinate detector measures one (or two) projections of the track crossings 
+with the detector volume. The measurement is done in the Detector Reference Frame
+(DRS) where the BOX shaped volume is defined. By definition, the plane of the
+measurement is normal to the axis IDIRDET(1)=I of the box
+(see a note on <a href="#orientation">orientation</a>).
+If IDIRDET(1)=1
+(beam along X) then the measurement is done in the Y-Z plane of DRS.
+If IDIRDET(1)=3
+(beam along Z) then the measurement is done in the X-Y plane of DRS.
+One may define the plane detectors: MWPC, DC, micro-strips, MSGC (they are treated
+like MWPCs at the moment), scintillator hodoscopes and calorimeter hoposcopes. 
+The types of the coordinate detectors are set in the following way:
+<ul>
+ <li> 1-30 - plane chambers, microstrips
+   <ul>
+    <li>  1-10 - MWPC
+    <li> 11-20 - DC
+    <li> 21-25 - silicon micro-strips
+    <li> 26-30 - MSGC
+   </ul>
+
+ <li> 41-50 - hodoscopes
+  <ul>
+    <li> 41-45 - 'normal' hits/digitizings (as for MWPC...) useful for scintillator hodoscopes
+    <li> 46-50 - merge the hits from each track, useful for calorimeters (see
+		 GSCHIT)
+  </ul>
+</ul>
+In GEANT detectors are
+grouped using their names 'SETS' and 'DETS'. There are many possible ways
+to arrange these 'SETS' and 'DETS'. OMGEANT uses one of these ways:
+<ul>
+ <li> <a name="coordet"> <b>Coordinate detectors</b> </a>.
+   One 'set' may contain several detectors 'det'. Let us suppose there is a MWPC
+   with 3 separate planes in one gas volume.
+   One defines some 'set' name (3 symbols), say MWP. This will become
+   the name of the volume for the full chamber containing sensitive media,
+   frames etc.
+   This volume (or its daughter volume)
+   may contain
+   several (say, 3) detectors which names 'DETS' would be: MWP1,MWP2,MWP3.
+   These detectors are defined by volumes with the same names.
+   <!- These volumes 
+       should NOT contain other volumes. ->
+   The medium of a detector volume should 
+   be decleared sensitive.
+   One may position the volume 'MWP' wherever one wants. So, there might be
+   many detectors of the set='MWP', det='MWP1'. They are distinguished by
+   the number of the volume 'MWP'. Examples:
+   <pre>
+C
+C ------------------------------------------------------------------------
+C
+C ---            Detector set "MWP " - MWPC
+C
+SET01NAME      'MWP '
+SET01TYPE       1            type (MWPC)
+SET01UNITS      7            number of units
+SET01GATE       80.          effective gate length (ns)
+C
+C Thickness:   cm  g/cm**2 Rad.l.  Abs.l.  Col.l.
+C center      6.8  0.058  0.00200 0.00054 0.00070
+C
+C --                       Volumes
+C                              posit                   1/2 size
+C              med moth rot  X   Y    Z   shape  npar   X     Y     Z
+SET01VOL1PAR   311  4    0  -1.6 0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL2PAR   311  4    0   0.  0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL3PAR   311  4    0   1.6 0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL4PAR   211  5    0   0.  0.   0.  'BOX '  3     3.4  89.   60.
+SET01VOL5PAR   212  6    0   0.  0.   0.  'BOX '  3     3.4 101.   72.
+SET01VOL6PAR     1  0    0   0.  0.   0.  'BOX '  3     9.0 101.   72.
+SET01VOL7PAR   215  6    0  -6.2 0.  66.  'BOX '  3     2.8 101.    6.
+SET01VOL8PAR   215  6    0   6.2 0.  66.  'BOX '  3     2.8 101.    6.
+SET01VOL9PAR   215  6    0  -6.2 0. -66.  'BOX '  3     2.8 101.    6.
+SET01VOLAPAR   215  6    0   6.2 0. -66.  'BOX '  3     2.8 101.    6.
+C
+C --                       Planes
+C             #wires  pitch     angle  wir1-orig  flag
+SET01PLA1PAR   760   -0.19688   10.14   75.00      0
+SET01PLA2PAR   760   -0.2        0.     75.9       0
+SET01PLA3PAR   760   -0.19688  -10.14   74.43      0
+C SET01PLA1PAR   76    -1.9688   10.14   75.00      10
+C SET01PLA2PAR   76    -2.        0.     75.9       10
+C SET01PLA3PAR   76    -1.9688  -10.14   74.43      10
+C
+
+
+C ----            Units
+SET01UNIMOTH    'HALL'   'HALL'  'HALL'  'HALL'  'HALL'  'HALL'  'HALL' mother
+SET01UNIROTM       0       0       0       0       0       0       0    rotat
+SET01UNICENY      0.02   -0.03   -0.05   -0.03   -0.03   -0.04     0.  y center
+SET01UNICENZ      0.      0.      0.      0.      0.      0.       0.  z center
+SET01UNIPL1X   -134.6   -96.6   -42.6    10.4    69.4   126.4    145.4 first plane
+C
+C  All planes:
+C      The value of coordinates are ignored (the unit is centred on the X)
+C                 if >1.E5
+SET01DETWIRY      21*1.E6
+SET01DETWIRZ      21*1.E6
+SET01DETEFFI      21*1.
+SET01DETBACK      21*0.
+SET01DETID        71 72 73 74 75 76 77 78 79 80            output identifier
+                  81 82 83 84 85 86 87 88 89 90
+                  91
+C
+  </pre>
+Commands SETXX... refer to the set number XX. Inside this set of
+MWPC there 3 detectors. One detector is one plane of MWPC. The number of
+detectors 'ndet' is defined by the commands for "planes": SETXXPLA1PAR ...
+In order to specify all volumes involved there are commands SETXXVOL1PAR and
+the volumes for the planes (3 in this case) are the first 'ndet' volumes in
+the list. The mother volume is specified by its number in the same list. All
+the planes in the example are put into the volume #4 defined by the command
+SET01VOL4PAR. The main volume of the 'set' is here the volume #6 for which
+the mother volume has the #0. These volumes identify the real chambers and
+they are positioned in the setup using the commands: SETXXUNIMOTH ...
+One such detector is called one unit. The full number of units is given by
+SETXXUNITS command. One may give the position of the center of the set volume
+but it is also possible to use the position of the first plane in X projection.
+One may also adjust the lateral position of the chamber using the coordinates
+of the first wires: see SETXXDETWIRY,SETXXDETWIRZ. The commands SETXXDET...
+refer to all planes in all units. The identifier SET01DETID is used by 
+reconstruction programs (the example presents TRIDENT identifiers for Omega
+A-chambers). The GEANT definition of the coordinate detectors is done via
+the call:
+<pre>
+            CALL GSDET(namset,namdet,nv,namesv(1),nbitsv(1),idtype,400,400
+     +                 ,idset,iddet)
+</pre>
+where nv=1, namesv(1)=namset and nbitsv(1) depends on the number of units.
+<p>
+<a name="warning1"><b>Warning</b></a>
+   I tried to use the routine GSDETV which should
+  fill the detector descriptors (nv,namesv,nbitsv) automatically.
+  Unfortunately it did not work for cases when detectors of the same type,
+  say 'MWP' were positioned to different levels of the volume tree,
+  for example some were positioned in 'HALL' while others in 'TBEN'
+  which in its turn was positioned in 'HALL'.
+<p>
+For each detector 'namdet' a number of additional parameters are stored using:
+<pre>
+            CALL GSDETU(namset,namdet,14,paruni(1))
+</pre>
+where the (REAL) parameters paruni are: <br>
+<pre>
+  1    -  full number of units
+  2    -  number of wires
+  3    -  wire pitch
+  4    -  cos(ang) where ang is the angle of the readout direction with respect
+          to the axis II of the detector frame
+  5       sin(ang)
+  6    -  distance from the first wire to the origin of the detector volume
+  7-9  -  X,Y,Z (in DRS) coordinates of a point on the first wire. Only one
+          projection (say 'II') in DRS has a non-sero value 
+ 10-12 -  the same components of the pitch
+ 13    -  the detector box size in the 'II' direction 
+ 14    -  the time gate length (ns) 
+</pre>
+The 'user' bank which contain this information has a pointer of LQ(jdet-3)
+(GEANT default). OMGEANT adds 'nunits' links to this bank, where 'nunits' is
+the number of units. Each link contains a bank with parameters of this unit,
+filled with:
+<pre>
+      CALL OMSDETU(NAMESET(iset),vnam(ivol),iuni
+     +                    ,npardet,pardet(1)
+     +                    ,ntpath,nampath(1,ipla),ipath(1,ipla))
+</pre>
+where ntpath,nampath and ipath define the volume path to the detector plane and
+the parameters pardet are:
+<pre>
+  1    -  ID of the plane (used for reconstruction)
+  2-3  -  II,III coordinates of a point on the first wire
+  4    -  efficiency of the plane
+  5    -  background level
+  6-?  -  additional parameters
+          DC:
+        1 - v - drift velocity (in cm/time_bin)
+        2 - t0 (measured t=t0-dist/v)
+        3 - two hit resolution (in units of time bins)
+        4 - space resolution (in units of time bins)
+        5 - the time bin length (in ns) 
+</pre>
+The information can be retrieved by:
+<pre>
+      CALL OMFDETU(IUSET,IUDET,IUNI,MXDPUS,nwpar,pardet(1)
+     +            ,nulev,nunam(1),nunum(1))
+</pre>
+The drift parameters are defined using cards of the type as follows:
+<pre>
+GSET05DETVELO     200*0.005                             drift velocity
+GSET05DETTIM0     200*80.                               time zero
+GSET05DETDRES     200*900.            double hit resolution (in time slices)
+GSET05DETSRES     200*3.              space resolution (in time slices)
+GSET05DETSLIC     200*1.              time slices in ns
+</pre>
+<p>
+Key names with different prefixes can be used to define a detector set:
+<pre>
+GSET...XX   where 01&lt;=XX&lt;=30   for general geometry files 
+SET...XX    where 01&lt;=XX&lt;=25   for other geometry files 
+USET...XX   where 01&lt;=XX&lt;=5   reserved for the user
+</pre>
+
+
+ <li><a name="hododet"> <b>Hodoscopes  </b></a> (scintillators, lead glass etc) are defined in a
+   simple way.
+   Here is an example:
+   <pre>
+C
+C---          Hodoscope 1
+C
+HOD1IDTYPE    46      hodoscope type
+HOD1SLATS     64      total number of slates
+HOD1MEDIUM    25      medium number
+HOD1MOTHER    'HOD1'  mother volume
+HOD1GATE      100.    gate in nsec
+HOD1SHAP      'BOX ' 'BOX '       shape for each type
+HOD1ROT        0       0          rotation matrices for each type
+C sizes          
+HOD1SIZE1      0.25   9.   50.    type one      
+HOD1SIZE2      0.5    9.   50.    type two
+HOD1TYPE  32*1 32*2   types of all the slates
+HOD1POSX   3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+HOD1POSY 192.   180.0  168.   156.   144.   132.   120.   108.
+          96.    84.    72.    60.    48.    36.    24.    12.
+           0.   -12.   -24.   -36.   -48.   -60.   -72.   -84.
+         -96.  -108.  -120.  -132.  -144.  -156.  -168.  -180.
+         192.   180.0  168.   156.   144.   132.   120.   108.
+          96.    84.    72.    60.    48.    36.    24.    12.
+           0.   -12.   -24.   -36.   -48.   -60.   -72.   -84.
+         -96.  -108.  -120.  -132.  -144.  -156.  -168.  -180.
+HOD1POSZ      32*50.                  upper half
+              32*-50.                 lower half
+HOD1EFFI 64*1.     efficiencies of the slates
+HOD1BACK 64*1.     background level in the slates
+C
+PARVOL39 'HOD1'   3  'HALL'   570.    0.    0.     0 'BOX ' 3   5. 220. 100.
+C
+   </pre>
+   A hodoscope is a volume called 'HODX' in this case 'HOD1' filled with
+   rectangular slates, of similar or different types (sizes).
+   The sizes are defined by the command HODXSIZE1, HODXSIZE2... for each type.
+   Each slate
+   gets its unique
+   number, disregarding of its type. This number is used in the definitions
+   HODXPOSX, HODXPOSY, HODXPOSZ, HODXTYPE, HODXEFFI and HODXBACK.
+   At the moment the number
+   of hodoscopes is limited to 8, the number of slates per hodoscope to 256,
+   the number of slate types to 2.
+   The 'set' name is always 'HODO'. A slate is a volume
+   which gets a name
+   of 'HOXN', where X is the hodoscope number and N is the slate type number.
+   This name is used for the 'detector' name. 
+   Thus there are many copies of each 'detector' inside one hodoscope.
+   A hit should be identified by the 'detector' name and the copy number.
+
+   <p>The "automatic" GSDETV routine is used at the moment to specify the hodoscopes,
+   therefore it is recommended to position them on one level
+   of the volume tree (see the <a href="#warning1">warning</a>).
+   
+For each detector 'namdet' a number of additional parameters are stored using:
+<pre>
+            CALL GSDETU(namset,namdet,NN,paruni(1))
+</pre>
+where the (REAL) parameters paruni are: <br>
+<pre>
+  1    -  the number of slates of the current type
+  2    -  the number of different types of slates for this hodoscope
+  3    -  time gate
+  4    -  the total number of slates in this hodoscope
+            for all slates of the current type:
+  5    -  1-st slate of this type: the serial number of this slate (disregarding the type) 
+  6    -  1-st slate of this type: efficiency 
+  7    -  1-st slate of this type: background 
+  8    -  2-st slate of this type: the serial number of this slate (disregarding the type) 
+  9    -  2-st slate of this type: efficiency 
+ 10    -  2-st slate of this type: background 
+ ...   - .......
+</pre>
+
+</ul>

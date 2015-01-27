@@ -1,0 +1,8 @@
+MACRO eve n=1
+
+  do i=1,[n]
+    trig
+    dxyz
+  enddo
+
+RETURN

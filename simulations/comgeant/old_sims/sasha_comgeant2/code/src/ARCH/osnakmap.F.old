@@ -1,0 +1,337 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OSNAKMAP(MAG,XX,BX,IERR)
+C
+C     *****************************************************************
+C     *                                                               *
+C     *   Read the #MAG map from SNAKE, or similar programs           * 
+C     *   SNAKE frame: XY-bend frame, Y - along the beam (left handed)*
+C     *   We convert it to: XYZ(SNAKE)==>XZY(ours) (right handed)     *
+C     *   A SNAKE-emulation format can be read (EMUL key) -           *
+C     *            in this case no conversion is used                 *
+C     *   INPUT: MAG - the magnet number, map file: magnet_MAG.map    * 
+C     *          XX  - the coordinates                                *
+C     *   OUTPUT: BX(1-3)  the components of the field                *
+C     *           IERR>0 - error                                      *
+C     *   called from: OMAGFLDN                                       *
+C     *                                                               *
+C     *****************************************************************
+C
+      IMPLICIT NONE
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+      INTEGER MAG,IERR
+      REAL XX(3),BX(3)
+C
+#include "geant321/gcunit.inc"
+#include "omgeant/omcunit.inc"
+C
+C---     Read a field map
+C
+      INTEGER    mxpnt,mxmap,mxmag,mxsym
+      PARAMETER (mxpnt=100000,mxmap=4,mxmag=30,mxsym=2)
+      INTEGER    nmap                 ! number of read maps
+     +          ,magmap(mxmap)        ! =MAG for each map
+     +          ,mapmag(mxmag)        ! =map for each MAG
+     +          ,mapsym(3,mxsym)      ! (map) symmetry flags for X,Y,Z of the map, =0 - nothing, =1 -asymmetry, =2 - symmetry 
+     +          ,npnt(mxmap)          ! (map) number of points for the magnet mag
+     +          ,nxyz(3,mxmap)        !       numbers of point in projections   
+     +          ,kmappnt(mxpnt)       !  mapping of the read array to the new projections (SNAKE)
+      REAL       dxyz(3,mxmap)        !       steps in projections
+     +          ,xlim(2,3,mxmap)      ! xmin,xmax, ymin,ymax, zmin,zmax for each map 
+     +          ,bxyz(3,mxpnt,mxmag)  ! B projection for each point for each map
+C
+      INTEGER map,maga,iost,nline,i,j,nz,nr,lcw,ip,ixyz(3),ipri,ix,iy,iz
+     +       ,ipz,ipy,n12,isym,k,iemulat,mp,jp
+      CHARACTER fnam*16,cnm*2,cform*32,csym*3,line*132
+C
+      REAL    bmax,bb,xyz(3),qq,sxyz(2,3),btmp(3),s3,s32,s321,a1,a2
+     +       ,refl(3)
+      REAL symm(3,mxsym)     ! (j,i) symmetry in projection Bj for case i, i=1 - "asymm", =2 -"symm"
+      INTEGER kfram(3,2)     ! (j,i) mapping of the projections: FILE==>internal (i=1 - as is, =2 SNAKE)  
+      SAVE symm,nmap,magmap,mapmag,mapsym,npnt,nxyz,dxyz,xlim,bxyz,kfram
+     +    ,kmappnt
+C
+      DATA nmap/0/
+      DATA ipri/0/
+      DATA symm/-1., 1., 1.     !  x --> -x ==> Bx=-Bx,By= By,Bz= Bz 
+     +         , 1.,-1.,-1.     !  x --> -x ==> Bx= Bx,By=-By,Bz=-Bz 
+     +         / 
+      DATA kfram/1,2,3          ! diagonal 
+     +          ,1,3,2          ! for SNAKE files 
+     +          /
+C
+C     ------------------------------------------------------------------
+C
+C---    First call - read the map
+C
+      ipri=0
+      BX(1)=0.
+      BX(2)=0.
+      BX(3)=0.
+      IERR=0
+C
+      IF(nmap.LT.0) THEN
+         IERR=1
+         GO TO 999
+      ELSE IF(nmap.EQ.0) THEN
+C
+C---    First entry - initialize the map counter
+C
+         DO maga=1,mxmag
+            mapmag(maga)=0
+         ENDDO
+      ENDIF
+C
+      IF(MAG.LE.0.OR.MAG.GT.mxmag) THEN
+         WRITE(LOUT,1500) MAG
+         GO TO 998
+      ENDIF
+C
+C---    Try to find the map
+C
+      IF(mapmag(MAG).EQ.0) THEN
+C
+C---      Try to read this map
+C
+         IF(nmap.GE.mxmap) THEN
+            WRITE(LOUT,1600) MAG,nmap
+            GO TO 998
+         ENDIF
+C
+         IF(MAG.LT.10) THEN
+            WRITE(cnm,FMT='(I1)') MAG
+            lcw=1
+         ELSE
+            WRITE(cnm,FMT='(I2)') MAG
+            lcw=2
+         ENDIF
+         fnam='magnet_'//cnm(1:lcw)//'.map'
+         lcw=INDEX(fnam,'map')+2
+         OPEN(LUNTMP,FILE=fnam(1:lcw),STATUS='OLD',IOSTAT=iost
+     +       ,FORM='FORMATTED')
+         IF(iost.NE.0) THEN
+            WRITE(LOUT,2000) MAG,fnam(1:lcw),iost
+            GO TO 998
+         ENDIF
+         nline=0
+         iemulat=0
+         READ(LUNTMP,FMT='(A)',IOSTAT=iost) line
+         IF(INDEX(line,'EMUL').GT.0) iemulat=1
+         mp=2-iemulat
+         nline=nline+1
+         IF(iost.NE.0) GO TO 997
+         READ(LUNTMP,FMT='(A3)',IOSTAT=iost) csym 
+         nline=nline+1
+         IF(iost.NE.0) GO TO 997
+C
+         nmap=nmap+1
+         magmap(nmap)=MAG
+         mapmag(MAG)=nmap
+         npnt(nmap)=1
+C
+         DO j=1,3
+            jp=kfram(j,mp)
+            IF(csym(j:j).EQ.'N'.OR.csym(j:j).EQ.'n') THEN
+               mapsym(jp,nmap)=0 ! no symmetry
+            ELSE IF(csym(j:j).EQ.'A'.OR.csym(j:j).EQ.'a') THEN
+               mapsym(jp,nmap)=1 ! "asymmetry"
+            ELSE IF(csym(j:j).EQ.'S'.OR.csym(j:j).EQ.'s') THEN
+               mapsym(jp,nmap)=2 ! "symmetry"
+            ELSE
+               WRITE(LOUT,1650) MAG,nmap,nline,csym
+               GO TO 998
+            ENDIF
+         ENDDO   
+C
+         DO j=1,3
+            jp=kfram(j,mp)
+            READ(LUNTMP,*,IOSTAT=iost) nxyz(jp,nmap)
+     +                                ,(xlim(i,jp,nmap),i=1,2)
+            nline=nline+1
+            IF(iost.NE.0) GO TO 997
+            IF(nxyz(jp,nmap).LE.1.OR.
+     +         xlim(1,jp,nmap).GE.xlim(2,jp,nmap)) THEN
+               WRITE(LOUT,1700) MAG,nmap,nline,jp,nxyz(jp,nmap)
+     +                                ,(xlim(i,jp,nmap),i=1,2)
+               GO TO 998
+            ENDIF
+            DO i=1,2
+               xlim(i,jp,nmap)=xlim(i,jp,nmap)/10.  ! mm --> cm
+            ENDDO
+            dxyz(jp,nmap)=(xlim(2,jp,nmap)-xlim(1,jp,nmap))
+     +                  /REAL(nxyz(jp,nmap)-1)
+            npnt(nmap)=npnt(nmap)*nxyz(jp,nmap)
+         ENDDO
+         IF(npnt(nmap).GT.mxpnt) THEN
+            WRITE(LOUT,1800) MAG,nmap,(nxyz(i,nmap),i=1,3)
+     +           ,npnt(nmap)
+            GO TO 998
+         ENDIF
+C
+C---        Fill the cross-mapping (for SNAKE projections swap)
+C
+         ixyz(1)=0
+         ixyz(2)=0
+         ixyz(3)=0
+         DO i=1,npnt(nmap)
+            ixyz(kfram(1,mp))=ixyz(kfram(1,mp))+1
+            IF(ixyz(kfram(1,mp)).GT.nxyz(kfram(1,mp),nmap)) THEN
+               ixyz(kfram(1,mp))=1
+               ixyz(kfram(2,mp))=ixyz(kfram(2,mp))+1
+            ENDIF
+            IF(ixyz(kfram(2,mp)).GT.nxyz(kfram(2,mp),nmap)) THEN
+               ixyz(kfram(2,mp))=1
+               ixyz(kfram(3,mp))=ixyz(kfram(3,mp))+1
+            ENDIF
+            ip=ixyz(1)+(ixyz(2)+ixyz(3)*nxyz(2,nmap))*nxyz(1,nmap)
+            kmappnt(i)=ip
+         ENDDO
+C
+         READ(LUNTMP,FMT='(A)',IOSTAT=iost) cform
+         nline=nline+1
+         IF(iost.NE.0) GO TO 997
+         READ(LUNTMP,FMT=cform,IOSTAT=iost) 
+     +       ((bxyz(kfram(j,mp),kmappnt(i),nmap),j=1,3),i=1,npnt(nmap))
+C
+         CLOSE(LUNTMP)
+C
+         bmax=0.
+         DO i=1,npnt(nmap)
+            bb=0.
+            DO j=1,3
+               bxyz(j,i,nmap)=bxyz(j,i,nmap)*10.   !  T --> kGs
+               bb=bb+bxyz(j,i,nmap)**2
+            ENDDO
+            bmax=MAX(bmax,SQRT(bb))
+         ENDDO
+C
+         WRITE(LOUT,1100) MAG,nmap,(nxyz(j,nmap),j=1,3),npnt(nmap)
+     +                 ,((xlim(i,j,nmap),i=1,2),j=1,3)
+     +                 ,(dxyz(j,nmap),j=1,3),bmax
+ 1100    FORMAT(' === Read the field map of mag=',I2,' into map=',I2
+     +         /6X,'nx,ny,nz,npnt=',3I4,I7,1X
+     +         ,' x,y,z limits=',3(2F8.2,1X)
+     +         ,' x,y,z steps=' ,3F7.2,2X,'Bmax=',F10.3)
+C
+         IF(ipri.NE.0) THEN
+            ixyz(1)=0
+            ixyz(2)=1
+            ixyz(3)=1
+            DO ip=1,npnt(nmap)
+               ixyz(1)=ixyz(1)+1
+               IF(ixyz(1).GT.nxyz(1,nmap)) THEN
+                  ixyz(1)=1
+                  ixyz(2)=ixyz(2)+1
+                  IF(ixyz(2).GT.nxyz(2,nmap)) THEN
+                     ixyz(2)=1
+                     ixyz(3)=ixyz(3)+1
+                  ENDIF
+               ENDIF
+               DO j=1,3
+                  xyz(j)=xlim(1,j,nmap)+(ixyz(j)-1)*dxyz(j,nmap)
+               ENDDO
+               WRITE(LOUT,FMT='(I5,2X,3I4,3X,3F8.2,3X,3F10.3)') 
+     +              ip,(ixyz(j),j=1,3)
+     +                ,(xyz(j),j=1,3)
+     +                ,(bxyz(j,ip,nmap),j=1,3)
+            ENDDO
+         ENDIF
+      ENDIF
+C
+      map=mapmag(MAG)
+      IF(map.LT.0.OR.map.GT.mxmap) THEN
+         WRITE(LOUT,1900) MAG,map
+         GO TO 998
+      ENDIF
+C
+C---     Find the location of the point on the grid
+C
+      DO j=1,3
+         refl(j)=1.
+      ENDDO
+C
+      DO j=1,3
+         xyz(j)=XX(j)
+         a1=xlim(1,j,map)
+         a2=xlim(2,j,map)
+         IF(ABS(xyz(j)).GT.MAX(ABS(a1),ABS(a2))) GO TO 999     ! outside the fiducial volume
+         IF(xyz(j).LT.a1.OR.xyz(j).GT.a2) THEN                 ! one of the sides for symmetrical maps
+            xyz(j)=-xyz(j) 
+            isym=mapsym(j,map)
+            IF(isym.LE.0.OR.isym.GT.mxsym) THEN  ! no symmetry defined
+               WRITE(LOUT,1950) MAG,map,j,XX
+               GO TO 998
+            ENDIF
+            DO i=1,3
+               k=j+i-1
+               IF(k.GT.3) k=k-3
+               refl(k)=refl(k)*symm(i,isym)
+            ENDDO
+         ENDIF
+         qq=xyz(j)-a1
+         ixyz(j)=INT(qq/dxyz(j,map))+1
+         sxyz(2,j)=(qq-(ixyz(j)-1)*dxyz(j,map))/dxyz(j,map)
+         sxyz(1,j)=1.-sxyz(2,j)
+         btmp(j)=0.
+      ENDDO
+C
+C---       Take an average of 8 points using weights depending on the distances. 
+C---           On a point the result coincides with the value at this point
+C
+C      WRITE(LOUT,FMT='(3I4,2X,6F6.3)') ixyz,sxyz 
+      n12=nxyz(1,map)*nxyz(2,map)
+      DO iz=0,1
+         ipz=(ixyz(3)+iz-1)*n12
+         s3=sxyz(iz+1,3)
+         DO iy=0,1
+            ipy=ipz+(ixyz(2)+iy-1)*nxyz(1,map)
+            s32=sxyz(iy+1,2)*s3
+            DO ix=0,1
+               ip=ipy+ixyz(1)+ix
+               s321=sxyz(ix+1,1)*s32
+C               WRITE(LOUT,FMT='(3I4,2X,3F9.2,2X,3F9.3)') 
+               DO j=1,3
+                  btmp(j)=btmp(j)+bxyz(j,ip,map)*s321*refl(j)
+               ENDDO
+            ENDDO
+         ENDDO
+      ENDDO
+C
+      DO j=1,3
+         BX(j)=btmp(j)
+      ENDDO
+C     
+      RETURN
+C
+ 997  IERR=1
+      IF(iost.LT.0) WRITE(LOUT,2100) MAG,nline
+      IF(iost.GT.0) WRITE(LOUT,2200) MAG,nline
+C
+ 998  IERR=1
+C
+ 999  RETURN
+ 1500 FORMAT(' *** Error in OSNAKMAP, magnet=',I4,' is out of range')
+ 1600 FORMAT(' *** Error in OSNAKMAP, magnet=',I2
+     +      ,' no space for a new map, already define ',I3)
+ 1650 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' map=',I2,' line=',I6
+     +      ,' symmetry flag=',A3)
+ 1700 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' map=',I2,' line=',I6
+     +      ,' wrong steps/limits ',2I4,2E12.4)
+ 1800 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' map=',I2
+     +     ,' too many points in the map ',2(I4,' x '),I4,' points=',I8)
+ 1900 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' map=',I2
+     +     ,' map reference is out of range ')
+ 1950 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' map=',I2
+     +     ,' no symmetry is defined for projection ',I1,'  XX=',3F10.2)
+ 2000 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' no file opened',A16
+     +      ,'  iost=',I4)
+ 2100 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' unexpected EOF'
+     +      ,'  line=',I8)
+ 2200 FORMAT(' *** Error in OSNAKMAP, magnet=',I2,' read error '
+     +      ,',  line=',I8)
+      END

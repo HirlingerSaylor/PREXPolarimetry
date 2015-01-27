@@ -1,0 +1,88 @@
+*** Begin of history file: Tue Jan 30 16:35:10 2007
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+ve/pr par1
+ve/pr par2
+ve/pr par3
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+exec 11set
+ve/pr q1
+ve/de *
+exec 11set
+ve/de *
+exec 11set
+ve/pr g1
+ve/pr g1
+exec 11set
+ve/pr q1
+ve/pr q2
+ve/pr q3
+ve/pr q3
+exec 11set
+mess q1=q1([1])
+mess q1=[q1([1])]
+q1=[q1(1)]
+q1=q1(1)
+q=q1(1)
+q=q1
+q1=q1
+rat=q2
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+ve/de *
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=2.4
+exec 11set e0=4.0
+ve/pr dip
+ve/pr eb
+exec 11set e0=4.0
+exec 11set e0=4.0
+exec 11set e0=4.0
+exec 11set e0=4.0
+exec 11set e0=4.0
+exit
+*** End   of history file: Tue Jan 30 18:37:19 2007

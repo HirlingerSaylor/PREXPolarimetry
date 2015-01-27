@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>Polarised target magnet</title>
+<!-- Changed by: Massimo Lamanna,  8-Apr-1998 -->
+</head>
+
+<body>
+
+The simplest solenoid available is a ``box'' like one
+(a cilinder 305 cm long with an internal radius of 40 cm
+with the field along the beam axis) described by the
+omagfld3.F.
+The field in the example is
+is 25 kG but can be changed at will.
+
+This is activated by the following card:
+
+<PRE>
+C        Xcen  Ycen  Zcen   rot   bfield  unused kflag
+MAGNET3     0.    0.    0.    0    25.      0.    0 
+C
+</PRE>
+
+Other options have been implemented:
+With kflag=1 omgfld3c.F is used to provide the presently
+available calculation of the PT magnet done by Oxford.
+The fringe field of the SM1 is artificially put to
+0. 
+<PRE>
+C        Xcen  Ycen  Zcen   rot   bscale  unused kflag
+MAGNET3     0.    0.    0.    0    1.      0.    1 
+C
+</PRE>
+
+kflag=2 triggers omgfld3b.F (PT + fringe), and
+kflag=3 uses omgfld3a.F (fringe only).
+Note that to superimpose the fringe fields, the distance
+between the PT and the SM1 centres is hardwired.
+Due to the mechanism of providing magnetic field to the
+tracking implemented in comgeant (Areas), this part
+can create funny behaviours: be carefully if you touch
+the magnets positions! A new version of the system
+PT+SM1 is under study and will be delivered with the
+next release.
+These last options have not been tested yet.
+
+<P>
+Note that:
+<UL>
+<LI> The position at 0 cm is
+     presently the "official" position. This number is hardwired in 
+     the routine.
+<LI> Note the unused word before the kflag
+</UL>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

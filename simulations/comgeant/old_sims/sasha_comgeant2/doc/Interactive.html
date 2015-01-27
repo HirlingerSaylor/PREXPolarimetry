@@ -1,0 +1,30 @@
+<a name="Interactive">
+<h2>Interactive version</h2>
+</a>
+One may run OMGEANT interactively. For that an interactive version
+has to be compiled with several additional routines from OMGEANT and
+with standard CERN graphics and PAW libraries.<p>
+In order to store the particle trajectories the bank JXYZ is filled.
+Since these banks may occupy a very large space the program may run
+out of ZEBRA memory (see /GCBANK/). In order to reduce the number
+of stored trajectories in showers several cuts are used
+(in this example the default values are given):
+<pre>
+CUTXYZ  0.005  0.  2.
+</pre>
+Where the parameters mean the following:
+<ol>
+ <li> - cut on momenta of e+/-,gamma in showers in heavy material, for steps < 1cm;
+ <li> - cut on material density for shower e+/-,gamma
+        tracks which do not stop or cross a boundary;
+ <li> - cut on step size for shower e+/-,gamma
+        tracks which do not stop or cross a boundary.
+</ol>
+Additionally, the full number of entries to GSXYZ is limited and the limit can
+be changed using, say:
+<pre>
+MAXXYZ  300000
+</pre>
+The default value depends on the full length of /GCBANK/ KWBANK:
+KWBANK/14, which means that JXYZ may fill up to one half of the full
+/GCBANK/ length.

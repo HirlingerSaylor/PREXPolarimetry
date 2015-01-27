@@ -1,0 +1,121 @@
+* $Header: /afs/cern.ch/exp/compass/src/cvs/comgeant/code/src/omgbatch/ompro/omntpini.F,v 1.1.1.1 1997/06/02 17:39:55 fdr Exp $
+* $Log: omntpini.F,v $
+* Revision 1.1.1.1  1997/06/02 17:39:55  fdr
+* Comgeant Monte-Carlo
+*
+* Revision 3.2  1997/05/11 19:45:20  gen
+* *** empty log message ***
+*
+* Revision 3.1  1997/05/05 19:26:07  gen
+* *** empty log message ***
+*
+*
+*-- Author :    E.Chudakov   17/04/97
+C
+      SUBROUTINE OMNTPINI(NTFLA,ID)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *   Books a CWN ntuple for the DETE parameters                   *
+C     *   INPUT :  NTFLA - flag                                        *
+C     *   OUTPUT:  ID - id of the ntuple                               *
+C     *                                                                *
+C     *    ==>Called by : OMNTUPIN                                     *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER  NTFLA,ID
+#include "geant321/gcbank.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "omgeant/omcdpar.inc"
+#include "omgeant/omcntup.inc"
+#include "omgeant/omcntdet.inc"
+#include "omgeant/omcdetw.inc"
+#include "omgeant/omceven.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id: omntpini.F,v 1.1.1.1 1997/06/02 17:39:55 fdr Exp $'/
+#endif
+C
+      INTEGER     nbitsv(MXDVS)
+      CHARACTER*4 namesv(MXDVS)
+C
+      INTEGER nset,ndet,iset,idet,js,jd,nuni,nv,nwhi,nwdi,iset1,idet1
+     +       ,idtype,i,nmxbits,ndall,nmxtyp
+C
+      CHARACTER uset*4,udet*4
+C
+      CHARACTER lend*4,lenb*2,lent*4,lenv*2
+C
+C     ------------------------------------------------------------------
+C
+      ID=1
+C
+      IWDETNT=0
+      NMXVSNT=0
+      NDETNT=0
+      IF(JSET.EQ.0) GO TO 999
+      nmxbits=1
+      ndall=0
+      nmxtyp=0
+
+C
+C---      Find the maximum number of path volumes
+C
+      nset=IQ(JSET-1)
+C
+      DO iset=1,nset
+        js=LQ(JSET-iset)
+C
+        IF(js.NE.0) THEN
+          WRITE(uset,'(A4)') Q(JSET+iset)
+          ndet=IQ(js-1)
+C 
+          DO idet=1,ndet
+            jd=LQ(js-idet)
+            IF(jd.NE.0) THEN
+              WRITE(udet,'(A4)') Q(js+idet)
+              CALL GFDET(uset,udet,nv,namesv(1),nbitsv(1),idtype
+     +             ,nwhi,nwdi,iset1,idet1)
+              nmxtyp=MAX(nmxtyp,idtype)
+              NMXVSNT=MAX(NMXVSNT,nv)
+              DO i=1,nv
+                nmxbits=MAX(nmxbits,nbitsv(i))
+              END DO
+              CALL OMDETUNI(iset,idet,nuni)
+              nuni=MAX(nuni,0)
+C
+              ndall=ndall+nuni
+C
+            ENDIF
+          END DO
+        ENDIF
+      END DO
+C
+      IF(ndall.EQ.0) GO TO 999
+      NDETNT=ndall
+C
+      WRITE(lend,FMT='(I4)') ndall
+      WRITE(lenb,FMT='(I2)') nmxbits+1
+      WRITE(lent,FMT='(I4)') nmxtyp
+      WRITE(lenv,FMT='(I2)') NMXVSNT
+C
+      CALL HBNAME(ID,'det',   NDETNT    ,'ndet[0,'//lend//']')
+      CALL HBNAME(ID,'det',  IDDETNT(1) ,'iddet(ndet)[0,32000]')
+      CALL HBNAME(ID,'det', ITYDETNT(1) ,'itydet(ndet)[0,'//lent//']') 
+      CALL HBNAME(ID,'det', NSTDETNT(1) ,'nsetdet(ndet)')
+      CALL HBNAME(ID,'det', NDTDETNT(1) ,'ndetdet(ndet)')
+      CALL HBNAME(ID,'det',  NMXVSNT    ,'mxvs[1,15]')
+      CALL HBNAME(ID,'det', KVSDETNT(1) ,'kvsdet(ndet)[0,'//lenv//']')
+      CALL HBNAME(ID,'det', NVSDETNT(1) ,'nvsdet('//lenv//',ndet)')
+      CALL HBNAME(ID,'det', IVSDETNT(1) 
+     +                    ,'ivsdet('//lenv//',ndet)::'//lenb)
+C
+ 999  RETURN
+      END
+
+

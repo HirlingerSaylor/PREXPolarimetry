@@ -1,0 +1,184 @@
+MACRO run_energy e=11.0 nev=1000 suf=0 nq=0 dq=0.001 sim=1
+*
+* === run COMGEANT for Moller
+*
+*     sim=1 - run COMGEANT, write an ntuple, read it, fill histograms, write them out
+*                        and analyze the data
+*         0 - read the histogram file and analyze the data
+
+
+  if $VDIM(magn,1)<6 then  
+    ve/cr magn(6) r 
+  endif 
+
+* q1-q4 - fields in Moller quads, kG
+* dp    - field  in Moller dipole, kG
+* fld   - field  in Moller target SC solenoid, T 
+        q1=-5.7           
+    	q2=-5.6           
+        q3=2.4
+        q4=5.2
+        dp=13.9
+        fld=3.5
+        mgf=[fld]/4.0
+        mess Solenoid factor=[mgf] field=[fld]T
+
+    ve/in magn [q1] [q2] [q3] [q4] [fld] [dp]
+    ve/pr magn
+
+  if $VDIM(xmcoo,1)<6 then  
+    ve/cr xmcoo(6) r 
+  endif
+  ve/in xmcoo 75.0 140.0 208.5 274.5 0.0  422.8 
+  if $VDIM(typ,1)<6 then  
+    ve/cr typ(6) r 
+  endif
+  ve/in typ 1  1  1  1  9  2
+  if $VDIM(xs,1)<6 then  
+    ve/cr xs(6) r 
+  endif
+  ve/in xs 5.08  5.08  5.08  5.08  20.0  8.001    
+  if $VDIM(ys,1)<6 then  
+    ve/cr ys(6) r 
+  endif
+  ve/in ys 5.08  5.08  5.08  5.08  20.0  30.001   
+  if $VDIM(zs,1)<6 then  
+    ve/cr zs(6) r 
+  endif  
+ ve/in zs 18.37 22.3 18.37 18.37  80.0  82.25
+
+  if $VDIM(sval,1)<4 then  
+    ve/cr  sval(4) r 
+    ve/cr esval(4) r 
+  endif
+  if $VDIM(vinit,1)<6 then  
+    ve/cr  vinit(6) r
+  else
+    ve/in vinit 6*0
+  endif
+  opt stat
+
+  hdir=../ntup_his/
+  namh=[hdir]//'test_[q1]_'//'[q2]_'//'[q3]_'//[q4]//'.his'
+  naml=[hdir]//'test_[q1]_'//'[q2]_'//'[q3]_'//[q4]//'.log'
+  namn=[hdir]//'test_[q1]_'//'[q2]_'//'[q3]_'//[q4]//'.nt'
+
+  if [sim]=0 then
+      goto nanalys
+  elseif [sim]=2 then
+      goto fill
+  endif
+
+  shell cp omg_0.ffr  omg.ffr
+  k=$INDEX([e],'.')
+  if [k]=0 then
+     e=[e]//'.0'
+  endif
+  e0=[e]-0.0001
+  e1=[e]+0.0001
+  shell echo TRIG   [nev]   events >> omg.ffr
+  shell echo BEAMOMLIM    [e0]  [e1]   momentum limits >> omg.ffr
+  shell echo MAGNET05  10=[mgf] >> omg.ffr
+
+  if $VDIM(eqq)<7 then
+    ve/cr eqq(7) r
+  endif
+  ve/in eqq(1) [e]
+  if $VDIM(nm,1)<5 then  
+    ve/cr nm(5) i 
+  endif
+  ve/in nm 1  2  3  4  6
+ 
+  do n=1,5
+  j=nm([n])
+*    ve/in magn(1) [j]
+    x=xmcoo([j])
+    typ=typ([j])
+    xs=xs([j])
+    ys=ys([j])
+    zs=zs([j])
+    k=$INDEX([x],'.')
+    if [k]=0 then
+       x=[x]//'.0'
+    endif
+    q=magn([j])
+    if [j]=[nq] then
+       q=[q]+[dq]
+    endif
+    k=$INDEX([q],'.')
+    if [k]=0 then
+       q=[q]//'.'
+    endif
+     nam='MAGNET0'//[j]
+     shell echo [nam]  [typ] \'HALL\'  0.    0.  [x]    0  [xs]   [ys]   [zs]  [q]    0    0    Q one  >> omg.ffr
+    j1=[j]+1
+    ve/in eqq([j1]) [q]
+  enddo
+
+*   shell  nice ../code/comg_batch.rhws3u.exe > log
+   shell nice ../code64/comg_batch.x86_64_d.exe > log
+   shell mv log [naml]
+
+  fill:
+  clo 0
+  h/del 0
+  opt grid
+
+  h/fil 1 csimout.nt
+  shell mv csimout.nt [namn]
+  opt nbox
+  exec  fill lun=lun1 id=1000
+  clo 1
+  cd //pawc
+  1dh 1003 'E,q1-q6' 6 0. 6.
+  h/put_vec/con 1003 eqq
+
+  h/fil 1 [namh] ! N
+  hrout 0
+
+     nanalys:
+
+  clo 0
+  cd //pawc
+
+  h/get_vec/con 1003 vinit
+  ve/pri vinit
+  nsim=$HINFO(1030,'ENTRIES')
+  n1arm=$HINFO(1031,'ENTRIES')
+  n2arm=$HINFO(1033,'ENTRIES')
+  anp=$HINFO(1033,'MEAN')
+  anpr=$HINFO(1033,'RMS')
+  eanp=$SIGMA([anpr]/SQRT([n2arm]))
+  acc1= $SIGMA(REAL([n2arm])/REAL([nsim]))
+  eacc1=$SIGMA(SQRT([acc1]*(1.-[acc1])/[nsim]))
+  acc2=$SIGMA(REAL([n2arm])/REAL([n1arm]))
+  eacc2=$SIGMA(SQRT([acc2]*(1.-[acc2])/[n1arm]))
+  theta=$HINFO(1013,'RMS')
+  phi=$HINFO(1023,'RMS')
+  err=$SIGMA(100./SQRT([n2arm]))
+  tmean=$HINFO(1011,'MEAN')
+
+  ve/in  sval(1)  [anp]
+  ve/in esval(1) [eanp]
+  ve/in  sval(2)  [acc1]
+  ve/in esval(2) [eacc1]
+  ve/in  sval(3)  [acc2]
+  ve/in esval(3) [eacc2]
+
+  if $VDIM(kin,1)<8 then  
+    ve/cr kin(8) r 
+  endif
+  ve/in kin [theta] [phi] [nsim] [n1arm] [n2arm] [anp] [err] [tmean]
+
+  mess Events=[nev]   Calorimeter=[nsim]   Single=[n1arm]  Coins.=[n2arm]
+  mess Ener=[e] [nq] [dq]  An.power=[anp]+/-[eanp]   Acc=[acc1]+/-[eacc1]
+  mess Theta=[theta]    Phi=[phi]  Stat.Err=[err]
+  mess Single arm Theta mean=[tmean]
+  mess file=[namn]
+ 
+  eend:
+ 
+ ve/write magn(1),magn(2),magn(3),magn(4),magn(6),kin(1),kin(2),kin(3),kin(4),kin(5),kin(6),kin(7),kin(8),magn(5) run_opt.dat (5F6.2,2F6.2,3F7.0,F8.4,F6.3,F7.3,F5.2)
+
+
+RETURN

@@ -1,0 +1,17 @@
+<a name="User">
+<h2>User's routines</h2>
+</a>
+
+There are calls to user's routines provided. A user may supply some of this
+routines, otherwise they are taken from the dummy library.
+<ul>
+ <li> OUBGN is called at the beginning of initialisation. One may define the
+   FFREAD commands there.
+ <li> OUINIT is called after the FFREAD has been read in.
+ <li> OUTRAK is called at the end of processing of every track.
+ <li> OUSTEP is called at the end of processing of every step.
+ <li> OUSENSV(hitdat) is called inside every sensitive medium.
+ <li> OEXCLGEN(ntgen) user's <a href="#exclusive">exclusive </a>
+   kinematic generator.
+ <li> OEXCLINI initialisation for this generator
+</ul>

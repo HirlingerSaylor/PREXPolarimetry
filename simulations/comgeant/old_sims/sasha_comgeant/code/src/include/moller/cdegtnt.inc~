@@ -1,0 +1,70 @@
+* $Header:$
+* $Log:$
+*
+#ifndef CERNLIB_OMCUNIT_INC
+* #define CERNLIB_OMCUNIT_INC
+C
+C---           e- scattering flags
+C
+      COMMON/CESCATT/ THETMOL(2),PHIMOL(2),IMSHELL
+     +               ,IDMOLTET
+     +               ,THETMOT(2),PHIMOT(2)
+     +               ,IMOTTWG,MOTTARG,IDMOTT,ALPHMOTT
+     +               ,IPHOTPR,THETPHPR(2),PMOMPHPR(2),IPHPRGEA(6)
+     +               ,IDPHOTPR
+     +               ,NTWRHIT
+C
+      INTEGER         IMSHELL
+     +               ,IDMOLTET
+     +               ,IMOTTWG,MOTTARG,IDMOTT
+     +               ,IPHOTPR,IPHPRGEA,IDPHOTPR
+     +               ,NTWRHIT
+C
+      REAL            THETMOL,PHIMOL,THETMOT,PHIMOT,ALPHMOTT
+     +               ,THETPHPR,PMOMPHPR
+C
+#if defined CERNLIB_COMMENT
+C
+C=F=   IMSHELL         = 0 - scatterinmg on an external shell
+C                        1 - L - shell
+C                        2 - K - shell
+C---   IDMOLTET          ID for a histogram of Theta CM dependence
+C=F=   THETMOL(1-2)    lower/upper limits for CM theta of Moller scattering, degree
+C=F=   PHIMOL(1-2)     lower/upper limits for CM phi of Moller scattering  , degree
+C
+C=F=   THETMOT(1-2)    lower/upper limits for LAB theta of Mott scattering , degree
+C=F=   PHIMOT(1-2)     lower/upper limits for LAB phi of Mott scattering   , degree
+C=F=   MOTTARG         - the target particle number for Mott
+C                            A>0 a spinless nucleus with a certain radius is considered
+C
+C=F=   IMOTTWG          = 0 - simulate events without a weight.
+C                           The Mott cross-section is approximated with an exponential 
+C                           A substitution theta=-log(x)/alpha, or x=exp(-alpha*theta) is made.
+C                           The Mott cross-section on the variable x is stored in the histograms.
+C                           Events are simulated using HRNDM1   
+C                       = 1 - "light" weights: as before, but take a even distrubution of x
+C                           and assign a weight to the event (cross-section on x) 
+C                       = 1 - "heavy" weights: even distribution in theta and the cross-section
+C                              used for weight. These weights differ by many orders of magnitude.
+C      IDMOTT       - ID for a histogram of x(theta) LAB dependence in the 
+C    ALPHMOTT       - the alpha slope of the exponential
+C
+C=F=   IPHOTPR      =n - photoproduction in the target (Bosted and Wiser's program)
+C                          n=1,2,3,4,5,6 - pi+,pi-,K+,K-,p,pbar
+C=F=   THETPHPR     - theta (LAB) limits for "pions"
+C=F=   PMOMPHPR     - momentum/Ebeam (LAB) limits for "pions"
+C=F=   IPHPRGEA     - corresponding GEANT numbers of pions,kaons.. 
+C=F=   IDPHOTPR     - ID of a histogram for photoproduction
+C
+C=F=   NTWRHIT      =0 - write all events to NTUPLES
+C                   >0 - write only events with hits
+C
+#endif
+C
+#endif
+
+
+
+
+
+

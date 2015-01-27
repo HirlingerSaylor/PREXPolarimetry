@@ -1,0 +1,364 @@
+#! /bin/sh
+
+# $Id: comglnk,v 1.2 1997/06/02 21:58:35 fdr Exp $
+# $Log: comglnk,v $
+# Revision 1.2  1997/06/02 21:58:35  fdr
+#  added $
+#
+ 
+# Linking of COMGEANT
+
+ PROG=`basename $0`
+ echo Start $PROG
+
+ cernlb=$CERN_ROOT/bin/cernlib
+ dr=`pwd`
+ fexe=comg
+ err=0
+ b=1
+ c=0
+ g=0
+ clib=0
+ crlib=$CERN_ROOT
+ apx=0
+ dexe=$dr
+ hdir=$COMGCOD/src
+ ldir=$COMGCOD/`uname`
+ mainr=$hdir/main/xxx/amain.F
+ mn=0
+ fd=0
+ fd1=0
+ fd2=0
+ fd3=0
+ verb=" "
+ magl=0
+ newlund=1
+
+ hostn=`hostname`
+ os=`uname | cut -f1`
+
+# ==========   Help routine start
+ help_dis () {
+  cat <<help_doc
+ $PROG - a script to link (C)OMGEANT
+         two environment variables must be defined:
+           COMGCOD  - the full name of the directory with the code, say ~/cvs/comgeant/code
+                      There should exist: $COMGCOD/src - the source tree
+                                          $COMGCOD/`uname` - the relevant libraries
+         one additional variable can be used as a parameter for compillation:
+           COMG_COMP_USER
+         The executable name looks like : comg_batch_debug.exe
+ Call parameters:
+ $PROG [-i ] [-C ] [-m mainname] [-f filename] [-d dirname] [-a appendix] [-L cernlib] -[F fdirnam] [-M] cern [-v]
+    where:
+           -i interactive version                       default:batch
+           -C version with debug options                default: no
+           -f compile also a file "filename"            default: no
+           -F compile also all .F files from "fdirname" default: no
+           -A compile also all .F files from "fdirname" default: no
+           -D compile also all .F files from "fdirname" default: no
+           -E compile also all .F files from "fdirname" default: no
+           -m main program                              default: $mainr
+           -l LUND =0 - old, =1 - PYTHIA 6              default: $newlund
+           -d directory name for the executable         default: the current directory
+           -a suffux to the executable name             default: no
+           -L cernlib path                              default: $CERN_ROOT
+           -M cern - link CERN magnets libraries        default: no
+           -v verbose                                   default: $verb
+ Example: $PROG -i -C -f tst1.F -a tst1 -d /tmp  
+ Example: $PROG -i -F src -a tst1   
+help_doc
+ }
+# ==========   Help routine end
+
+  if [ "$1" = "?" -o "$1" = "-?" ]; then
+    help_dis
+    exit
+  fi
+
+  if [ "$COMGCOD" = "" ] ; then
+     echo "Error: the variable COMGCOD is not set" 
+     help_dis
+     exit 2
+  fi
+  if ! test -d $COMGCOD ; then
+     echo "Error: the directory COMGCOD= $COMGCOD is missing" 
+     help_dis
+     exit 2
+  fi
+
+  set -- `getopt iMCvf:m:d:a:L:F:A:D:E: $*`
+  if [ $? != 0 ] ; then
+    echo *** Error in getopt . Usage:
+    help_dis
+    exit 2
+  fi
+  for i in $* ; do
+     case $i in
+      -i)  b=0 ; shift 1;;
+      -C)  c=1 ; shift 1;;
+      -m)  mainr=$2 ; mn=1 ; shift 2;;
+      -f)  corrf=$2 ; g=1 ; shift 2;;
+      -d)  dexe=$2 ; shift 2;;
+      -a)  apend=$2 ; apx=1 ; shift 2;;
+      -L)  crlib=$2  ; shift 2;;
+      -F)  fdir=$2 ; fd=1 ; shift 2;;
+      -A) fdir1=$2 ; fd1=1 ; shift 2;;
+      -D) fdir2=$2 ; fd2=1 ; shift 2;;
+      -E) fdir3=$2 ; fd3=1 ; shift 2;;
+      -l) newlund=$2 ; shift 2;;
+      -M)  magl=1 ; maglib=$2; shift 2;;
+      -v)  verb="-v" ; shift 1;;
+      --)  shift ; break;;
+     esac
+  done
+
+
+ crver=`basename $crlib`
+
+ cdef=" -DCERNLIB_TYPE -DCERNLIB_DOUBLE -DOMGEANT_VERSION "
+ incn=" -I$hdir/include -I$crlib/include "
+ case $os in
+   AIX)
+       cdef=" -WF,-DCERNLIB_TYPE -WF,-DCERNLIB_DOUBLE -WF,-DOMGEANT_VERSION "
+       incn=" -WF,-I$hdir/include -WF,-I$crlib/include "
+ esac
+
+ if [ $fd -ne 0 ] ; then
+   incn=" -I$fdir/include "$incn
+   case $os in
+     AIX)
+       incn=" -WF,-I$fdir/include "$incn
+   esac
+   corrf=$fdir/"*.F" 
+   g=1
+ fi
+
+ if [ $fd1 -ne 0 ] ; then
+   incn=" -I$fdir1/include "$incn
+   case $os in
+     AIX)
+       incn=" -WF,-I$fdir1/include "$incn
+   esac
+   corrf=$corrf" "$fdir1/"*.F" 
+   echo corrf=$corrf
+   g=1
+ fi
+
+ if [ $fd2 -ne 0 ] ; then
+   incn=" -I$fdir2/include "$incn
+   case $os in
+     AIX)
+       incn=" -WF,-I$fdir2/include "$incn
+   esac
+   corrf=$corrf" "$fdir2/"*.F" 
+   echo corrf=$corrf
+   g=1
+ fi
+
+ if [ $fd3 -ne 0 ] ; then
+   incn=" -I$fdir3/include "$incn
+   case $os in
+     AIX)
+       incn=" -WF,-I$fdir3/include "$incn
+   esac
+   corrf=$corrf" "$fdir3/"*.F" 
+   echo corrf=$corrf
+   g=1
+ fi
+
+ libgeant="-L$crlib/lib -lgeant321"
+ if [ $b -eq 0 ]; then
+   libcrn=`$cernlb pawlib graflib/X11 packlib mathlib kernlib` 
+ else
+   libcrn=`$cernlb packlib mathlib packlib ` 
+ fi 
+
+
+ case $os in
+   ULTRIX)
+           cpara="f77 -Olimit 1000 -O -G 3 -cpp $incn $cdef "
+           cparb="f77 -Olimit 1000 -O3 -G 3 -cpp $incn $cdef "
+           cparc="f77 -C -g -G 3 -cpp $incn $cdef "
+           if [ $b -eq 0 ]; then
+             libcrn=  `$cernlb -v $crlib pawlib graflib/X11 packlib mathlib kernlib -lreadline -ltermcap -lzvmi `
+           fi 
+           ;;
+   OSF1) 
+#           
+           cpara="f77 -D 40000000 -T 20000000 -taso -O4 $incn $cdef "
+#           cpara="f77 -cpp $incn $cdef "
+#           cpara="f77 -Olimit 1000 -O4 -cpp $incn $cdef "
+           cparb=no
+#           cparc="f77 -C -g -cpp $incn $cdef "
+           cparc="f77 -C -g -D 40000000 -T 20000000 -taso $incn $cdef "
+#           cparc="f77 -C -g $incn $cdef "
+#           if [ $b -eq 0 ]; then
+#             libcrn="-L$crlib/lib -lpawlib -lgraflib -lgrafX11 \
+#                     -lpacklib -lmathlib -lkernlib -lX11 "
+#           else
+#             libcrn=" -L$crlib/lib -lpacklib -lmathlib -lkernlib " 
+#           fi 
+ 	   ;;
+   AIX)
+           cpara="f77 -qextname -O $incn $cdef "
+           cparb=no
+           cparc="f77 -qextname -d -C -g -bnoquiet $incn $cdef "
+#           if [ $b -eq 0 ]; then
+#             libcrn="-L$crlib/lib -lpawlib -lgraflib -lgrafX11 \
+#                     -lmathlib -lpacklib -lmathlib -lkernlib -lX11 -lld "
+#           else
+#             libcrn=" -L$crlib/lib -lpacklib -lmathlib -lkernlib " 
+#           fi 
+           ;;
+   HP-UX)
+           cpara="fort77 +ppu -O2 +B -Wl,-E $incn $cdef "
+           cparb=no
+           cparc="fort77 +ppu -C -g +B -Wl,-E $incn $cdef "
+           ;;
+   SunOS)
+           cpara="f77 -cpp -z muldefs $incn $cdef "
+           cparb=no
+           cparc="f77 -C -g -cpp -z muldefs -ftrap=common $incn $cdef "
+#           if [ $b -eq 0 ]; then
+#             libcrn="-L$crlib/lib -lpacklib -lmathlib -lkernlib \
+#                      -lpawlib -lgraflib -lgrafX11 -lpacklib -L/usr/openwin/lib -lX11"
+#           fi 
+           ;;
+   Linux)
+           rh=0
+           if test -f /etc/redhat-release ; then
+             rh=`cat /etc/redhat-release | awk '{print $5}'`
+           fi
+#           cpara="g77 -v -O -fno-automatic -fno-second-underscore -fugly-complex $incn $cdef "
+#           cparb=no
+#           cparc="g77 -v -O -g -fno-automatic -fno-second-underscore -fugly-complex $incn $cdef "
+
+#           cpara="g77 $verb -O -Wuninitialized $incn $cdef "
+
+#           cpara="g77 $verb -Xlinker -M $incn $cdef "
+
+           cpara="g77 -O $verb $incn $cdef "
+           cpara="g77 -O $verb -Wl,-static $incn $cdef "
+
+           cparb=no
+#           cparc="g77 $verb -g -fbounds-check -ffpe-trap='invalid,zero,overflow,underflow,precision,denormal' $incn $cdef "
+           cparc="g77 $verb -g -fbounds-check $incn $cdef "
+
+
+
+           
+           if [ $b -eq 0 ]; then
+#              rh1=`echo $rh | cut -c1`
+              libcrn=`$cernlb pawlib graflib/X11 packlib mathlib lapack3 blas` 
+#              if [ $rh1 -lt 7 ]; then  
+#                libcrn=$libcrn" /usr/lib/libf2c.a /usr/lib/libcrypt.a"
+#              fi
+           fi 
+           ;;
+
+  esac
+ 
+  deb='' 
+  cpar=$cpara
+  if [ $b -eq 0 ]; then
+    fexe="$fexe"_inter
+  else
+    fexe="$fexe"_batch
+  fi
+  if [ $c -ne 0 ]; then
+    cpar=$cparc
+    fexe="$fexe"_debug
+    deb='_debug'
+  fi
+  if [ $apx -ne 0 ]; then
+    fexe="$fexe".$apend
+  fi
+  fexe=$dexe/"$fexe".exe
+
+  libomb=$ldir/libomgbatch"$deb".a 
+  libint='' 
+  libw89=$ldir/libwa89"$deb".a 
+  libn58=$ldir/libcompass"$deb".a 
+  libmag=" "
+  if [ $magl -ne 0 ]; then
+    if [ $maglib == "cern" ]; then
+       libmag=$ldir/libfield"$deb".a 
+    fi
+  fi
+  libgen=$ldir/libgenerators"$deb".a 
+  libdum="$ldir/libdummy.a $ldir/libdummybat.a" 
+  main=$hdir/main/batch/amain.F
+  load=$ldir/main/load/uload.o
+#  lnd1=$ldir/main/lundmc/fritiof_702n"$deb".o
+#  lnd2=$ldir/main/lundmc/ariadne_404r"$deb".o
+#  lnd3=$ldir/main/lundmc/pythia_56n"$deb".o
+#  lnd4=$ldir/main/lundmc/jetset_73L"$deb".o
+  if [ $newlund -eq 0 ]; then
+    lnd1=$ldir/main/lundmc/fritiof_702n.o
+    lnd2=$ldir/main/lundmc/ariadne_404r.o
+    lnd3=$ldir/main/lundmc/pythia_56n.o
+    lnd4=$ldir/main/lundmc/jetset_73L.o
+    lund="$lnd1 $lnd2 $lnd3 $lnd4"
+  else
+    lund=src/PYTHIA//pythia_h.o
+  fi
+#  cor1=$ldir/main/lundmc/gheisha"$deb".o
+  cor1=$ldir/main/lundmc/gheisha.o
+  if [ $b -eq 0 ]; then
+    libint=$ldir/libomginter"$deb".a 
+    libdum=$ldir/libdummy.a  
+    main=$hdir/main/inter/amain321.F
+    load="$load $ldir/main/load/uloadint.o"
+  fi
+  if [ $mn -ne 0 ]; then
+    main=$mainr
+  fi
+
+  comp=$main
+  if [ $g -ne 0 ]; then
+     comp="$comp $corrf"
+  fi
+  echo "Compile parameters:" $cpar "$COMG_COMP_USER"
+  echo "Compile includes  :" $incn
+  echo "Complile          :" $comp 
+  echo "Load              :" $load
+  echo "Libraries         :" "$libomb $libint $libw89 $libn58 $libmag $libgen "
+  echo "LUND              :" $lund
+  echo "GEANT cor         :" $cor1
+  echo "GEANT             :" $libgeant
+  echo "CERNLIB           :" $libcrn
+  echo "dummy             :" $libdum
+
+  pwd
+  if test -f $fexe ; then
+    rm $fexe
+  fi
+
+
+  nice --adjustment=8 $cpar $COMG_COMP_USER \
+    -o "$fexe" \
+    $comp  \
+    $load \
+    $libomb $libint $libw89 $libn58 $libmag $libgen  \
+    $lund \
+    $cor1 \
+    $libgeant \
+    $libomb   \
+    $libgeant \
+    $libcrn \
+    $libdum
+#    igrap2.o \
+  if test -f $fexe ; then
+     chmod +x $fexe
+     ls -alF $fexe
+  else
+     echo  " ... No executable built ..." 
+  fi
+
+
+
+
+
+
+

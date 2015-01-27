@@ -1,0 +1,193 @@
+<a name="interaction">
+<h3>Initial interaction</h3>
+</a>
+The initial interaction consists of two step. Both steps are optional,
+i.e. they may be turned off.
+<ol>
+ <li> <a name="inclusive"><b>Inclusive production</b></a>. One may simulate one
+   or two particles in
+   accordance with the given distribution of X<sub>F</sub> and
+   P<sub>t</sub>. This type of kinematics is normally used to simulate the charm
+   particles production or just some single particle production. The following
+   example is used for simulating the inclusive production of D<sup>*-</sup>
+   and D<sup>+</sup>:
+   <pre>
+C -------------     Inclusive production of charm ---------------
+KINCHARM     1            kinematics for two associated charmed particles
+NINCLKIN     2            number of particles produced inclusively
+C            2 charms     associated particles
+INCLKIN      56  35          14  14
+TYPRESTKIN   9            the new beam particle (pi neg)
+C        1-st particle  sum of 2
+PT2KIN         1.2         2.           Ptsquare slopes
+C
+C         1-st particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN    -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN     -1.   1.    5.
+C
+C         2-nd particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN2   -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN2    -1.   1.    5.
+C
+C NFEYNKIN    20
+C C                 (1-Xf)**2. X Feynman distribution
+C XFEYNKIN    0. 1.
+C             0.95063  0.85563  0.76562  0.68062  0.60062
+C             0.52563  0.45562  0.39062  0.33062  0.27562
+C             0.22562  0.18063  0.14062  0.10562  0.07562
+C             0.05062  0.03063  0.01562  0.00562  0.00062
+
+   </pre>
+      The differential cross-section of both particles is
+      proportional to
+   <pre>
+   (1-X<sub>F</sub>)**5*EXP(-1.*P<sub>t</sub>**2).
+   </pre>
+   X<sub>F</sub> of two particles are not correlated while there is a strong
+   correlation in P<sub>t</sub> (the given PT2KIN parameters are tuned to
+   describe a measurement from WA92). The command INCLKIN provides the minimum
+   possible reaction. In this case only 2 first particles are stored but the
+   X<sub>F</sub> value is estimated taking two protons into account.  
+   Since only a part of the full energy is
+   used for these two particles one may try to use the rest of the energy in
+   to simulate the multiplicity in the interaction. A simple mechanism is
+   implemented in order to do this. The rest of the momentum in the CM frame is
+   given to a virtual particle which type is set by TYRESTKIN. This virtual
+   "new beam" may interact with the target using some multiplicity generator
+   like FRITIOF (see the next point). Defining the type one should try to keep
+   a balance of strangeness and the baryon number.
+   <p>
+   For inclusive production of a single particle one may use the following
+   commands:
+<pre>
+KINCHARM     0            inclusive kinematics 
+NINCLKIN     1            number of particles produced inclusively
+C            2             associated particles
+INCLKIN      56  35          14  14
+TYPRESTKIN   9            the new beam particle (pi neg)
+C        1-st particle  
+PT2KIN         1.2        Ptsquare slope
+C
+C         1-st particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN    -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN     -1.   1.    5.
+C
+C NFEYNKIN    20
+C C                 (1-Xf)**2. X Feynman distribution
+C XFEYNKIN    0. 1.
+C             0.95063  0.85563  0.76562  0.68062  0.60062
+C             0.52563  0.45562  0.39062  0.33062  0.27562
+C             0.22562  0.18063  0.14062  0.10562  0.07562
+C             0.05062  0.03063  0.01562  0.00562  0.00062
+C
+</pre>
+
+     If NINCLKIN is set to 0 no inclusive particle is produced.
+     <p>
+
+  <li><a name="exclusive"><b>Exclusive generators</b></a>.
+    After the inclusive production is checked
+    the "beam" particle either stays as is was (if no inclusive production
+    was simulated) or is modified. This new "beam" particle may be used to
+    simulate the following processes depending on the flag N:
+    <pre>
+    OMKINE       N
+    </pre>
+    where:
+    <ul>
+     <li> 0 - primitive multiplicity, controlled  by the command TMPKINE
+     <li> 1 - PYTHIA
+     <li> 2 - FRITIOF (hadron interactions with nuclei) - normally used
+     <li> 3 - VENUS   (something close to FRITIOF but I have not used it)
+     <li> 4 - user's routine OEXCLGEN(ntgen) routine is called, reserved for
+       an exclusive production. Another user's routine OEXCLINI is called at the
+       initialisation stage. The routine OEXCLGEN should store the new
+       particles in the KINE bank and return the number of stored particles in
+       the call parameter 'ntgen'.
+     <li> 5 - <A HREF="omkine.5.html">Leptoproduction</A> (starting with the
+               <A HREF="vers32">version 3.2</A>) 
+    </ul>
+    <p>
+    The <a name="primitive m">"primitive multiplicity"</a>
+     option just generates several given particles,
+    for example:
+    <pre>
+    C particle#     1    2    3  (up to 5)
+    TMPKINE         2    2    2     multiplicities
+                21= 8    9    7     particle types
+                41= 1.   1.   2.    min P (flat distribution between min and max)
+                61=50. 100.  20.    max P
+                81= 1.   1.   1.    =b - mean P<sub>t</sub>**2, EXP(-pt**2/b)
+    </pre>
+    If all multiplicities are set to 0 and OMKINE =0 - nothing is generated.
+   <p>
+  <li><a name="interflund"><b>Interface to LUND</b></a>.
+    <p>
+    The types of LUND particles to be copied to the GEANT structure
+    are predefined in the code and can be modified by a command
+    (starting with <a href="#vers32">version 3.2</a>):
+    <pre>
+    LUNDSTOR  21=3112     41=3112           Sigma minus
+    </pre>
+    In this example 21 and 41 are the GEANT numbers while 3112 is the LUND one.
+    When the LUND particle array is scanned a particle 3112 will be
+    copied to its first occurence in the LUNDSTOR array - to the GEANT type 21.  
+    A call to FRITIOF uses the LUNDSTOR array in the opposite way. 
+    It obtains
+    the LUND particle code for the GEANT type of the
+    beam particle. If the GEANT type of the beam particle
+    is 41 (say, a special Sigma- which does not decay or interact strongly)
+    its LUND code of 3112 will be taken. In order to pass the particle type to
+    FRITIOF one has to specify 
+    the name of the particle. The names are stored in the array LUNDSNAM:
+    <pre>
+    LUNDSNAME   41='NEW1'
+    </pre>
+    If the name is 'NEW1' its particle code from LUNDSTOR is taken.
+    <p>
+    The particles produced in the
+           <a href="http://xfind.cern.ch/WRITEUPS/KEYWORDS?pythia">LUND</a>
+    generators (FRITIOF...) normally decay inside the LUND code. However the
+    long living particles like hyperons are transferred to GEANT to decay.
+    The codes of these particles are define in the subroutine OMLUNDI. 
+    One
+    may define other particles to be left to decay in GEANT, for example:
+    <pre>
+    C               Forbid to decay in LUND for:
+    C            pi0   eta   omega  eta'
+    LUNDDECOFF   111   221   223    331
+    </pre>
+    One may also allow the particles to decay in LUND: 
+    <pre>
+    C               Allow to decay in LUND for:
+    C            pi0  
+    LUNDDECOFF   111  
+    </pre>
+    The numbers are given in the LUND notation.
+     <p>
+    One may set a flag to ignore some types of particles in
+    GEANT:
+    <pre>
+    IGNTYPE      4   ignores neutrinos (up to 10 entries)
+    </pre>
+    <p>
+    There is a way to reject events simulated by LUND generators.
+    In this case GEANT skips all the rest processing for this event
+    and starts a new one. In case one wants to reject events
+    which do not contain certain particles with LUND particle codes
+    kf1,kf2...:
+    <pre>
+    LUNDSELOR  kf1 kf2 kf3 ...  - reject events which contain neither
+                                  of these particles
+    LUNDSELAND kf1 kf2 kf3 ...  - reject events which do not contain 
+                                  at least one of these particles
+    </pre>
+    If both flags are set the event is rejected if either of the conditions
+    is not fulfilled (rejection is "OR-ed").
+
+  <p>
+    
+</ol>

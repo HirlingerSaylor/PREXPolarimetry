@@ -1,0 +1,6 @@
+magf 3 2.184
+mollang 90. 90.0001 -0.1 0.1
+null -20 850 -10 10
+draw hall 90 90 0 0 1 1 
+trig
+dxyz

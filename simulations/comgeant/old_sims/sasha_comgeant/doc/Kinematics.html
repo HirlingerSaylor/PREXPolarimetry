@@ -1,0 +1,41 @@
+<a name="Kinematics">
+<h2>Kinematics</h2>
+</a>
+<a name="particles">
+<h3>Particle definitions</h3>
+</a>
+One may add new particles and redefine the existing ones using the command:
+<pre>
+C            #  tracking   mass  charge   tau      name              nuser par user
+PARTICLEXX   71  4         2.466  -1.    0.4E-12  'XiC-               $'   0       
+</pre>
+where XX is an arbitrary number (XX&lt;=95). One may define up to 4 user parameters.
+The decays are defined/redefined
+using:
+<pre>
+C          part#    prod  BR
+PARDECAYXX   36     110909 8.  160907 4.  100907 4. 16080909 3. 10080909 3.
+</pre>
+where XX is an arbitrary number (XX&lt;=95). Number of decay modes
+per particle is limited
+to 50. The GDECAY routine has been considerably modified. The original routine
+could handle only 6 decays per particle. Up to 5 decay products are allowed.
+Keeping in mind the format of the number used to store the types of decay
+particles one should make sure that this number does not exceed 2.E9. It should
+not be a problem to put a particle with a type&lt;20 on the fifth place.
+<p>
+Since it is convenient to define a permanent extension of the GEANT particle
+table in a separate FFREAD file similar commands are defined. This commands
+should be used only in this separate file: PARTICLSXX and PARDECASXX.
+<p>
+2-body decays and 3-body decays are simulated with equal weights
+using the GEANT tools. 4-body decays are simulated using a routine from OMGEANT
+which uses a 2-dimension random generator HRNDM2 from HBOOK. For every
+different decay occured
+a 2-dim histogram is booked. Again, no weight is attributed to the event.
+In the old version (before March,1996)
+5-body decays are simulated using a FOWL routine which gives back a weight for
+the event, stored in a variable EVWEIT from /OMCEVEN/. Newer versions
+simulate 5-body decays with equal weights.
+
+

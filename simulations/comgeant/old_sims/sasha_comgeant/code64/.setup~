@@ -1,0 +1,5 @@
+export CFGDIR=/home/gen/cvs/config
+export CERNCFGDIR=/home/gen/cvs/cernconfig
+export CVSROOT=":pserver:dist@wwwcompass.cern.ch:/afs/cern.ch/exp/compass/src/cvs/"
+export COMGCOD=/home/gen/cvs/comgeant/code
+export COMGLIB="$COMGCOD"/`uname`

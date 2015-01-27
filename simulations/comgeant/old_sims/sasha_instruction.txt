@@ -1,0 +1,108 @@
+Dear all,
+
+I am not professor/teacher. Sorry if my instruction is far away of state of
+art.
+
+So ...
+
+Link to the archive with required comgeant files on jlabl1 computer is:
+/u/scratch/glamazdi/sasha_comgeant.tar.gz
+I hope Jim or Paul can copy it from JLab using scp protocol.
+
+Requirements:
+
+1. OS - LINUX
+2. cernlib has to be installed.
+
+The archive contains:
+
+1. Directories code/ and code64/ with comgeant executable files for 
+32-bits(code/) and 64-bits(code64/) processors. Files *batch* are for running
+in batch mode. Files *inter* are for running in interactive mode.
+
+2. Directory data/ contains files with moller polarimeter geometry: 
+ - geom_moller_08t.ffr - old Moller polarimeter geometry (before upgrade, just
+   for example);
+ - geom_moller_t411.ffr - present Moller polarimeter geometry (11 GeV era);
+ - *.map - files with field map of the Moller target SC magnet;
+ - files with information about materials and particles.
+
+3. Directory doc/ contains Eugen's guide how to run comgeant.
+
+4. Directory example/ contains files with examples of commands to run comgeant
+   in batch and interactive mode.
+
+5. ntup_his/ is a directory to store ntuple and other files with results of
+   comgeant simulation.
+
+6. Directory paw/ contains files to run comgeant in batch mode. The main file
+   to run comgeant or to analyze comgeant results is run_energy.kumac
+
+7. Directory run/ is for interactive mode to test simple different
+   configurations. I did not edit links in run/ directory. You can practice
+   yourself.
+
+Running COMGEANT
+
+1. Interactive mode.
+
+You can choose either to add *inter*.exe files to bin/ directory, or to add
+path to directory with *inter*.exe files or to use full link to *.exe files.
+
+- Type comg_inter.x86_64_d.exe (for 64-bits processor) or 
+  comg_inter.rhws3u.exe (for 32-bits)
+- line "Workstation type (?=HELP) <CR>=1 :" has to appear. Type 3 (popup
+  window size. You can choose another one);
+- comgeant window (HIGZ_01@...) has to popup and prompt GEANT> has to appear
+  in the main comgeant window;
+- type exe plot_setup
+- Moller polarimeter layout has to appear in HIGZ... window;
+- type exe eve n=10
+- 10 red color raytraces from Moller target to detector have to appear on the
+  Moller layout.
+Bingo! You are running comgeant. Use example/ files and doc/ files to get more
+information about comgeant running.
+
+Hints:
+a) If you are exiting from comgeant/PAW by using "exit" command file
+last.kumac with all commands you entered in the last run is created. If you
+are ending comgeant/PAW with "quit" last.kumac file is not created. Using
+last.kumac file you can always revise what did you do and repeat it.
+b) If you want to change any parameters, use command line or paw/omg.ffr file.
+Don't change anything in data/ directory files.
+
+2. Batch mode.
+
+Open run_energy.kumac file in an editor. In run_energy.kumac:
+- choose directory to save files with results (hdir=../ntup/his/);
+- choose names of files with results (namh, naml, namn);
+- depends to your processor choose comment one of the lines:
+ shell nice ../code/comg_batch.rhws3u.exe > log
+ shell nice ../code64/comg_batch.x86_64_d.exe > log
+- you can change number of events and electron beam energy in the first line
+  (nev,e);
+- you can change magnetic fields in the Moller magnets (q1-q4,dp,fld).
+  Also, you can change a lot of parameters in omg_0.ffr file.
+  run_energy.umac translates parameters from omg_0.ffr to omg.ffr and
+  add/update parameters to omg_0.ffr (beam energy, number of events, magnets
+  magnetic fields etc). Take a look on links in paw/ directory to understand
+  what files are using for simulation.
+- type paw
+- line "Workstation type (?=HELP) <CR>=1:" has to appear. Type 3
+- comgeant window (HIGZ...) has to popup and prompt PAW> has to appear;
+- type exe run_energy nev=1000
+- in a short period new histograms in HIGZ... window and results of simulation
+  in PAW window will appear;
+- type hi/li to see list of histograms;
+- type hi/pl (histogram number) to show histogram;
+  Use example/ files and doc/ files to get more information.
+
+I hope it should be enough for the early beginning.
+E-Mail me or call me (757-269-5441) if you have any questions.
+Let me know your results.
+
+Good luck,
+Sasha
+
+PS I hope to see you here for more effective comgeant training and wider
+cooperation.

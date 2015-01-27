@@ -1,0 +1,66 @@
+<a name="beam">
+<h3>Beam definition</h3>
+</a>
+The following example describes the Sigma- beam used at WA89:
+<pre>
+C
+C---                   Beam
+C
+BEAMPART      21                particle      Sigma Neg
+BEAMOMLIM     270.  390.        momentum limits
+BEAMDISPE     0.07              momentum sigma
+BEAMSPECT     0  15*1.          momentum spectrum (not used here)
+BEAMXREFR     -1530.            X of the YZ plane of the profile reference
+C   Beam spot reference limits
+C                 Y         Z         SlopeY          SlopeZ
+BEAMYZLIM     -1.8 1.2  -2.4 -0.5    0.0  0.002    -0.0003 0.0008
+C
+C      SlopeY=A0+A1*Y, + sigma(Gauss)
+C               A0          A1          sigma
+BEAMSLOPCOR   1.441E-3    0.698E-3     0.75E-4     Y Slope correlation
+              0.759E-3    0.592E-3     0.12E-3     Z Slope correlation
+C
+BEAMDIMY      15                  dimension for Y
+BEAMDIMZ      10                  dimension for Z
+BEAMDISTY    0.3 0.8 11*1. 0.8 0.3     Y profile
+BEAMDISTZ    0.8 9*1. 0.8              Z profile
+</pre>
+The beam momentum is simulated within the limits defined by BEAMOMLIM. There
+are two ways to simulate the momentum distribution. A spectrum can be specified
+using the command BEAMSPEC where the first parameter is the number of points
+and the rest are the values of the distribution. If the number of point is set
+to 0 then the Gaussian distribution is assumed with a relative sigma defined
+by BEAMDISPE. The beam spot is defined at a certain X coordinate (see
+BEAMXREFR). There are 4 parameters involved - Y,Z and the slopes in Y and Z.
+The limits on all parameters are set with BEAMYZLIM. The slopes and coordinates
+in each projection may be correlated (see BEAMSLOPCOR). The beam profiles
+on Y and Z are defined with the commands (BEAMDIMY,BEAMDISTY;
+BEAMDIMZ,BEAMDISTZ).
+<p>
+There are two ways to handle the beam. It may be forced to interact in every
+event somewhere in the <a href="#target">target</a>, which should be also
+defined. In this case possible decays or interactions of the beam particles on
+their way are ignored. Another way is to treat the beam particle as other
+particles, so it may decay or interact anywhere. The former way is the regular
+way to simulate some processes while the latter may be used for some special
+purposes. The modes are selected with:
+<pre>
+C -----------            Beam -------------------
+C
+OMBEAM     1      beam interacts always
+C  OMBEAM   2      beam may pass through
+</pre>
+In the former mode the beam origin is set to the interaction point and its
+momentum in the KINE bank is opposite to its normal momentum. Thus tracking
+of the beam is done backwards which might sound bizarre, but it allows to have
+a beam interaction in each event and also take into account the multiple
+scattering of the beam particle. Since the beam particle may interact or decay
+on its way back which is not desirable it would be better to specify
+a special type of the beam particle. For example the beam Sigma- are
+specified in the following way:
+<pre>
+C                Special Sigma- (no decay, no hadron interaction)
+PARTICLS03   43  5  1.1974 -1.  1.479E-10 'Sigma- no dec,hadr $'
+</pre>
+The <i>muon</i> tracking type is selected in order to avoid hadronic interactions. 
+

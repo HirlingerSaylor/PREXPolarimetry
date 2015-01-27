@@ -1,0 +1,37 @@
+MACRO 11set e0=11.0 
+* Moller polarimeter magnets setting for 11GeV 
+* Dipole bending angle=7.3deg
+* Three Quads setting
+*ve/cr enb(10)  r 2.4    3.0    4.0    5.0    6.0    7.0    8.0    9.0   10.0   11.0
+*ve/cr qf1(10) r 2.145  2.083  1.563  0.522 -0.943 -1.757 -2.153 -3.0   -4.3   -5.7
+*ve/cr qf2(10) r 0.147  0.367  0.733  1.100  1.467  1.833  2.200  1.8    1.0   -1.0
+*ve/cr qf3(10) r 0.886  1.059  1.471  2.041  2.675  2.803  2.659  3.2    4.5    6.0
+*ve/cr dip(10) r 3.049  3.811  5.081  6.351  7.621  8.891 10.162 11.432 12.702 13.972
+*opt grid
+*opt nbox
+*opt nstat
+*zone 2 1
+*null 2.2 11.2 -6.0  6.0 
+*sigma eb=array(20,2.4#11.0)
+*set mtyp 20
+*sigma qf1=-1.3867+2.8815*eb-0.67411*eb**2+0.034499*eb**3
+*ve/pl qf1%eb ! Sl
+sigma q1=-1.3867+2.8815*[e0]-0.67411*[e0]**2+0.034499*[e0]**3
+q1=q1
+*set mtyp 22
+*sigma qf2=0.10702-0.30604*eb+0.16891*eb**2-0.013407*eb**3
+*ve/pl qf2%eb ! Sl
+sigma q2=0.10702-0.30604*[e0]+0.16891*[e0]**2-0.013407*[e0]**3 
+q2=q2
+*set mtyp 24
+*sigma qf3=1.0193-0.38508*eb+0.15503*eb**2-0.0074826*eb**3
+*ve/pl qf3%eb ! Sl
+sigma q3=1.0193-0.38508*[e0]+0.15503*[e0]**2-0.0074826*[e0]**3 
+q3=q3
+sigma dp=0.42346E-03+1.2701*[e0]
+dp=dp
+*sigma dp=0.42346E-03+1.2701*eb
+*ve/pl dp%eb
+mess Q1=[q1]  Q2=[q2]  Q3=[q3]  DP=[dp] kG 
+
+RETURN

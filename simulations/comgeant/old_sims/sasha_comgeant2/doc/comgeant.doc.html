@@ -1,0 +1,2106 @@
+<html>
+<head>
+<title>COMGEANT User's Guide</title>
+</head>
+
+<body>
+
+<p align=center>
+<h1>COMGEANT User's Guide</h1>
+<br>E. Chudakov 
+<address>gen@jlab.org</address>
+<br>contributions for COMPASS by K.Braune and M.Lamanna
+<!-- hhmts start -->
+<br>Last updated: 1 Nov 1999
+<!-- hhmts end -->
+</p>
+
+<hr>
+This is a guide to a Monte Carlo simulation program based on GEANT3.
+<hr>
+<h2> Contents </h2>
+<ol>
+ <li> <a href="#General">General</a> information
+ <li> <a href="#Geometry">Geometry</a> definition
+   <ul>
+    <li> <a href="#orientation">orientation of the Master Reference System</a>
+    <li> <a href="#rotation">rotation matrices</a>
+    <li> <a href="#material">materials</a>
+    <li> <a href="#media">media</a>
+    <li> <a href="#areas">areas</a>
+    <li> <a href="#magnets">magnets</a>
+    <li> <a href="#volumes">volumes</a>
+    <li> <a href="#detectors">detectors</a>
+      <ul>
+       <li> <a href="#coordet">coordinate detectors</a>
+       <li> <a href="#hododet">scintillator hodoscopes</a>
+       <li> <a href="#rch1det">Rich 1</a>
+      </ul>
+   </ul>
+ <li> <a href="#Kinematics">Kinematics</a>
+   <ul>
+    <li> <a href="#particles">particles definition</a>
+    <li> <a href="#beam">beam</a>
+    <li> <a href="#pileup">beam pileup</a>
+    <li> <a href="#halo">beam halo</a>
+    <li> <a href="#target">target</a>
+    <li> <a href="#interaction">Initial interaction</a>
+      <ul>
+       <li> <a href="#inclusive">inclusive production</a>
+       <li> <a href="#exclusive">exclusive/multiplicity generators</a>
+       <li> <a href="#interflund">Interface to LUND</a>
+      </ul>
+   </ul>
+ <li> <a href="#Tracking">Tracking</a> 
+      <ul>
+       <li> <a href="#dabsorbers">dead absorbers</a>
+       <li> <a href="#newparticles">new particles</a>
+       <li> <a href="#tflight">time of flight</a>
+      </ul>
+ <li> <a href="#Hits">Hits</a> 
+ <li> <a href="#Digitisation">Digitisation</a> 
+ <li> <a href="#Trigger">Trigger</a> 
+ <li> <a href="#Random">Random numbers</a> 
+ <li> <a href="#Output">Data output</a> 
+ <li> <a href="#Setups">Setup dependent routines</a> 
+ <li> <a href="#User">User's routines</a> 
+ <li> <a href="#Files">Input/Output</a> files 
+ <li> <a href="#Banks">OMGEANT banks</a> 
+ <li> <a href="#Interactive">Interactive version</a> 
+ <li> <a href="#FFR">FFREAD commands</a>  
+ <li> <a href="#Versions">Versions</a>  
+ <li> <a href="http://axhyp1.cern.ch/cheops/sp/software/geantdoc/compile.html">
+               Compilation and libraries</a>  
+ <li> <a href="#Debugging">Debugging tools (printout dumps)</a>  
+ <li> <a href="#FAQ">FAQ and Troubleshooting</a>  
+ </ol>
+
+<hr>
+<a name="General">
+<h2> General information </h2>
+</a>
+  The OMGEANT program is an interface to 
+    <a href="http://wwwcn.cern.ch/pl/geant">GEANT 3.21
+    </a> simulation package. It has been used for the
+    <a href="http://vsnhd1.cern.ch/">WA89</a> experiment. It may also be used
+    for different fixed target experiments. It has been upgraded to be used
+    for the <a href="http://wwwcompass.cern.ch/compass/">
+   COMPASS (NA58)</a> experiment and since then may be called COMGEANT.
+   Nothing on the setup
+   geometry is predefined in the code. The geometry data should be stored
+   in external data files in the
+   <a href="http://consult.cern.ch/writeup/ffread">FFREAD</a> format.
+   OMGEANT contains calls to certain kinematic packages like
+   <a href="http://xfind.cern.ch/WRITEUPS/KEYWORDS?pythia">JETSET</a>
+   (PYTHIA and FRITIOF) and also provides a tool to simulate inclusive
+   production of charmed and other particles. The following types of plane
+   detectors are properly treated: MWPC, DC, silicon micro-strips,
+   scintillator hodoscopes. The hit information can be written out.
+   At the moment the digitised information is written out only in
+   a special format used in WA89 (ZBOOK banks). The full hit information
+   (without digitisation data) can be written out as ZEBRA banks.
+   Both batch and interactive versions of OMGEANT-GEANT are provided.
+
+
+
+
+
+
+<hr>
+<a name="Geometry">
+<h2>Geometry definition</h2>
+</a>
+
+Everything but the main mother volume may be defined using the FFREAD commands.
+Several FFREAD files may be read one after another thus defining the general
+geometry and some particular settings. The later files may redefine
+values set by the previous ones. In order to reduce unwanted interference
+between different input FFREAD files there are different sets of FFREAD keys
+for the same variables.
+The main mother volume of the 'BOX' shape called 'HALL' is defined in the code.
+The medium number of the 'HALL' is set to 1.
+The sizes of the volume 'HALL' are taken from the "..AREA"
+definitions (see below).
+The center of the master reference frame (MRS) is positioned to the center of
+the 'HALL'. Normally the MRS is defined in a way that X goes along the beam
+and Z goes up. In fact, another options exist, but they have not been really
+tested.
+<p>
+Starting with the <a href="#vers32">version 3.2</a>
+it is possible to pass a name of the setup with the FFREAD card:
+<pre>
+SETUPNAME  'WA89HY93'
+</pre>
+The first 4 characters serve for the setup/experiment name and are checked
+in the present version of the code. The second 4 characters may be used to
+distinguish runs, configurations etc. At the moment the name 'WA89' is used
+in the OMGEANT code to check if some WA89 specific routines should be called.
+
+</p>
+
+
+
+<a name="orientation">
+<h3>Orientation</h3>
+In Omega and some other experiments a coordinate system was used which had
+the X axis pointed in the beam direction, and Z pointed upwards. This is the
+default orientation of OMGEANT. Most of the definitions of the geometry
+are independent on this orientation, except the beam simulation and the
+detector simulation.
+One may change the orientation using the FFREAD card:
+<pre>
+DIRDET  n
+</pre>
+where n=1 by default, or n=3 if the beam goes along Z. (The option to change
+the default orientation is implemented but has not been thoroughly checked so far.)
+The array IDIRDET(1-3) from /OMCFLA/ defines the orientation used.
+<pre>
+  variable     meaning             Ex. for the beam along: X  Z
+ IDIRDET(1)  - the beam direction                          1  3   
+ IDIRDET(2)  - 1-st projection to be measured              2  1  
+ IDIRDET(3)  - 2-nd projection to be measured              3  2  
+</pre>
+
+<a name="rotation">
+<h3>Rotation matrices</h3>
+</a>
+
+Rotation matrices are defined using the FFREAD commands:
+<pre>
+C
+C --    Rotation matrix
+C
+RMATR01  90.  90.   0.   0.  90.    0.     I is along Y,II along Z,III along X
+RMATR02   0.   0.  90.   0.  90.   90.     I is along Z,II along X,III along Y
+RMATR03  90.   0.   0.   0.  90.  270.  Z  I is along X,II along Z,III oppos Y
+</pre>
+The number XX in RMATRXX defines the rotation matrix number.
+
+<a name="material">
+<h3>Material definition</h3>
+</a>
+
+Materials are defined using the FFREAD commands:
+<pre>
+C
+C -- New materials
+C           #       name               A    Z    g/cm3        RLcm   Int.len cm
+C
+PARMAT01   20 'Silicon$            '  28.  14.   2.33         9.36   45.5   0
+PARMAT02   21 'Glass borosilic.$   '  19.  10.   2.23        12.7    44.    0
+PARMAT03   22 'G10           $     '  16.   8.   1.7         19.4    53.0   0
+</pre>
+The number XX in PARMATXX is used only to distinguish the FFREAD commands.
+<p>
+Materials can be also defined as mixtures (starting with the
+<a href="#vers32">version 3.2</a>) with up to 20 materials per mixture:
+<pre>
+C
+C -- Mixtures
+C           #       name            g/cm3  Nmat   A1  Z1  W1    A2  Z2  W2 ...
+C
+PARMXT01   25 'CH4                 ' 1.1   -2     12.  6.  1.    1.  1.  4. 
+</pre>
+Different key names can be used to define a material:
+<pre>
+GPARMATXX   where 01&lt;=XX&lt;=50   for general geometry files 
+PARMATXX    where 01&lt;=XX&lt;=40   for other geometry files 
+UPARMATXX   where 01&lt;=XX&lt;=10   reserved for the user
+GPARMXTXX   where 01&lt;=XX&lt;=40   for general geometry files 
+PARMXTXX    where 01&lt;=XX&lt;=30   for other geometry files 
+UPARMXTXX   where 01&lt;=XX&lt;=10   reserved for the user
+</pre>
+
+<a name="media">
+<h3>Media definition</h3>
+</a>
+Media are defined using the FFREAD commands:
+<pre>
+C -- Media definition
+C           #       name             mat sen F Fmx Fan Dmul  Elo epsi st(mu,lo)
+C
+PARMED01    1 'Air, mag  field$    '  15  0  1 30. 1.  0.1   0.2  1.     1.
+PARMED02  101 'Air, low mag. field$'  15  0  1  2. 1.  0.1   0.2  1.     1.
+PARMED03  201 'Air, mag. field$    '  15  0  1 30. 1.  0.1   0.2  0.2    1.
+PARMED04    2 'Silicon, no field$  '  20  1  0  0. 1.  0.002 0.2  0.0002 1.
+</pre>
+The number XX in PARMEDXX is used only to distinguish the FFREAD commands.
+Different key names can be used to define a medium:
+<pre>
+GPARMEDXX or GPARMEDXXX where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=100 for general geometry files 
+PARMEDXX                where 01&lt;=XX&lt;=80,               for other   geometry files 
+UPARMEDXX               where 01&lt;=XX&lt;=20, reserved for the user 
+</pre>
+
+<a name="areas">
+<h3>Areas</h3>
+</a>
+Areas which are entities of OMGEANT (not GEANT) are introduced in order to
+speed up the tracking. They are used to specify the maximum
+sizes of the useful area and roughly define regions with magnetic fields.
+The coordinates of the MRS are used (tied to the volume HALL).
+Example:
+<pre>
+C --                       Areas
+C
+C            start       up to ...
+C --   Attention: areas should be a bit wider than the mag. fields
+C          beam     target,mag1        mag2
+C  area#        1      2      3      4      5      
+MEDAREA      1    201      1    201      1      1
+MAGAREA      0      2      0      5      0      0
+XMNAREA    -500.  -200.   200.  1000.  1500.  4000.
+YMXAREA     300.   500.   500.   500.   500.   500.
+ZMXAREA     200.   300.   300.   300.   300.   400.
+</pre>
+The areas are arranged in the X-increasing order.
+XNMAREA sets the limits of each area in the X projection.
+The YMXAREA/ZMXAREA defines the Y/Z limits of each area. These limits are
+used to set the sizes of the 'HALL' volume. Using the command DEADVOL one
+may set "dead volumes" beyond each area (between the area and the 'HALL')
+where tracking of particles stops. The flag MAGAREA sets whether there
+is magnetic field in the area or not. The value defined gives the number
+of the magnet used (what field map will be used in this area).
+
+<a name="magnets">
+<h3>Magnets</h3>
+</a>
+
+At the moment 5 magnets are defined in the code:
+<ul>
+<LI>(1) - <A HREF="magnet.1.html">Omega magnet</A>
+<LI>(2) - <A HREF="magnet.2.html">SM1h (Torino C-shape magnet)</A>
+<LI>(3) - <A HREF="magnet.3.html">Polarized target solenoid</A>
+<LI>(4) - <A HREF="magnet.4.html">SM1m (HMC original and OAFM)</A>
+<LI>(5) - <A HREF="magnet.5.html">SM2 (FSM SMC Magnet)</A>
+</ul>
+If a particle is inside an area, say #4 which refers to the magnet #5
+the field map for the M2 magnet will be called from GUFLD. One should
+keep in mind that no volume is defined in the code, so one has to define
+the magnet geometry (the yoke, poles etc) in the FFREAD. One should also
+set the commands for the particular magnets used.
+Example:
+
+<PRE>
+C        Xcen  Ycen  Zcen   rot    bfield bscale kflag
+MAGNET4  350.    0.    0.    0     1.      1.    2    SM1m
+C         Xcen  Ycen  Zcen   rot  scale   flag1 flag2
+MAGNET5 1550.    0.    0.    0     1.      0    0      FSM
+</PRE>
+
+These commands set the position of the center of the field maps in the
+MRS (rotation does not work at the moment) and allow to scale the field
+and set special flags in order to control the field map. To get the explanation
+of the meaning of the different flag setting for a given magnet just click
+on the magnet list above.
+
+These routines are used to initialise the field maps and to return the
+values of the field; the magnet number is hardwired in the code:
+
+<PRE>
+OMAGINI1,OMAGINI2,...
+OMAGFLD1(X,B),OMAGFLD2(X,B),... where X(1-3) is the input position vector
+                                 and  B(1-3) is the output field vector
+</PRE>
+
+
+<a name="volumes">
+<h3>Volume definition</h3>
+</a>
+
+One may define "detector" volumes (see <a href="#detectors">detectors</a>) and
+other volumes. These "other" volumes 
+ are defined using the FFREAD commands of a type as follows:
+<pre>
+C --                       Additional volumes
+C                          ..................
+C         name   med  mother    X     Y     Z  rot  shape npar  par.....
+C --     RICH-1 behind MAG1
+PARVOL41 'CER1'   4  'HALL'   300.    0.    0.  1  'TRD2'  5  150. 250.  160. 220. 150.
+PARVOL42 'C1W1'  35  'CER1'     0.    0. -149.5 0  'BOX '  3  149. 159.  0.05
+PARVOL43 'C1W2'  24  'CER1'     0.    0. -149.  0  'BOX '  3  149. 159.  0.15
+PARVOL44 'C1M1'  23  'CER1'     0.    0.  140.  0  'BOX '  3  240. 210.  0.2
+PARVOL45 'C1W3'  35  'CER1'     0.    0.  149.  0  'BOX '  3  249. 219.  0.05
+PARVOL46 'C1W4'  24  'CER1'     0.    0.  149.5 0  'BOX '  3  249. 219.  0.1
+</pre>
+The number XX in PARVOLXX is used only to distinguish the FFREAD commands.
+The full number of volumes is at the moment limited to 400. Different key names
+can be used to define a volume:
+<pre>
+GPARVOLXX or GPARVOLXXX where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=200 for general geometry files 
+PARVOLXX  or PARVOLXXX  where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=170 for other   geometry files 
+UPARVOLXX               where 01&lt;=XX&lt;=30, reserved for the user 
+</pre>
+The parameters 3-7 specify the mother volume and the position where to
+place the current volume. So, this command does not define multiple volumes
+- every volume is presented only once.
+All volume positions are defined as 'ONLY' (see GSPOS).
+<p>
+It is recommended to use the FFREAD volume definitions whenever possible.
+However it may happen that some extra features of GEANT geometry definitions
+have to be used (say 'MANY'). In order to make such definitions using
+external FORTRAN routines there is a limited number of 'volume plugs'
+forseen. A volume plug may be any volume defined with ..PARVOL.. cards
+and which has no daughter volumes. For all these volumes a set of routines
+is called:
+<pre>
+      CALL CGEPLUG1(cn,ierr)
+      .....................
+      CALL CGEPLUG9(cn,ierr)
+</pre>
+where 'cn' is CHARACTER*4 name of the volume to be checked. Dummies of CGEPLUGX
+routines exist in the OMGEANT dummy library.
+If one wants to 
+define a volume, say RICH and fill it with some complex structure one should 
+use a FF command of the type:
+<pre>
+PARVOL41 'RICH'   4  'HALL'   300.    0.    0.  1  'TRD2'  5  150. 250.  160. 220. 150.
+</pre>
+and choose one of the CGEPLUGX routines, say CGEPLUG2 (upon agreement with other users).
+The routine should look like that:
+<pre>
+C
+      SUBROUTINE CGEPLUG2(CNAM,IRET)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *  Geometry plug 2 - COMPASS RICH1                               *
+C     *    INPUT:  CNAM - the name of the volume                       *
+C     *   OUTPUT:  ierr=0 - nothing happened                           *
+C     *                >0 - something is plugged in                    *
+C     *                <0 - error                                      *
+C     *           It should check that CNAM is the proper name, and    *
+C     *           in this case plug in some extra volumes              *
+C     *                                                                *
+C     *    ==>Called by : OMGEOM                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      INTEGER   IRET
+      CHARACTER CNAM*4
+C
+      CHARACTER*4 vmother
+C
+C---     Check the volume name
+C
+      IRET=0
+      vmother='RICH'
+      IF(CNAM.NE.vmother) GO TO 999
+C
+C---       Fill the volume CNAM
+C
+      IRET=1
+ .........  the code .............
+C
+ 999  CONTINUE
+      RETURN
+      END
+</pre>
+
+
+<a name="detectors">
+<h3>Detectors definition</h3>
+</a>
+
+In GEANT there is no link from the JSET banks to the instances of the
+detectors. In other words, if one looks for a detector with a certain
+ISET,IDET numbers within the JSET... structure s/he has no clue how
+many instanses there are, unless one looks into the JVOLUM structure.
+One may define a detector, say a wire
+chamber, and position several copies (instances) of this chamber.
+These instances are geometrically identical (for GEANT) but may
+be slightly different otherwise, say in their efficiencies. Therefore
+it is convenient to store some information on the instances into
+the same JSET structure. In OMEANT there are two types of detectors:
+those which have some internal structure different instance-wise,
+each instance is called "unit", and those which have no internal
+structure and no additional information is stored (hodoscopes, for example).
+<p>
+GEANT identifies a detector using a path of significant volumes and their
+copy (instance) numbers. Therefore a detector index may have several dimensions.
+In order to simplify the numbering of detectors OMGEANT uses only one-dimension
+index, so a detector should be identified with only one pair - the volume name
+and the instance number.
+<p>
+Only plane detectors are supported at the moment.
+A detector should be defined
+as a volume filled with a sensitive medium.  
+A plane coordinate detector measures one (or two) projections of the track crossings 
+with the detector volume. The measurement is done in the Detector Reference Frame
+(DRS) where the BOX shaped volume is defined. By definition, the plane of the
+measurement is normal to the axis IDIRDET(1)=I of the box
+(see a note on <a href="#orientation">orientation</a>).
+If IDIRDET(1)=1
+(beam along X) then the measurement is done in the Y-Z plane of DRS.
+If IDIRDET(1)=3
+(beam along Z) then the measurement is done in the X-Y plane of DRS.
+One may define the plane detectors: MWPC, DC, micro-strips, MSGC (they are treated
+like MWPCs at the moment), scintillator hodoscopes and calorimeter hoposcopes. 
+The types of the coordinate detectors are set in the following way:
+<ul>
+ <li> 1-30 - plane chambers, microstrips
+   <ul>
+    <li>  1-10 - MWPC
+    <li> 11-20 - DC
+    <li> 21-25 - silicon micro-strips
+    <li> 26-30 - MSGC
+   </ul>
+
+ <li> 41-50 - hodoscopes
+  <ul>
+    <li> 41-45 - 'normal' hits/digitizings (as for MWPC...) useful for scintillator hodoscopes
+    <li> 46-50 - merge the hits from each track, useful for calorimeters (see
+		 GSCHIT)
+  </ul>
+</ul>
+In GEANT detectors are
+grouped using their names 'SETS' and 'DETS'. There are many possible ways
+to arrange these 'SETS' and 'DETS'. OMGEANT uses one of these ways:
+<ul>
+ <li> <a name="coordet"> <b>Coordinate detectors</b> </a>.
+   One 'set' may contain several detectors 'det'. Let us suppose there is a MWPC
+   with 3 separate planes in one gas volume.
+   One defines some 'set' name (3 symbols), say MWP. This will become
+   the name of the volume for the full chamber containing sensitive media,
+   frames etc.
+   This volume (or its daughter volume)
+   may contain
+   several (say, 3) detectors which names 'DETS' would be: MWP1,MWP2,MWP3.
+   These detectors are defined by volumes with the same names.
+   <!- These volumes 
+       should NOT contain other volumes. ->
+   The medium of a detector volume should 
+   be decleared sensitive.
+   One may position the volume 'MWP' wherever one wants. So, there might be
+   many detectors of the set='MWP', det='MWP1'. They are distinguished by
+   the number of the volume 'MWP'. Examples:
+   <pre>
+C
+C ------------------------------------------------------------------------
+C
+C ---            Detector set "MWP " - MWPC
+C
+SET01NAME      'MWP '
+SET01TYPE       1            type (MWPC)
+SET01UNITS      7            number of units
+SET01GATE       80.          effective gate length (ns)
+C
+C Thickness:   cm  g/cm**2 Rad.l.  Abs.l.  Col.l.
+C center      6.8  0.058  0.00200 0.00054 0.00070
+C
+C --                       Volumes
+C                              posit                   1/2 size
+C              med moth rot  X   Y    Z   shape  npar   X     Y     Z
+SET01VOL1PAR   311  4    0  -1.6 0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL2PAR   311  4    0   0.  0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL3PAR   311  4    0   1.6 0.   0.  'BOX '  3     0.8  76.   60.
+SET01VOL4PAR   211  5    0   0.  0.   0.  'BOX '  3     3.4  89.   60.
+SET01VOL5PAR   212  6    0   0.  0.   0.  'BOX '  3     3.4 101.   72.
+SET01VOL6PAR     1  0    0   0.  0.   0.  'BOX '  3     9.0 101.   72.
+SET01VOL7PAR   215  6    0  -6.2 0.  66.  'BOX '  3     2.8 101.    6.
+SET01VOL8PAR   215  6    0   6.2 0.  66.  'BOX '  3     2.8 101.    6.
+SET01VOL9PAR   215  6    0  -6.2 0. -66.  'BOX '  3     2.8 101.    6.
+SET01VOLAPAR   215  6    0   6.2 0. -66.  'BOX '  3     2.8 101.    6.
+C
+C --                       Planes
+C             #wires  pitch     angle  wir1-orig  flag
+SET01PLA1PAR   760   -0.19688   10.14   75.00      0
+SET01PLA2PAR   760   -0.2        0.     75.9       0
+SET01PLA3PAR   760   -0.19688  -10.14   74.43      0
+C SET01PLA1PAR   76    -1.9688   10.14   75.00      10
+C SET01PLA2PAR   76    -2.        0.     75.9       10
+C SET01PLA3PAR   76    -1.9688  -10.14   74.43      10
+C
+
+
+C ----            Units
+SET01UNIMOTH    'HALL'   'HALL'  'HALL'  'HALL'  'HALL'  'HALL'  'HALL' mother
+SET01UNIROTM       0       0       0       0       0       0       0    rotat
+SET01UNICENY      0.02   -0.03   -0.05   -0.03   -0.03   -0.04     0.  y center
+SET01UNICENZ      0.      0.      0.      0.      0.      0.       0.  z center
+SET01UNIPL1X   -134.6   -96.6   -42.6    10.4    69.4   126.4    145.4 first plane
+C
+C  All planes:
+C      The value of coordinates are ignored (the unit is centred on the X)
+C                 if >1.E5
+SET01DETWIRY      21*1.E6
+SET01DETWIRZ      21*1.E6
+SET01DETEFFI      21*1.
+SET01DETBACK      21*0.
+SET01DETID        71 72 73 74 75 76 77 78 79 80            output identifier
+                  81 82 83 84 85 86 87 88 89 90
+                  91
+C
+  </pre>
+Commands SETXX... refer to the set number XX. Inside this set of
+MWPC there 3 detectors. One detector is one plane of MWPC. The number of
+detectors 'ndet' is defined by the commands for "planes": SETXXPLA1PAR ...
+In order to specify all volumes involved there are commands SETXXVOL1PAR and
+the volumes for the planes (3 in this case) are the first 'ndet' volumes in
+the list. The mother volume is specified by its number in the same list. All
+the planes in the example are put into the volume #4 defined by the command
+SET01VOL4PAR. The main volume of the 'set' is here the volume #6 for which
+the mother volume has the #0. These volumes identify the real chambers and
+they are positioned in the setup using the commands: SETXXUNIMOTH ...
+One such detector is called one unit. The full number of units is given by
+SETXXUNITS command. One may give the position of the center of the set volume
+but it is also possible to use the position of the first plane in X projection.
+One may also adjust the lateral position of the chamber using the coordinates
+of the first wires: see SETXXDETWIRY,SETXXDETWIRZ. The commands SETXXDET...
+refer to all planes in all units. The identifier SET01DETID is used by 
+reconstruction programs (the example presents TRIDENT identifiers for Omega
+A-chambers). The GEANT definition of the coordinate detectors is done via
+the call:
+<pre>
+            CALL GSDET(namset,namdet,nv,namesv(1),nbitsv(1),idtype,400,400
+     +                 ,idset,iddet)
+</pre>
+where nv=1, namesv(1)=namset and nbitsv(1) depends on the number of units.
+<p>
+<a name="warning1"><b>Warning</b></a>
+   I tried to use the routine GSDETV which should
+  fill the detector descriptors (nv,namesv,nbitsv) automatically.
+  Unfortunately it did not work for cases when detectors of the same type,
+  say 'MWP' were positioned to different levels of the volume tree,
+  for example some were positioned in 'HALL' while others in 'TBEN'
+  which in its turn was positioned in 'HALL'.
+<p>
+For each detector 'namdet' a number of additional parameters are stored using:
+<pre>
+            CALL GSDETU(namset,namdet,14,paruni(1))
+</pre>
+where the (REAL) parameters paruni are: <br>
+<pre>
+  1    -  full number of units
+  2    -  number of wires
+  3    -  wire pitch
+  4    -  cos(ang) where ang is the angle of the readout direction with respect
+          to the axis II of the detector frame
+  5       sin(ang)
+  6    -  distance from the first wire to the origin of the detector volume
+  7-9  -  X,Y,Z (in DRS) coordinates of a point on the first wire. Only one
+          projection (say 'II') in DRS has a non-sero value 
+ 10-12 -  the same components of the pitch
+ 13    -  the detector box size in the 'II' direction 
+ 14    -  the time gate length (ns) 
+</pre>
+The 'user' bank which contain this information has a pointer of LQ(jdet-3)
+(GEANT default). OMGEANT adds 'nunits' links to this bank, where 'nunits' is
+the number of units. Each link contains a bank with parameters of this unit,
+filled with:
+<pre>
+      CALL OMSDETU(NAMESET(iset),vnam(ivol),iuni
+     +                    ,npardet,pardet(1)
+     +                    ,ntpath,nampath(1,ipla),ipath(1,ipla))
+</pre>
+where ntpath,nampath and ipath define the volume path to the detector plane and
+the parameters pardet are:
+<pre>
+  1    -  ID of the plane (used for reconstruction)
+  2-3  -  II,III coordinates of a point on the first wire
+  4    -  efficiency of the plane
+  5    -  background level
+  6-?  -  additional parameters
+          DC:
+        1 - v - drift velocity (in cm/time_bin)
+        2 - t0 (measured t=t0-dist/v)
+        3 - two hit resolution (in units of time bins)
+        4 - space resolution (in units of time bins)
+        5 - the time bin length (in ns) 
+</pre>
+The information can be retrieved by:
+<pre>
+      CALL OMFDETU(IUSET,IUDET,IUNI,MXDPUS,nwpar,pardet(1)
+     +            ,nulev,nunam(1),nunum(1))
+</pre>
+The drift parameters are defined using cards of the type as follows:
+<pre>
+GSET05DETVELO     200*0.005                             drift velocity
+GSET05DETTIM0     200*80.                               time zero
+GSET05DETDRES     200*900.            double hit resolution (in time slices)
+GSET05DETSRES     200*3.              space resolution (in time slices)
+GSET05DETSLIC     200*1.              time slices in ns
+</pre>
+<p>
+Key names with different prefixes can be used to define a detector set:
+<pre>
+GSET...XX   where 01&lt;=XX&lt;=30   for general geometry files 
+SET...XX    where 01&lt;=XX&lt;=25   for other geometry files 
+USET...XX   where 01&lt;=XX&lt;=5   reserved for the user
+</pre>
+
+
+ <li><a name="hododet"> <b>Hodoscopes  </b></a> (scintillators, lead glass etc) are defined in a
+   simple way.
+   Here is an example:
+   <pre>
+C
+C---          Hodoscope 1
+C
+HOD1IDTYPE    46      hodoscope type
+HOD1SLATS     64      total number of slates
+HOD1MEDIUM    25      medium number
+HOD1MOTHER    'HOD1'  mother volume
+HOD1GATE      100.    gate in nsec
+HOD1SHAP      'BOX ' 'BOX '       shape for each type
+HOD1ROT        0       0          rotation matrices for each type
+C sizes          
+HOD1SIZE1      0.25   9.   50.    type one      
+HOD1SIZE2      0.5    9.   50.    type two
+HOD1TYPE  32*1 32*2   types of all the slates
+HOD1POSX   3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+           3.25   2.75   3.25   2.75   3.25   2.75   3.25   2.75  upper half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+          -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  -2.75  -3.25  lower half
+HOD1POSY 192.   180.0  168.   156.   144.   132.   120.   108.
+          96.    84.    72.    60.    48.    36.    24.    12.
+           0.   -12.   -24.   -36.   -48.   -60.   -72.   -84.
+         -96.  -108.  -120.  -132.  -144.  -156.  -168.  -180.
+         192.   180.0  168.   156.   144.   132.   120.   108.
+          96.    84.    72.    60.    48.    36.    24.    12.
+           0.   -12.   -24.   -36.   -48.   -60.   -72.   -84.
+         -96.  -108.  -120.  -132.  -144.  -156.  -168.  -180.
+HOD1POSZ      32*50.                  upper half
+              32*-50.                 lower half
+HOD1EFFI 64*1.     efficiencies of the slates
+HOD1BACK 64*1.     background level in the slates
+C
+PARVOL39 'HOD1'   3  'HALL'   570.    0.    0.     0 'BOX ' 3   5. 220. 100.
+C
+   </pre>
+   A hodoscope is a volume called 'HODX' in this case 'HOD1' filled with
+   rectangular slates, of similar or different types (sizes).
+   The sizes are defined by the command HODXSIZE1, HODXSIZE2... for each type.
+   Each slate
+   gets its unique
+   number, disregarding of its type. This number is used in the definitions
+   HODXPOSX, HODXPOSY, HODXPOSZ, HODXTYPE, HODXEFFI and HODXBACK.
+   At the moment the number
+   of hodoscopes is limited to 8, the number of slates per hodoscope to 256,
+   the number of slate types to 2.
+   The 'set' name is always 'HODO'. A slate is a volume
+   which gets a name
+   of 'HOXN', where X is the hodoscope number and N is the slate type number.
+   This name is used for the 'detector' name. 
+   Thus there are many copies of each 'detector' inside one hodoscope.
+   A hit should be identified by the 'detector' name and the copy number.
+
+   <p>The "automatic" GSDETV routine is used at the moment to specify the hodoscopes,
+   therefore it is recommended to position them on one level
+   of the volume tree (see the <a href="#warning1">warning</a>).
+   
+For each detector 'namdet' a number of additional parameters are stored using:
+<pre>
+            CALL GSDETU(namset,namdet,NN,paruni(1))
+</pre>
+where the (REAL) parameters paruni are: <br>
+<pre>
+  1    -  the number of slates of the current type
+  2    -  the number of different types of slates for this hodoscope
+  3    -  time gate
+  4    -  the total number of slates in this hodoscope
+            for all slates of the current type:
+  5    -  1-st slate of this type: the serial number of this slate (disregarding the type) 
+  6    -  1-st slate of this type: efficiency 
+  7    -  1-st slate of this type: background 
+  8    -  2-st slate of this type: the serial number of this slate (disregarding the type) 
+  9    -  2-st slate of this type: efficiency 
+ 10    -  2-st slate of this type: background 
+ ...   - .......
+</pre>
+
+</ul>
+
+
+<A name="rch1det"> <B>RICH1</B> </A>
+<!-- Changed by: Massimo Lamanna,  8-Apr-1998 -->
+
+
+<p align=left> RICH1 - geometry and simulation description <br>
+Last update 24.11.97
+</p>
+
+<br><hr>
+
+
+<UL> 
+<LI> <A HREF="#geom"> RICH1 geometry description </A>
+<LI> <A HREF="#oper"> Simulation of the RICH1 operation  </A>
+<LI> <A HREF="#ntu"> RICH1 ntuple </A>
+</UL>
+
+<br><hr>
+
+
+
+
+<H1><A NAME="geom">  RICH1 geometry description </A></H1>
+<P>
+
+Special routine cgeplug2.F which describes RICH1 geometry and material properties is called when volume RCH1 has no daughters (see fort.21 geometry file).
+<p>
+ Primitive description of RICH1 components (gas radiator volume, mirrors and 
+photon detectors planes) is given by following FFREAD cards:
+<pre>
+C
+C --- RICH-1 parameters (for explanation see src/include/omgeant/richntu.inc)
+C
+C            CH1POS(3)       GAS(3)        GAP1      WIN1(3)          WIN2(3)
+C                                                           
+RCH1MAIN   175. 335. 290. 145.5 310. 270.   56.   2.  160. 120.    2.5 335. 255.
+C           MIRFLAG             ALMR(6)                 GAP2
+RICH1MIR       0      660. 661. 75.97 97.     60. 120.   22.
+C         PHDFLAG  PHOTDET(3)  APHOT     PHDTP(3)      YANGLE  ZANGLE  GAS1L
+RCH1PHOT     0    0.  0.  0.   8.594  354.92 0. 200.18    0.    0.     0.
+C         HOLFLAG     BHOLE(5) (BHOLE(1)=GAS(1) if HOLFLAG=1)
+RCH1HOLE    0       143.  0.  4.  0.  5.
+C RCH1HOLE    2        25.  0.  5.  0.  5.
+C
+</pre>
+where
+<pre>
+C      MRS - COMGEANT reference system,
+C      MIRS - "mirror" reference system, with origin at (X,0,0) in MRS, where X
+C      is x coordinate of mirror centre of curvature in MRS.
+C
+c CH1POS(3) -  RCH1 dimensions (BOX shape, cgeomplug2 is called if
+c RCH1 has no daughter)
+c GAS(3) - main gas volume dimensions (X, Y, Z)
+c GAP1 -  Gap between upstream sides of GASM and CHR1
+c WIN1(3) - entrance window dimensions (BOX)
+c WIN2(3) - exit window dimension (BOX)
+c MIRFLAG - mirror wall optional flag (not used at the moment)
+c ALMR(6) - mirror wall dimensions (SPHE shape, single big mirror at the moment)
+c GAP2 - min distance between face of the mirror and downstr. GASM
+c PHDETFLG - photon detector optional flag (not used at the moment)
+c PHOTDET(3) - photon detector additional parameters
+c APHOT -  photon detector inclination angle 
+c PHDTP - photon detector position in MIRS
+c YANGLE - not used 
+c ZANGLE - not used
+c GAS1L - not used
+c HOLFLAG = 0 - no hole around beam axis
+c         = 1 - hole (radiator gas without Cherenkov properties) 
+c               in radiator gas and in mirror wall
+c         = 2 - hole only in mirror wall (gas with Cherenkov props)  
+c BHOLE(5) - hole (CONE shape) parameters
+</pre>
+
+RICH1 gas radiator (C<sub>4</sub>F<sub>10</sub>) has medium number 471 (sensitive), mirror (Borosilicate glass) has medium number 79, RICH1 gas without Cherenkov properties (no light production and transportation) has medium number 75, entrance and exit windows (carbon at the moment) have medium number 78.
+This can be changed by changing FFREAD cards (fort.21) <pre>GPARMED64-67</pre>
+<p>
+At the moment there is no detailed description of the mirror wall - just two 
+big solid mirrors.
+
+Some geometry parameters (positions of RICH elements in MRS) can be
+printed during initialization via setting ISWIT(6) to 1.
+          
+<br><hr>
+
+<H1><A NAME="oper"> Simulation of the RICH1 operation </A></H1>
+<P>
+
+At the moment we have only rough description of Cherenkov photons generation, tracking, reflection and detection (these processes are activated by setting <pre>CKOV  1</pre>flag (fort.15) to 1). Furthermore, we will have Cherenkov photons taken into account (stored for tracking and so on) only if NTUFLG flag is set to 1 or 2 (<pre>RICH1NTU  1(2)</pre> FFREAD command in fort.15).
+<p>
+For each track we store (see src/include/omgeant/richntu.inc file for details) entrance ( upstream side of WIN1) and exit ( downstream side of WIN2) points , momentum components, full momentum, total energy and particle type IPART in temporary buffer.
+<p>
+For each detected Cherenkov photon we store (see richntu.inc and cherphot.F routine)  reflection and detecton points, detection point in photon detector reference system, number of photon detector and photon energy in temporary buffer.
+
+<br><hr>
+
+
+
+
+<H1><A NAME="ntu"> RICH1 ntuple </A></H1>
+<P>
+After all photons produced by certain track have been tracked we can fill ntuple (unit 29, name rich1.ntp, LREC=1024) if NTUFLG is set to 2 by <pre> RICH1NTU  2
+</pre> FFREAD card (see rich1ntu.F). 
+<p> 
+For each detected photon we store 25 variables (real):
+<pre>
+1 ('ev') - event number
+2 ('tr') - track number of mother particle
+3 ('pt') - IPART of mother particle, or 200+IPART if mother particle
+  is a product of interaction. (see COMGEANT User's Guide ONEWKINE flag) 
+4-6 ('x1'-'z1')   - X, Y, Z OF MOTHER PARTICLE WHEN IT ENTERS RICH1(WIN1)
+7-9 ('px'-'pz')   - Px, Py, Pz          -  
+10 ('pp')         - P                   -  
+11 ('ep')         - E                   -  
+12-14 ('x2'-'z2') - X, Y, Z OF MOTHER PATICLE WHEN IT LEAVES RICH1(WIN2)
+15 ('io') - flag for mother paricle: 0. - don't know IN and OUT parameters,
+   1. - know IN parameters, 2 - know IN and OUT parameters. This flag can be 
+   equal to zero if mother particle didn't pass entrance window or 
+    mother particle is a product of secondary interaction. 
+16-18 ('xm'-'zm') - POINT OF DETECTION IN MRS 
+19,20 ('xd',yd') - X (Y in MRS), Y (Z in MRS) coordinates of the 
+      detection point in DRS of photon detector
+21 ('dn') - number of photon detector(cathode) 1-16
+
+         ___________________________________
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  1 |  | 3  |  | 5  |  | 7  |  |
+         |  |____|  |____|  |____|  |____|  |
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  2 |  | 4  |  | 6  |  | 8  |  |
+         |  |____|  |____|  |____|  |____|  |
+         |__________________________________| 
+
+                           Z
+                                ^ X (beam)                          
+                           ^   /
+                           |  /                        
+                           | /
+            Y <------------|/               
+
+
+         ___________________________________
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  |  9 |  | 11 |  | 13 |  | 15 |  |
+         |  |____|  |____|  |____|  |____|  |
+         |  ______  _____   _____   _____   |
+         |  |    |  |    |  |    |  |    |  |
+         |  | 10 |  | 12 |  | 14 |  | 16 |  |
+         |  |____|  |____|  |____|  |____|  |
+         |__________________________________| 
+
+
+
+22 ('et') - photon energy (GeV)
+23-25 ('xr'-'xr') - point of reflection in MRS
+</pre>
+
+This code intended mainly for RICH1 optimization purposes, so it's recommended 
+to switch off mechanisms which produces secondaries (delta-rays, ...). The problems raise because 
+we want to store mother particle characteristics (already "reconstructed")
+ and photon characteristics in one ntuple. This will be changed for general simulation code.  
+
+<p>
+
+To be continued...
+
+<p align=right> Vadim Alexakhin (alex@nu.jinr.ru)</p>
+omp
+
+<hr>
+<a name="Kinematics">
+<h2>Kinematics</h2>
+</a>
+<a name="particles">
+<h3>Particle definitions</h3>
+</a>
+One may add new particles and redefine the existing ones using the command:
+<pre>
+C            #  tracking   mass  charge   tau      name              nuser par user
+PARTICLEXX   71  4         2.466  -1.    0.4E-12  'XiC-               $'   0       
+</pre>
+where XX is an arbitrary number (XX&lt;=95). One may define up to 4 user parameters.
+The decays are defined/redefined
+using:
+<pre>
+C          part#    prod  BR
+PARDECAYXX   36     110909 8.  160907 4.  100907 4. 16080909 3. 10080909 3.
+</pre>
+where XX is an arbitrary number (XX&lt;=95). Number of decay modes
+per particle is limited
+to 50. The GDECAY routine has been considerably modified. The original routine
+could handle only 6 decays per particle. Up to 5 decay products are allowed.
+Keeping in mind the format of the number used to store the types of decay
+particles one should make sure that this number does not exceed 2.E9. It should
+not be a problem to put a particle with a type&lt;20 on the fifth place.
+<p>
+Since it is convenient to define a permanent extension of the GEANT particle
+table in a separate FFREAD file similar commands are defined. This commands
+should be used only in this separate file: PARTICLSXX and PARDECASXX.
+<p>
+2-body decays and 3-body decays are simulated with equal weights
+using the GEANT tools. 4-body decays are simulated using a routine from OMGEANT
+which uses a 2-dimension random generator HRNDM2 from HBOOK. For every
+different decay occured
+a 2-dim histogram is booked. Again, no weight is attributed to the event.
+In the old version (before March,1996)
+5-body decays are simulated using a FOWL routine which gives back a weight for
+the event, stored in a variable EVWEIT from /OMCEVEN/. Newer versions
+simulate 5-body decays with equal weights.
+
+
+
+<a name="beam">
+<h3>Beam definition</h3>
+</a>
+The following example describes the Sigma- beam used at WA89:
+<pre>
+C
+C---                   Beam
+C
+BEAMPART      21                particle      Sigma Neg
+BEAMOMLIM     270.  390.        momentum limits
+BEAMDISPE     0.07              momentum sigma
+BEAMSPECT     0  15*1.          momentum spectrum (not used here)
+BEAMXREFR     -1530.            X of the YZ plane of the profile reference
+C   Beam spot reference limits
+C                 Y         Z         SlopeY          SlopeZ
+BEAMYZLIM     -1.8 1.2  -2.4 -0.5    0.0  0.002    -0.0003 0.0008
+C
+C      SlopeY=A0+A1*Y, + sigma(Gauss)
+C               A0          A1          sigma
+BEAMSLOPCOR   1.441E-3    0.698E-3     0.75E-4     Y Slope correlation
+              0.759E-3    0.592E-3     0.12E-3     Z Slope correlation
+C
+BEAMDIMY      15                  dimension for Y
+BEAMDIMZ      10                  dimension for Z
+BEAMDISTY    0.3 0.8 11*1. 0.8 0.3     Y profile
+BEAMDISTZ    0.8 9*1. 0.8              Z profile
+</pre>
+The beam momentum is simulated within the limits defined by BEAMOMLIM. There
+are two ways to simulate the momentum distribution. A spectrum can be specified
+using the command BEAMSPEC where the first parameter is the number of points
+and the rest are the values of the distribution. If the number of point is set
+to 0 then the Gaussian distribution is assumed with a relative sigma defined
+by BEAMDISPE. The beam spot is defined at a certain X coordinate (see
+BEAMXREFR). There are 4 parameters involved - Y,Z and the slopes in Y and Z.
+The limits on all parameters are set with BEAMYZLIM. The slopes and coordinates
+in each projection may be correlated (see BEAMSLOPCOR). The beam profiles
+on Y and Z are defined with the commands (BEAMDIMY,BEAMDISTY;
+BEAMDIMZ,BEAMDISTZ).
+<p>
+There are two ways to handle the beam. It may be forced to interact in every
+event somewhere in the <a href="#target">target</a>, which should be also
+defined. In this case possible decays or interactions of the beam particles on
+their way are ignored. Another way is to treat the beam particle as other
+particles, so it may decay or interact anywhere. The former way is the regular
+way to simulate some processes while the latter may be used for some special
+purposes. The modes are selected with:
+<pre>
+C -----------            Beam -------------------
+C
+OMBEAM     1      beam interacts always
+C  OMBEAM   2      beam may pass through
+</pre>
+In the former mode the beam origin is set to the interaction point and its
+momentum in the KINE bank is opposite to its normal momentum. Thus tracking
+of the beam is done backwards which might sound bizarre, but it allows to have
+a beam interaction in each event and also take into account the multiple
+scattering of the beam particle. Since the beam particle may interact or decay
+on its way back which is not desirable it would be better to specify
+a special type of the beam particle. For example the beam Sigma- are
+specified in the following way:
+<pre>
+C                Special Sigma- (no decay, no hadron interaction)
+PARTICLS03   43  5  1.1974 -1.  1.479E-10 'Sigma- no dec,hadr $'
+</pre>
+The <i>muon</i> tracking type is selected in order to avoid hadronic interactions. 
+
+
+<a name="pileup">
+<h3>Beam pileup</h3>
+</a>
+One may simulate the beam pileup turning on the command:
+<pre>
+PILEUP    2.E7   300.
+</pre>
+In this example it is assumed that the beam flux is 2.E7 per second. The time
+interval in which the spurious beam tracks will be simulated is from -300ns to
++300ns. The main beam track comes at the time zero. It is reasonable to specify
+the time interval matching the time resolution of the slowest detector. For 
+example it may be a drift chamber with maximum drift time of 300ns. The spurious
+beam tracks are just
+normal tracks of the beam type, which are traced through the setup taking
+into account the proper interactions. When a spurious track or its products
+crosses a detector the timing of the hit is considered.<p>
+
+Sometimes it is convenient to simulate beam particles of a special type -
+say Sigma- which does not decay and does not interact hadronically
+while traced by GEANT. A new particle type can by defined. This particle
+would have the same properties as an ordinary Sigma-, but the lifetime
+is set to infinity and the muon-type of tracking (=5) is taken. However
+for calculations of pileup one has to define an ordinary Sigma-:
+<pre>
+PILEUP    2.E7   300.  21
+</pre>
+If the third field =0 the beam type of particle is taken.
+
+
+<a name="halo">
+<h3>Beam halo</h3>
+</a>
+A simple model for simulating a beam halo is provided. The halo consist of:
+<ul>
+ <li> a flat distribution in transverse coordinates;
+ <li> a Gaussian distribution.
+</ul>
+The timing of halo particles is simulated uniformly in the time interval defined
+by the command PILEUP.
+<pre>
+HALOPART      5                      halo particle type
+C
+C origine:  X: min   max  Y: min  max  Z:min   max  
+HALOORIGIN    -320. -320.   -200. 200.   -150. 150.   
+C
+HALOFLAT     100.                    particles per sq centimeter
+C     center: flux/cm**2   Ycen  Ysigma  Zcen Zsigma (transv. plane)
+HALOGAUS     2.E4            0.  40.       0.  20.
+C            offset   corr       sigma
+HALOSLOPE      0.       0.       0.002     Y
+               0.       0.       0.002     Z
+C mom:       mean    corY  corY**2   corZ   corZ**2
+HALOPMEAN     250.    0.     0.        0.     0.     momentum
+HALOPSIGM      20.    0.     0.        0.     0.     sigma
+C
+</pre>
+
+<a name="target">
+<h3>Target definition</h3>
+</a>
+
+The following example describes the targets for WA89 1993 run:
+<pre>
+C
+C ---                  Define the target volumes and the target area
+C
+TRGVOL    'TRD1'  'TRD2'  'TRD3'  'TRCU'  'MS11'  'MS31'  'MS32'  target volumes
+TRGPROB   0.0082  0.0082  0.0082  0.0261 0.00066 0.00066 0.00066  interaction probabilities
+TRGLIM    -1380. -1328.  -3. 3.   -3. 3.                          general X,Y,Z limits
+</pre>
+The interaction point is simulated in one of the specified volumes accordingly
+to their thickness in interaction probabilities (normalised to 1) and the beam
+profile.  
+
+
+<a name="interaction">
+<h3>Initial interaction</h3>
+</a>
+The initial interaction consists of two step. Both steps are optional,
+i.e. they may be turned off.
+<ol>
+ <li> <a name="inclusive"><b>Inclusive production</b></a>. One may simulate one
+   or two particles in
+   accordance with the given distribution of X<sub>F</sub> and
+   P<sub>t</sub>. This type of kinematics is normally used to simulate the charm
+   particles production or just some single particle production. The following
+   example is used for simulating the inclusive production of D<sup>*-</sup>
+   and D<sup>+</sup>:
+   <pre>
+C -------------     Inclusive production of charm ---------------
+KINCHARM     1            kinematics for two associated charmed particles
+NINCLKIN     2            number of particles produced inclusively
+C            2 charms     associated particles
+INCLKIN      56  35          14  14
+TYPRESTKIN   9            the new beam particle (pi neg)
+C        1-st particle  sum of 2
+PT2KIN         1.2         2.           Ptsquare slopes
+C
+C         1-st particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN    -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN     -1.   1.    5.
+C
+C         2-nd particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN2   -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN2    -1.   1.    5.
+C
+C NFEYNKIN    20
+C C                 (1-Xf)**2. X Feynman distribution
+C XFEYNKIN    0. 1.
+C             0.95063  0.85563  0.76562  0.68062  0.60062
+C             0.52563  0.45562  0.39062  0.33062  0.27562
+C             0.22562  0.18063  0.14062  0.10562  0.07562
+C             0.05062  0.03063  0.01562  0.00562  0.00062
+
+   </pre>
+      The differential cross-section of both particles is
+      proportional to
+   <pre>
+   (1-X<sub>F</sub>)**5*EXP(-1.*P<sub>t</sub>**2).
+   </pre>
+   X<sub>F</sub> of two particles are not correlated while there is a strong
+   correlation in P<sub>t</sub> (the given PT2KIN parameters are tuned to
+   describe a measurement from WA92). The command INCLKIN provides the minimum
+   possible reaction. In this case only 2 first particles are stored but the
+   X<sub>F</sub> value is estimated taking two protons into account.  
+   Since only a part of the full energy is
+   used for these two particles one may try to use the rest of the energy in
+   to simulate the multiplicity in the interaction. A simple mechanism is
+   implemented in order to do this. The rest of the momentum in the CM frame is
+   given to a virtual particle which type is set by TYRESTKIN. This virtual
+   "new beam" may interact with the target using some multiplicity generator
+   like FRITIOF (see the next point). Defining the type one should try to keep
+   a balance of strangeness and the baryon number.
+   <p>
+   For inclusive production of a single particle one may use the following
+   commands:
+<pre>
+KINCHARM     0            inclusive kinematics 
+NINCLKIN     1            number of particles produced inclusively
+C            2             associated particles
+INCLKIN      56  35          14  14
+TYPRESTKIN   9            the new beam particle (pi neg)
+C        1-st particle  
+PT2KIN         1.2        Ptsquare slope
+C
+C         1-st particle    (1-Xf)**a X Feynman distributions
+NFEYNKIN    -1        number of bins (if neg then the power law flag)
+C           xmin xmax  power
+XFEYNKIN     -1.   1.    5.
+C
+C NFEYNKIN    20
+C C                 (1-Xf)**2. X Feynman distribution
+C XFEYNKIN    0. 1.
+C             0.95063  0.85563  0.76562  0.68062  0.60062
+C             0.52563  0.45562  0.39062  0.33062  0.27562
+C             0.22562  0.18063  0.14062  0.10562  0.07562
+C             0.05062  0.03063  0.01562  0.00562  0.00062
+C
+</pre>
+
+     If NINCLKIN is set to 0 no inclusive particle is produced.
+     <p>
+
+  <li><a name="exclusive"><b>Exclusive generators</b></a>.
+    After the inclusive production is checked
+    the "beam" particle either stays as is was (if no inclusive production
+    was simulated) or is modified. This new "beam" particle may be used to
+    simulate the following processes depending on the flag N:
+    <pre>
+    OMKINE       N
+    </pre>
+    where:
+    <ul>
+     <li> 0 - primitive multiplicity, controlled  by the command TMPKINE
+     <li> 1 - PYTHIA
+     <li> 2 - FRITIOF (hadron interactions with nuclei) - normally used
+     <li> 3 - VENUS   (something close to FRITIOF but I have not used it)
+     <li> 4 - user's routine OEXCLGEN(ntgen) routine is called, reserved for
+       an exclusive production. Another user's routine OEXCLINI is called at the
+       initialisation stage. The routine OEXCLGEN should store the new
+       particles in the KINE bank and return the number of stored particles in
+       the call parameter 'ntgen'.
+     <li> 5 - <A HREF="omkine.5.html">Leptoproduction</A> (starting with the
+               <A HREF="vers32">version 3.2</A>) 
+    </ul>
+    <p>
+    The <a name="primitive m">"primitive multiplicity"</a>
+     option just generates several given particles,
+    for example:
+    <pre>
+    C particle#     1    2    3  (up to 5)
+    TMPKINE         2    2    2     multiplicities
+                21= 8    9    7     particle types
+                41= 1.   1.   2.    min P (flat distribution between min and max)
+                61=50. 100.  20.    max P
+                81= 1.   1.   1.    =b - mean P<sub>t</sub>**2, EXP(-pt**2/b)
+    </pre>
+    If all multiplicities are set to 0 and OMKINE =0 - nothing is generated.
+   <p>
+  <li><a name="interflund"><b>Interface to LUND</b></a>.
+    <p>
+    The types of LUND particles to be copied to the GEANT structure
+    are predefined in the code and can be modified by a command
+    (starting with <a href="#vers32">version 3.2</a>):
+    <pre>
+    LUNDSTOR  21=3112     41=3112           Sigma minus
+    </pre>
+    In this example 21 and 41 are the GEANT numbers while 3112 is the LUND one.
+    When the LUND particle array is scanned a particle 3112 will be
+    copied to its first occurence in the LUNDSTOR array - to the GEANT type 21.  
+    A call to FRITIOF uses the LUNDSTOR array in the opposite way. 
+    It obtains
+    the LUND particle code for the GEANT type of the
+    beam particle. If the GEANT type of the beam particle
+    is 41 (say, a special Sigma- which does not decay or interact strongly)
+    its LUND code of 3112 will be taken. In order to pass the particle type to
+    FRITIOF one has to specify 
+    the name of the particle. The names are stored in the array LUNDSNAM:
+    <pre>
+    LUNDSNAME   41='NEW1'
+    </pre>
+    If the name is 'NEW1' its particle code from LUNDSTOR is taken.
+    <p>
+    The particles produced in the
+           <a href="http://xfind.cern.ch/WRITEUPS/KEYWORDS?pythia">LUND</a>
+    generators (FRITIOF...) normally decay inside the LUND code. However the
+    long living particles like hyperons are transferred to GEANT to decay.
+    The codes of these particles are define in the subroutine OMLUNDI. 
+    One
+    may define other particles to be left to decay in GEANT, for example:
+    <pre>
+    C               Forbid to decay in LUND for:
+    C            pi0   eta   omega  eta'
+    LUNDDECOFF   111   221   223    331
+    </pre>
+    One may also allow the particles to decay in LUND: 
+    <pre>
+    C               Allow to decay in LUND for:
+    C            pi0  
+    LUNDDECOFF   111  
+    </pre>
+    The numbers are given in the LUND notation.
+     <p>
+    One may set a flag to ignore some types of particles in
+    GEANT:
+    <pre>
+    IGNTYPE      4   ignores neutrinos (up to 10 entries)
+    </pre>
+    <p>
+    There is a way to reject events simulated by LUND generators.
+    In this case GEANT skips all the rest processing for this event
+    and starts a new one. In case one wants to reject events
+    which do not contain certain particles with LUND particle codes
+    kf1,kf2...:
+    <pre>
+    LUNDSELOR  kf1 kf2 kf3 ...  - reject events which contain neither
+                                  of these particles
+    LUNDSELAND kf1 kf2 kf3 ...  - reject events which do not contain 
+                                  at least one of these particles
+    </pre>
+    If both flags are set the event is rejected if either of the conditions
+    is not fulfilled (rejection is "OR-ed").
+
+  <p>
+    
+</ol>
+
+<hr>
+<a name="Tracking">
+<h2>Tracking</h2>
+</a>
+Tracking is turned on by the command:
+<pre>
+OMTRACK   1
+</pre>
+<a name="dabsorbers">
+<h3>Dead absorbers</h3>
+</a>
+The tracking is mainly done by GEANT. There are several options implemented in
+OMGEANT mainly in order to speed up the computing. One may declare a "dead
+absorber" either for all particles or for particles of some certain types. The
+<a name="dead a">command</a>:
+<pre>
+DEADVOL 99
+</pre>
+requires that all particles should be stopped when entering the medium 99. This
+medium should have been of course declared. The command also inserts "dead
+volumes" - some boxes around the setup which fill the space between the 'HALL'
+walls and the maximum sizes of the areas declared by XMNAREA,YMXAREA and
+ZMXAREA.
+<p> One may also declare up to 9 media be opaque for certain types of tracks:
+<pre>
+C
+C       Absorbers: 
+C         medium      tracking types
+MEDABSORB1   54        1  2  3  4  7      photons electrons hadrons
+MEDABSORB2   95        1  2  3  4  7      photons electrons hadrons
+MEDABSORB3  295        1  2  3  4  7      photons electrons hadrons
+</pre>
+
+<a name="newparticles">
+<h3>New particles</h3>
+</a>
+New particles may be produces on the tracking stage as the result of decays
+or interactions. Storing of all new particles to the KINE bank including
+the shower elements may
+cause memory problems. Therefore by default
+only the products of decays are stored in the KINE bank and thus get
+a number 'itra'. The products of interactions are not stored in the KINE.
+While tracking they have the 'itra' number of the mother particle.
+One may change this 'storing rule'  using the command:
+<pre>
+C === "storing of new particles" 0 - decays,
+C                                1 - + hadron interactions 
+C                                2 - all processes
+ONEWKINE    2
+</pre>
+
+<a name="tflight">
+<h3>Time of flight</h3>
+</a>
+While tracking GEANT calculates the time of flight of a particle
+using the time offset stored in the origin vertex bank. These offsets
+are stored by GSVERT using the current value of the variable TOFG
+from /GCTRAC/, reset to 0 by GEANT at the event initialisation.
+In OMGEANT a "zero time point" should be defined using the command:
+<pre>
+XYZTIME0  -1500. 0. 0.  (or something like that)
+</pre>
+It is logical to set this point at a place where the beam enters
+the setup.
+The primary vertex is assigned a time needed for the beam to
+come from the "zero time point" to this vertex.
+
+<hr>
+
+<a name="Hits">
+<h2>Hits</h2>
+</a>
+Calculation and storing of hits is turned on by the command:
+<pre>
+OMHITS   1
+</pre>
+At the moment all types of detectors are treated in the same way.
+All tracks which give at least one hit in detectors are marked and counted
+as "trajectories". For intersections of tracks with sensitive volumes of the
+detector planes the coordinates of the entrance and exit points are stored.
+The centre of the line between this points is calculated.
+The timing of the hit is checked - it should be within -tgate:tgate interval,
+where tgate is the time gate of the detector set (see SETXXGATE).
+For a given
+trajectory (track)
+the following information is stored in the GEANT hits banks (via CALL GSAHIT):
+<ul>
+ <li> <i>32bit</i> words 1-3 - X,Y,Z of the centre of the track crossing with the sensitive
+   volume in the MRS;
+ <li> <i>32bit</i> words 4-6 - the X,Y,Z of the entrance point in the DRS (detector refer. system)
+ <li> <i>32bit</i> words 7-9 - the X,Y,Z of the exit point in the DRS (detector refer. system)
+ <li> <i>32bit</i> word 10   - full energy deposit in the sensitive volume;
+ <li> <i>32bit</i> word 11   - ionisation energy deposit in the sensitive volume (at the
+   moment does not differ from the full energy deposit);
+ <li> <i>32bit</i> word 12   - momentum;
+ <li> <i>08bit</i> word 13   - the track type if this hit is caused by a
+   product of 
+   the original track or
+   0 if it is caused by the original track;
+ <li> <i>24bit</i> word 14   - "reduced time of flight": the difference between 
+                  the actual time of flight and the time needed for light
+                  to reach this point from the "zero time point" XYZTIME0,
+                  the value; for the beam this value is set to 0. This
+                  value is used for the drift chamber digitisation.
+</ul>
+   <p align=center><i>Filled starting with the <a href="#vers32">version 3.2</a></i></p>
+<ul>
+ <li> <i>32bit</i> word 15-17
+                - direction cosines in MRS at the enterance point.
+ <li> <i>16bit</i> word 18   - the serial number of this hit on the track (only
+                  hits in the detectors are considered). 
+ <li> <i>32bit</i> word 19   - the additive response of the detector (for 'calorimeters' -
+                               see also hodoscopes IDTYP=46..)
+                   At the moment = the ionisation losses.
+</ul>
+<p>
+At the moment calorimeters are not treated as GEANT detectors. For WA89 there
+is a patch allowing to store the hits with the Lead Glass calorimeter. For that 
+the volume with the "lead glass" sensitive medium should be called 'LG',
+or one redefined by the FF command:
+<pre>
+LGVNAME 'LGS '
+</pre>
+Then
+the hits of all tracks with its surface will be stored and written out in
+the <a href="#trident output">TRIDENT output</a> format. They can be treated
+in <a href="http://vsnhd1.cern.ch/offline/phynix/">PHYNIX</a>. Another way
+to write out the hit information including all sensitive media is described
+in the <a href="#hits output">Hits output</a> section.
+
+<hr>
+<a name="Digitisation">
+<h2>Digitisation</h2>
+</a>
+Digitisation is turned on by the command:
+<pre>
+OMDIGI   1
+</pre>
+Plane coordinate detectors and hodoscopes are treated.
+The results are stored in the regular GEANT digitisation
+banks (via CALL GSDIGI).
+<ul>
+ <li> <b>MWPC</b> <br>
+      A track may hit one or several wires, depending on
+      the length of the projection of
+      its trajectory inside the sensitive volume on the wire plane.
+      All hit wires are combined in clusters
+      if there is no gap between them. The maximum length of a cluster
+      is 16 wires. The following words are stored:
+   <ol>
+    <li> 16 bits: the number of the first wire in a cluster (name:WIRE);
+    <li> 16 bits: the number of wires in a cluster (name:WIDT);
+   </ol>
+ <li> <b>Silicon micro-strips (SMS)</b><br>
+      At the moment they are treated like MWPC.
+ <li> <b>MSGC</b><br>
+      At the moment they are treated like MWPC.
+ <li> <b>Drift</b> chambers<br>
+      The distance between
+      the center of a track trajectory inside the sensitive volume
+      and the closest wire is calculated
+      (a track may hit only one wire).
+      The drift time in unit of time bins is
+      calculated as
+      time=INT((dist/velocity)+smearing+RTOF)
+      where smearing simulates the resolution (Gaussian distribution)
+      and RTOF is the "reduced time of flight" (see <a href="#Hits">Hits</a>).
+      The resolution
+      is given in the description of the chamber.
+      The following words are stored:
+   <ol>
+    <li> 16 bits: the number of the wire (name:WIRE);
+    <li> 16 bits: the time in units of time bins (name:TIME);
+   </ol>
+ <li> <b>Hodoscopes</b> <br>
+      Each slate is identified by its 'detector' name and the copy number. 
+      The ionisation energy release per slate is calculated. 
+      The following words are stored:
+   <ol>
+    <li> 16 bits: the energy (GeV)*1.E4 (name:EION);
+   </ol>
+</ul>
+
+<hr>
+<a name="Trigger">
+<h2>Trigger</h2>
+</a>
+A template for a trigger logic is prepared. Certain detectors may be declared
+to be used in the trigger.
+Several adjacent channels may be "OR"-ed. 
+The digitisings from these detectors are copied
+to separate arrays. 
+The trigger routines are called if a flag is set:
+<pre>
+OMTRIG   1
+</pre>
+The trigger detectors are defined in the following way:
+<pre>
+TRIGDEF1 'HO11' 0 1
+TRIGDEF2 'HO21' 0 1 'HO22' 0 1
+TRIGDEF3 'HO31' 0 1
+TRIGDEF4 'HO41' 0 1
+TRIGDEF5 'LAW1' 1 8
+TRIGDEF6 'LAW2' 1 8
+</pre>
+The number of the trigger detectors is limited to 10. For each trigger
+detector one should specify up to 2 regular detectors, for example
+two types of plastic slates in a hodoscope.
+For each regular detector one has to set 
+the name of the detector ("DET" variable),
+the copy number (if =0 - all copies are taken) and how many adjacent
+channels should be "OR"-ed. <p>
+
+The trigger detector information and the hits are stored in COMMON/OMCTRIG/:
+<pre>
+C
+C---  Trigger part
+C
+      INTEGER MXTRIG,MXTRELEM,MXTWORD,MXTRAELE,MXTRIGD
+      PARAMETER (MXTRIG=10                 ! max number of trigg. detectors
+     +          ,MXTRELEM=256)             ! max number of elements/detect
+      PARAMETER (MXTWORD=(MXTRELEM+31)/32) ! max number of words/detec
+      PARAMETER (MXTRAELE=16)              ! max number of tracks per element
+      PARAMETER (MXTRIGD=2)                ! max number of GEANT detectors
+C                                            per a trigger detector
+      COMMON/OMCTRIG/ ITRIGDEF(3,MXTRIGD,MXTRIG) ! FF definitions
+     +               ,NTRIGDET             ! number of trigger detectors
+     +               ,NTRIGELE(MXTRIG)     ! number of elements/detect
+     +               ,NTRIGHIT(MXTRIG)     ! number of hits
+     +               ,ITRIGHIT(MXTRELEM,MXTRIG) ! (isl,j) hit patterns
+     +               ,ETALLHIT(MXTRIG)          ! full energy/hodoscope
+C                                                  i=1,NTRIGHIT
+     +               ,JTRIGHIT(MXTRELEM,MXTRIG) ! (i,j) channel numbers
+     +               ,NTRAGHIT(MXTRELEM,MXTRIG) ! (isl,j) tracks per hit
+     +               ,ITRAGHIT(MXTRAELE,MXTRELEM,MXTRIG) ! (k,isl,j) tracks #
+C
+</pre>
+
+<hr>
+<a name="Random">
+<h2>Random numbers</h2>
+</a>
+OMGEANT uses the
+<a href="http://wwwcn.cern.ch/asdoc/shortwrupsdir/v113/top.html">RANMAR</a>
+random runber generatior from
+<a href="http://wwwcn1.cern.ch/asd/cernlib/libraries.html">CERNLIB</a>.
+Random number generatiors from GEANT (GRNDM) and LUND (RLU) as well as
+the old CERNLIB generator RNDM are replaced with the calls to RANMAR.
+Three independent sequences are used:
+<ol>
+ <li> for the beam and inclusive production
+ <li> for LUND (FRITIOF, JETSET ...)
+ <li> for GEANT (decays, processes ...)
+</ol>
+Therefore one can simulate identical initial kinematics (before
+decays) with different setups.
+
+One can redefine the seeds using the card:
+<pre>
+RNDMSEQ n
+</pre>
+where 0&lt;n&lt;1000000 - is an arbitrary number which changes the seeds
+for all 3 sequences used. <p>
+
+A snapshot of the random numbers are stored in a file <i>omg_random.dat</i>
+at the end of the job. This file can be used to continue the task from the
+current position. In order to continue the FF command should be used:
+<pre>
+CONTINUE  1
+</pre>
+
+Unfortunately this mechanism provides 2 rndm.o to the linker (one from
+omgbatch.a 
+--the modified source sits in 
+<A HREF="../omgbatch/ompro/rndm.F">omgbatch/ompro/rndm.F</A>--
+and the original from packlib): on some platforms it can make the linker
+complain (e.g. Sun-Solaris 2.5) and additional linker option have to be
+provided by hand to the linker (e.g. -z muldefs on Sun-Solaris 2.5).
+
+<hr>
+<a name="Output">
+<h2>Data output</h2>
+</a>
+There are three ways to write out the simulated data:
+<ol>
+ <li> <a name="#trident output"><b>ZBOOK output for TRIDENT</b></a> can be read by
+   <a href="http://vsnhd1.cern.ch/offline/trident/">TRIDENT</a> (the
+   reconstruction program of WA89). A special
+   ZBOOK bank is filled and written out. The contents of KINE and VERT banks
+   are stored and also the hit information including the hit coordinates and
+   the results of digitisation. The structure of the bank is documented in the code.
+   This ZBOOK bank has 2 links. A bank at the
+   first link may contain the 'LG' information (see <a href="#Hits">Hits</a>),
+   a bank at the second link may contain the trigger information.
+ <li> <a name="#zebra output"><b>ZEBRA output</b></a>. One may write down any
+   set of GEANT banks using the SAVE command from GEANT, in the ZEBRA FZ
+   format:<br>
+   <pre>
+   SAVE  'bnk1' 'bnk2' ....
+   </pre>
+   where bnk1 .. are the names of the banks.<p>
+   <h3> General output for hits </h3>
+   One may add
+   a special hit bank to the GEANT output using the command:
+   <pre>
+   SAVE 'KINE' 'VERT' 'OHIT'
+   </pre>
+   If this command is set then a new ZEBRA bank JOHIT is filled. Additionally
+   to the hits in detectors hits in all sensitive media are stored. The  
+   conditions for storing the hits in detectors are the same as for
+   the regular GEANT hit banks - the timing is checked.
+   The
+   format of this bank look as follows:
+   <pre>
+                             OHIT format
+
+
+C---      JOHITS    - a hit bank (special format - INTEGER/REAL values)
+C                     booked only if NSAVE>0
+C                IQ(JOHITS+1) =ntrj number of trajectories (itrj=1,ntrj)
+C                johtj=LQ(JOHITS-itrj)
+C                    IQ(johtj+1) = itra (see JKINE)
+C                    IQ(johtj+2) = nhits - number of stored hits (ihit=1,nhits)
+C                        johth=LQ(johtj-ihit)
+C                          
+C           Q(johth+1:3) - X,Y,Z of the center of the trajectory in the
+C                                   sens. volume. in MRS (main ref. system)
+C                             For detectors:
+C                   4:6  - X,Y,Z of the enterance point (DRS)
+C                   7:9  -       of the exit point
+C                            For media
+C                   4:6  - X,Y,Z of the enterance point (MRS)
+C                   7:9  - 0
+C                 10:11  - energy depositions
+C                    12  - momentum
+C                    13  - =0 if this hit is caused by the "original"
+                              track
+                           =IPART if the hit is caused by some products
+                                  of the original track
+                     14  - delay time from the "time zero" point,
+                           the minimum flight time to this detector
+                           is subtracted
+                     15  - icode
+                           a) detector:      icode=IDTYEP*1000
+                                   types: 1  -  MWPC
+                                         11  -  DC
+                                         21  - m-strips
+                                         26  - MSGC
+                           b) sens. medium:       =NUMED
+                     16  - a) detector:   IDTRID identifier
+                           b) sens. med:  0
+                   17:19 - COS X,Y,Z of the track at the enterance point (MRS)<p>
+   </pre>
+ <li> <a name="#ntuple output"><b>NTUPLE output</b></a>.
+   One may write down to a disk a column-wise ntuple (CWN)
+   (see <a href="http://consult.cern.ch/writeups/hbook">HBOOK</a>) 
+   which may contain several ID:
+   <ul>
+    <li> ID=1 - written once per job;
+    <li> ID=1 - written once per event;
+    <li> ID=3 - written once per event (not filled at the moment, but reserved);
+   </ul>
+   <p>
+   These "ID"s contain information as follows:
+   <ul>
+    <li> ID=1 - information on detectors;
+    <li> ID=2 - information on the beam;
+    <li> ID=2 - LUND event;
+    <li> ID=2 - information on geant tracks;
+    <li> ID=2 - information on hits;
+    <li> ID=2 - information on digitisations;
+   </ul>
+   <p>
+   <b>Note 1</b>
+   since there is a limit in hbook of 50k columns per ID, and because of
+   a high multiplicity generated in compass hadron
+   simulation with pileup, a few per cent of events may go beyond the limit
+   and be truncated. In order to avoid such a case
+   in future the hits may be optionally put to a different ID (=3). It will have 
+   a drawback, namely it will be more difficult to analyse the ntuple with
+   PAW, if one has to get access to different IDs at once.
+   Still it will be easy to read and analyse the ntuple from a fortran
+   program.
+   <p>
+   <b>Note 2</b>
+   it is forseen that some of the ntuple information (say the LUND record)
+   can be read in by GEANT
+   and used for simulation. 
+   However this feature has not been yet implemented. 
+   <p>
+   there are several ways to use the ntuple:
+   <ul>
+    <li> <b>with PAW</b>-type program, or interactive GEANT. In this case one can
+      make distributions of different variables using a comis routine (see an
+      example in data/examples/cntpr.f)
+    <li> <b>from FORTRAN(or C)</b>. One may/should use a set of routines from
+          COMGEANT in order to define the variables: omnt?ini.F and the
+      appropriate COMMON blocks.      To be continued ...
+   </ul>
+</ol>
+
+<hr>
+<a name="Setups">
+<h2>Setup dependent routines (OUTDATED!!!)</h2>
+</a>
+Calls to several setup dependent routines have been included in the code
+(starting with the <a href="vers32">version 3.2</a>)
+<ul>
+ <li> WA89 calls depend on the flag SETUPNAME (see <a href="#Geometry">geometry</a>)
+   <ul>
+    <li> W89TRIG - trigger 
+    <li> W89SAVE - write events for TRIDENT 
+    <li> W89BGN  - FF cards definitions (called always)
+    <li> W89INI  - initialisation
+    <li> W89LAST - at the very end
+    <li> W89LGHIT - stores the intersections of tracks with the LG calorimeter
+   </ul>
+ <li> COMPASS calls
+   <ul>
+    <li> C9RICH1 - called if there is a volume with a name of 'RCH1' in order
+      to fill it;
+    <li> C9RICH2 - called if there is a volume with a name of 'RCH2' in order
+      to fill it
+   </ul>
+*** the previous explanation is out of date!
+Now the Rich1 simulation is driven by the routine 
+comgeant/code/src/compass/geomplugs/cgeplu2.F and triggered by the volume
+RCH1. The same mechanism will be used for Rich2 and the fine description
+of the PT system (these part of the equipments are
+considered too complicated to be described by simple FFR cards.
+</ul>
+
+<hr>
+<a name="User">
+<h2>User's routines</h2>
+</a>
+
+There are calls to user's routines provided. A user may supply some of this
+routines, otherwise they are taken from the dummy library.
+<ul>
+ <li> OUBGN is called at the beginning of initialisation. One may define the
+   FFREAD commands there.
+ <li> OUINIT is called after the FFREAD has been read in.
+ <li> OUTRAK is called at the end of processing of every track.
+ <li> OUSTEP is called at the end of processing of every step.
+ <li> OUSENSV(hitdat) is called inside every sensitive medium.
+ <li> OEXCLGEN(ntgen) user's <a href="#exclusive">exclusive </a>
+   kinematic generator.
+ <li> OEXCLINI initialisation for this generator
+</ul>
+
+<hr>
+<a name="Files">
+<h2>Input/Output files</h2>
+</a>
+<ul>
+ <li> <b>Used </b> logical units:
+   <ul>
+    <li> 1 - input data
+    <li> 2 - output data
+    <li> 9 - for temporary use (inside one routine)
+    <li> 15 - input FFREAD
+    <li> 17 - input the field map for the SM1h ("Torino") magnet
+    <li> 18 - input the field map for the SM1m magnet
+    <li> 19 - input the field map for the SM2 (SFM) magnet
+    <li> 20 - input the field map for the PT magnet
+    <li> 21 - printing out detector information
+    <li> 22 - printing out detector information
+    <li> 25 - input file with LUND events (M.Lamanna)
+    <li> 26 - input  NTUPLE
+    <li> 27 - output NTUPLE
+   </ul>
+ <li> <b>INPUT</b>: OMGEANT reads in the user's FFREAD file from fort.15
+   This file may/should trigger reading in of other files using the FFREAD
+   command READ, for example:
+  <pre>
+   NOLI
+   C  == Read the general geometry data:
+   READ 8
+   C  == Read the specific geometry data:
+   READ 16
+   ..... other user's commands
+  </pre>
+   providing the proper links to these logical units (8 and 16 in this case).
+   Thus one can redefine values set in general geometry files and add new
+   definitions.
+ <li> <b>Convention</b>:
+   In order to avoid clashes with logical units the user should use
+   numbers higher than 40. The numbers lower may be used by COMGEANT
+   in future.
+</ul>
+
+<hr>
+<a name="Banks">
+<h2>OMGEANT banks</h2>
+</a>
+OMGEANT fills the standard GEANT ZEBRA banks for hits and digitisings.
+It also writes several ZEBRA banks of its own. 
+The pointers to these banks are stored in the COMMON:
+<pre>
++KEEP,OMCBANK.
+C
+C---  Pointers to ZEBRA banks
+C
+      INTEGER    MXJOADR
+      PARAMETER (MXJOADR=32)
+C
+      COMMON/OMCBANK/ JOKTRA,JOTDIG,JOKINP(10),JOKOUT(10),JOMTMP(10)
+C
+      INTEGER         JOKTRA,JOTDIG,JOKINP,JOKOUT,JOMTMP
+      INTEGER         JOADR(MXJOADR),JOHITS
+      EQUIVALENCE    (JOADR(1),JOKTRA),(JOHITS,JOMTMP(1))
+C
+</pre>
+   
+The banks are filled with the following information:<p>
+<a name="joktra">
+<b>JOKTRA</b>
+</a>
+<p>
+   contains additional information on every JKINE track.
+   The bank is booked and filled booked at the tracking stage. 
+<pre>
+C
+C              joktrk=LQ(JOKTRA-1) - tracking flags
+C              jokhit=LQ(JOKTRA-2) - hit flags
+C              joktrj=LQ(JOKTRA-3) - trajectory numbers (or 0)
+C              jokjtr=LQ(JOKTRA-4) - track numbers for trajectories
+C              jokusf=LQ(JOKTRA-5) - flags for "useful" tracks
+C              jokdeb=LQ(JOKTRA-6) - bank for debugging
+C                       itr=1,NTRACK
+C                IQ(joktrk+itr) =0   - no tracking is done
+C                               =1   - the tracking started
+C                               =2   - the tracking of the MAIN track finished
+C                           (the secondaries with the same ITRA may follow)
+C                IQ(jokhit+itr) =0   - no hits in the detectors
+C                               =1   - no hits in the coordinate detectors
+C                               =2   - hits in the coordinate detectors
+C                               =3   - digitizings in the coordinate detectors
+C                IQ(joktrj+itr) =itj (or 0) - the trajectory number
+C                IQ(jokusf+itr) >0 - for useful tracks
+C                       itj=1,NTRAJEC
+C                IQ(jokjtr+itj) =itr - initial number
+C
+C                jdeb=LQ(jokdeb-itr)      - bank for debugging
+C                     jstop=LQ(jdeb-1)    - bank for process codes for the last
+C                                                                     step
+</pre>   
+<p>
+<a name="jotdig">
+<b>JOTDIG</b>
+</a>
+is a bank bank containing both hit coordinates and digitisings in the
+coordinate detectors, stored in a format close to the output format used
+by TRIDENT (geometrical reconstruction for OMEGA experiments).
+The bank is booked at the digitisation stage.
+<pre>
+C
+C             notw=IQ(JOTDIG+1) - number of words/hit in "jotd"
+C               (=10) (=8 before the <a href="#vers32">version 3.2</a>)
+C             jotd=LQ(JOTDIG-1)
+C                      itr=1,NTRACK
+C            notrd=IQ(jotd+itr) - number of "hits" for this track
+C            jotrd=LQ(jotd-itr) - pointer to the digit. bank with hits
+C                      i=1,notrd
+C            words for the "hit" no "i":
+C             Q(jotrd+notw*(i-1)+1) - iddet   - the plane number
+C                               +2) - idtype  - the type of the detector
+C                               +3) - 0 if the hit is caused by the main
+C                                       track
+C                                   = ipart (type) if it is caused
+C                                          by secondaries from this track
+C                                         (results of interactions)
+C             Q(jotrd+notw*(i-1)+4) - Y (MRS) (if the beam goes along X)
+C                               +5) - Z (MRS)
+C             Q(jotrd+notw*(i-1)+6) - dig1
+C             Q(jotrd+notw*(i-1)+7) - dig2
+C             Q(jotrd+notw*(i-1)+8:10) - COS Y,Z,X (MRS) (if the beam goes along X)
+C                                        at the enterance point of the detector 
+C             Q(jotrd+notw*(i-1)+11)   - the serial number of this hit on
+C                                        the trajectory
+</pre>
+ 
+
+<hr>
+<a name="Interactive">
+<h2>Interactive version</h2>
+</a>
+One may run OMGEANT interactively. For that an interactive version
+has to be compiled with several additional routines from OMGEANT and
+with standard CERN graphics and PAW libraries.<p>
+In order to store the particle trajectories the bank JXYZ is filled.
+Since these banks may occupy a very large space the program may run
+out of ZEBRA memory (see /GCBANK/). In order to reduce the number
+of stored trajectories in showers several cuts are used
+(in this example the default values are given):
+<pre>
+CUTXYZ  0.005  0.  2.
+</pre>
+Where the parameters mean the following:
+<ol>
+ <li> - cut on momenta of e+/-,gamma in showers in heavy material, for steps < 1cm;
+ <li> - cut on material density for shower e+/-,gamma
+        tracks which do not stop or cross a boundary;
+ <li> - cut on step size for shower e+/-,gamma
+        tracks which do not stop or cross a boundary.
+</ol>
+Additionally, the full number of entries to GSXYZ is limited and the limit can
+be changed using, say:
+<pre>
+MAXXYZ  300000
+</pre>
+The default value depends on the full length of /GCBANK/ KWBANK:
+KWBANK/14, which means that JXYZ may fill up to one half of the full
+/GCBANK/ length.
+
+<hr>
+<a name="FFR">
+<h2>FFREAD commands</h2>
+</a>
+The table is not complete yet!
+<pre>
+<hr>
+   keyword   variable   Meaning                                       Default
+<hr>
+                     <h4>General commands</h4>
+   LUNGET    LUNOMG(1)          Logical unit to read event data...................1
+   LUNSAVE   LUNOMG(2)          Logical unit to write event data..................2
+   LENPIPE   LENPIPE            Length of I/O buffer for the pipe..............1024
+                     <h4>Geometry</h4>
+   DEADVOL   IDEADVOL           Medium number for <a href="#dead a">dead absorber</a>...................0
+                     <h4>Kinematics</h4>
+   TMPKINE   KINTMP(1,1):(20,5) <a href="#primitive m">"Primitive kinematics"</a>...zeros
+                     <h4>Miscellaneous</h4>
+   ERRTRAP   IERTRAP            =0 - ignore arithmetic errors.....................2
+                                 1 - print a message and continue
+                                 2 - crash
+                                 (works on ULTRIX) 
+<hr>
+</pre>
+
+<hr>
+<a name="versions">
+<h2>Versions</h2>
+</a>
+
+<ul>
+ <li> 2.1 - 2.3 based on GEANT 3.15: Obsolete versions.  
+ <li> 3.1 based on GEANT 3.21. <br>
+   CMZ format. <br>Includes:
+   <ul>
+    <li> WA89: simulation of the trigger
+    <li> Various magnets (sizes and field maps) can be used:
+      <ol>
+       <li> Omega (omega_field.a library should be linked)
+       <li> SM1h - Torino C-shape magnet
+       <li> Goliath
+       <li> SM1m - large apperture  
+       <li> SM2  - (SFM)
+      </ol>
+      Omega field is taken from omega_field.a library.<br>
+      Field for the magnets 2-5 are either taken from dummy.a (simple uniform
+      field)
+      or magnets.a (real field maps)
+   </ul>
+
+ <li> <a name="vers32">3.2</a> <br>
+      CVS format.<br>
+          A set of modifications was done with respect to the version 3.1
+          in order to use OMGEANT for COMPASS. The code was cleaned up and
+          WA89 proprietary parts were moved to separate directories/libraries.
+   <ul>
+    <li> WA89 specific routines were renamed by removing "OM" at the
+         beginning and adding "W89" instead. These routines (mainly concerning
+         the trigger) were moved to a new directory wa89.
+    <li> OMSAVE FF flag is renamed to WA89SAVE.
+    <li> In older versions the "reduced time of flight" (the word 14 in the hit
+         banks) was calculated as <i>TOF-dist/clight*SIGN</i> where <i>SIGN</i>
+         could be negative if X&lt;XYZTIME0(1). This could be useful
+         if the zero time point XYZTIME0 were put in a middle of the setup.
+         Since this option has not been used the <i>SIGN</i> term is removed.
+   </ul>
+</ul> 
+
+<hr>
+<a name="Debugging">
+<h2>Debugging tools (printout dumps)</h2>
+</a>
+
+<P>Geant foresees a mechanism to enable/disable the print-out of information
+(on standard output) at the execution time mostly for debugging purposes.
+Here there is a description of the mechanism and its implementation. All
+these dumps are controlled by the integer IDEBUG&nbsp;variable sitting
+in the GCFLAG&nbsp;common block (file include/geant321/gcflag.inc): if
+this variable is set to 0 it means no output, 1 means output enabled. The
+variable can be set via FFREAD&nbsp;cards or (in the interactive version)
+with the command DEBUG&nbsp;ON. To allow different types of dumps, a mask
+is provided (the integer vector ISWIT&nbsp;of lenght 10 sitting in the
+same common). ISWIT(K)=0 means again no output, whilst higher values of
+ISWIT (1,2,3...) stands for more complex/long outputs. The value of K&nbsp;controls
+the set of routines interested by the dump. ISWIT&nbsp;can be either preset
+via FFREAD&nbsp;cards or by the command ISWIT&nbsp;in the interactive version.</P>
+
+<P>This is the (provisional) list of used ISWIT&nbsp;positions with their
+meaning:</P>
+
+<UL>
+<LI>Initialization:&nbsp;ISWIT(1)</LI>
+
+<UL>
+<LI>omgbatch/ompro/oginit.F</LI>
+
+<LI>omgbatch/ompro/omgpart.F</LI>
+
+<LI>omgbatch/ompro/omdetwri.F</LI>
+
+<LI>omgbatch/ompro/omstarg.F</LI>
+
+<LI>omgbatch/ompro/omstrig.F</LI>
+</UL>
+
+<LI>Kinematics:&nbsp;ISWIT(2)</LI>
+
+<UL>
+<LI>generators/fritiof/fritgen.F</LI>
+</UL>
+
+<UL>
+<LI>omgbatch/ompro/gukine.F</LI>
+<LI>omgbatch/ompro/omkine.F</LI>
+<LI>omgbatch/geacor/gdecay.F</LI>
+<LI>omgbatch/ompro/mu1.F</LI>
+</UL>
+
+<LI>Tracking:&nbsp;ISWIT(3)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gustep.F</LI>
+
+<LI>omgbatch/ompro/gutrack.F</LI>
+
+<LI>omgbatch/ompro/gufld.F</LI>
+
+<LI>omgbatch/ompro/guswim.F</LI>
+</UL>
+
+<LI>Hits:&nbsp;ISWIT(4)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gutrev.F</LI>
+
+<LI>omgbatch/ompro/omsensv.F</LI>
+</UL>
+
+<LI>Digitization:&nbsp;ISWIT(5)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gudici.F</LI>
+</UL>
+
+<UL>
+<LI>omgbatch/ompro/omdwire.F</LI>
+
+<LI>omgbatch/ompro/omtrig.F</LI>
+</UL>
+
+<LI>Obsolete WA89:&nbsp;ISWIT(6)</LI>
+
+<LI>Hodoscopes?:&nbsp;ISWIT(7)</LI>
+
+<UL>
+<LI>omgbatch/ompro/guout.F</LI>
+
+<LI>omgbatch/ompro/gutrev.F</LI>
+
+<LI>omgbatch/ompro/omhodo.F</LI>
+</UL>
+
+<LI>Obsolete WA89:&nbsp;ISWIT(8)</LI>
+
+<LI>Magnetic Fields:&nbsp;ISWIT(9)</LI>
+
+<UL>
+<LI>omgbatch/ompro/gufld.F</LI>
+
+<LI>fields/magnets/omagfld*.F (here ISWIT(9)=K for <A HREF="#magnets">magnet
+K</A> only)</LI>
+
+<LI>fields/magnets/omagini*.F</LI>
+</UL>
+
+<LI>Decays (should be moved to Kinematics #2?):&nbsp;ISWIT(10)</LI>
+
+<UL>
+<LI>omgbatch/geacor/gdecay.F</LI>
+
+<LI>omgbatch/ompro/omdec2s.F</LI>
+</UL>
+</UL>
+
+
+<hr>
+<a name="FAQ">
+<h2>FAQ and Troubleshooting</h2>
+</a>
+
+<P>This is just a list of problems occured to users. Please contribute...
+
+<UL>
+<LI>Comgeant Interactive
+<UL>
+<LI>At the startup, after the usual prints it keeps on the completion of
+interactive Geant commands: check your ~/.pawlogon file. It is executed
+by Geant as well as from Paw but some Paw commands are ambiguous under
+Geant, e.g. opt is gra/opt for Paw and geant/opt for Geant; the solution
+is to use the full path for Paw command in the ~/.pawlogon
+</UL>
+</UL>
+
+
+<hr>
+
+</body> </html>
+
+<hr>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

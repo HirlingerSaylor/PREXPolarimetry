@@ -1,0 +1,41 @@
+<a name="versions">
+<h2>Versions</h2>
+</a>
+
+<ul>
+ <li> 2.1 - 2.3 based on GEANT 3.15: Obsolete versions.  
+ <li> 3.1 based on GEANT 3.21. <br>
+   CMZ format. <br>Includes:
+   <ul>
+    <li> WA89: simulation of the trigger
+    <li> Various magnets (sizes and field maps) can be used:
+      <ol>
+       <li> Omega (omega_field.a library should be linked)
+       <li> SM1h - Torino C-shape magnet
+       <li> Goliath
+       <li> SM1m - large apperture  
+       <li> SM2  - (SFM)
+      </ol>
+      Omega field is taken from omega_field.a library.<br>
+      Field for the magnets 2-5 are either taken from dummy.a (simple uniform
+      field)
+      or magnets.a (real field maps)
+   </ul>
+
+ <li> <a name="vers32">3.2</a> <br>
+      CVS format.<br>
+          A set of modifications was done with respect to the version 3.1
+          in order to use OMGEANT for COMPASS. The code was cleaned up and
+          WA89 proprietary parts were moved to separate directories/libraries.
+   <ul>
+    <li> WA89 specific routines were renamed by removing "OM" at the
+         beginning and adding "W89" instead. These routines (mainly concerning
+         the trigger) were moved to a new directory wa89.
+    <li> OMSAVE FF flag is renamed to WA89SAVE.
+    <li> In older versions the "reduced time of flight" (the word 14 in the hit
+         banks) was calculated as <i>TOF-dist/clight*SIGN</i> where <i>SIGN</i>
+         could be negative if X&lt;XYZTIME0(1). This could be useful
+         if the zero time point XYZTIME0 were put in a middle of the setup.
+         Since this option has not been used the <i>SIGN</i> term is removed.
+   </ul>
+</ul> 

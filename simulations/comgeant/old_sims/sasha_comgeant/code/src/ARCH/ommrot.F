@@ -1,0 +1,69 @@
+* $Header:$
+* $Log:$
+*
+C
+      SUBROUTINE OMMROT(X,IROT,IFL)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *         Transfer the point/vector X(1:3) using JROTM matrix    *
+C     *                 a translation vector                           *
+C     *   INPUT: X(1:3),IROT,IFL=0  to IROT, <>0 - from IROT           *
+C     *  OUTPUT: X(1:3)                                                *
+C     *                                                                *
+C     *    called from: various                                        *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+      INTEGER IROT,IFL
+      REAL    X(3)
+C
+#include "geant321/gcbank.inc"
+#include "geant321/gcunit.inc"
+C
+      REAL xx(3)
+      INTEGER jrot,nlnk
+C
+C     ------------------------------------------------------------------
+C
+C---      Find the JROTM matrix
+C
+      xx(1)=X(1)
+      xx(2)=X(2)
+      xx(3)=X(3)
+C
+      IF(IROT.GT.0.AND.JROTM.NE.0) THEN
+C
+        jrot=0
+        nlnk=IQ(JROTM-2)
+        IF(IROT.LE.nlnk) THEN
+          jrot=LQ(JROTM-IROT)
+          IF(jrot.NE.0) THEN
+C
+             IF(IFL.EQ.0) THEN
+                CALL   GROT(xx(1),Q(jrot+1),X(1))
+             ELSE
+                CALL GINROT(xx(1),Q(jrot+1),X(1))
+             ENDIF
+C
+          ENDIF
+        ENDIF
+        IF(jrot.EQ.0) THEN
+          WRITE(LOUT,1000) IROT
+        ENDIF
+      ENDIF
+C
+C+SELF,IF=DEBUG.
+C      write(6,1100) IROT,xx,X
+C 1100 format(' === OMTOFRAM: IROT,Xin,Xout: ',I3,2X,3E12.4,4X,3E12.4)
+C+SELF.
+C
+      RETURN
+ 1000 FORMAT(' *** OMMROT error: rotation matrix ',I3,' is missing')
+      END

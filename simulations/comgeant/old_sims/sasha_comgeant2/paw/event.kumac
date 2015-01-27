@@ -1,0 +1,10 @@
+MACRO event nn=10
+
+ zone 1 2 
+ exec plot_setup z1=-10. z2=800.
+ exec eve n=[nn]
+ exec plot_setup proj=2  x1=-8 x2=8 z1=-10. z2=750.
+* exec plot_setup y1=-70 y2=-30
+ exec eve n=[nn]
+ zone
+RETURN

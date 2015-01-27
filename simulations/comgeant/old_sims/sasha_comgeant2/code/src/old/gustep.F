@@ -1,0 +1,425 @@
+* $Header: /afs/cern.ch/exp/compass/src/cvs/comgeant/code/src/omgbatch/ompro/gustep.F,v 1.1.1.1 1997/06/02 17:39:52 fdr Exp $
+* $Log: gustep.F,v $
+* Revision 1.1.1.1  1997/06/02 17:39:52  fdr
+* Comgeant Monte-Carlo
+*
+* Revision 3.5  1997/05/11 19:45:05  gen
+* *** empty log message ***
+*
+* Revision 3.4  1997/05/05 17:11:02  gen
+*  Chudakov: define the include name is removed from all includes
+*
+* Revision 3.3  1997/03/16 22:11:30  gen
+* E.Chudakov: modifications #1
+*
+* Revision 3.2.0.1  1996/11/07 19:23:24  las
+* First CVS version.
+*
+*CMZ :          30/10/96  16.29.20  by  E.Chudakov
+*-- Author :    E.Chudakov   01/02/93
+C
+      SUBROUTINE GUSTEP
+C
+C     ******************************************************************
+C     *                                                                *
+C     *       User routine called at the end of each tracking step     *
+C     *       INWVOL is different from 0 when the track has reached    *
+C     *              a volume boundary                                 *
+C     *       ISTOP is different from 0 if the track has stopped       *
+C     *                                                                *
+C     *    ==>Called by : GTRACK                                       *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+C
+#include "geant321/gcbank.inc"
+#include "geant321/gcflag.inc"
+#include "geant321/gckine.inc"
+#include "geant321/gcking.inc"
+#include "geant321/gctmed.inc"
+#include "geant321/gctrak.inc"
+#include "geant321/gcunit.inc"
+#include "geant321/gcsets.inc"
+#include "geant321/gcvolu.inc"
+#include "geant321/gcnum.inc"
+#include "geant321/gcmate.inc"
+#include "omgeant/omcfla.inc"
+#include "omgeant/omctrack.inc"
+#include "omgeant/omceven.inc"
+#include "omgeant/omcbank.inc"
+#include "omgeant/omckin.inc"
+#include "omgeant/omcran.inc"
+#include "omgeant/omcrun.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id: gustep.F,v 1.1.1.1 1997/06/02 17:39:52 fdr Exp $'/
+#endif
+      INTEGER itr,i,istor,ierr,newkin,jokusf,jokdeb,joktrk,jdeb,jstop
+     +       ,ntrnew,ncstop,ndat,nlnk,mec,mabs,iorig
+      CHARACTER clin*4,cstop*4
+      INTEGER cnamec(MAXMEC)
+      REAL    valm
+C
+C     DATA MEC/'NEXT','MULS','LOSS','FIEL','DCAY','PAIR','COMP','PHOT' *
+C    +        ,'BREM','DRAY','ANNI','HADR','ECOH','EVAP','FISS','ABSO' *
+C    +        ,'ANNH','CAPT','EINC','INHE','MUNU','TOFM','PFIS','SCUT' *
+C    +        ,'RAYL','PARA','PRED','LOOP','NULL','STOP'/              *
+C
+C     ------------------------------------------------------------------
+C
+C
+      IF(NCOUNTR(7).LT.2147000000) NCOUNTR(7)=NCOUNTR(7)+1
+C
+      IF(IEOTRI.NE.0) GO TO 999
+C
+      ncstop=0
+C
+C---      Is it the original track or a shower product with the same ITRA?
+C---       iorig=0 - a product
+C---            =1 - the original track
+C
+      iorig=1
+      IF(JOKTRA.NE.0) THEN
+        joktrk=LQ(JOKTRA-1)
+        IF(joktrk.NE.0) THEN
+          IF(IQ(joktrk+ITRA).GE.2) iorig=0
+        ENDIF        
+      ENDIF
+C
+C---       Special kinematics, store the material thickness
+C
+      IF(KINTST(1).NE.0) THEN
+        ierr=1
+        DO i=1,NMEC
+          IF(LMEC(i).EQ.2) ierr=0
+        END DO
+        IF(ierr.EQ.0) THEN
+          valm=RADL
+          IF(KINTST(2).EQ.1) valm=ABSL
+          CALL OMATFIL(KINTST(1),SLENG,STEP,valm)
+        ENDIF
+      ENDIF
+C
+C---       Print the point
+C
+      IF(IDEBUG.NE.0) THEN
+        ierr=0
+        clin='    '
+        IF(IUSEFUL.NE.0) clin='usfl'
+        DO i=1,NMEC
+          IF(LMEC(i).LE.MAXMEC) THEN
+            cnamec(i)=NAMEC(LMEC(i))
+          ELSE IF(LMEC(i).LE.100+MAXMEC) THEN
+            cnamec(i)=NAMEC1(LMEC(i)-100)
+          ELSE
+            CALL UCTOH('____',cnamec(i),4,4)
+          ENDIF
+        END DO
+        IF(ISWIT(3).GE.2.AND.ISWIT(3).LE.3) THEN
+          WRITE(LOUT,1000) ITRA,clin,NSTEP,NUMED,TOFG*1.E9
+     +                    ,(VECT(i),i=1,7)
+     +                    ,STEP,INWVOL,ISTOP
+     +                    ,(NCALSEQ(i,1),i=1,3)
+     +                    ,(cnamec(i),i=1,NMEC)
+        ELSE IF(ISWIT(3).EQ.4) THEN
+          CALL GPCXYZ
+          CALL GPGKIN
+        ELSE IF(ISWIT(3).EQ.5) THEN
+          WRITE(LOUT,1300) NLEVEL,(NAMES(i),NUMBER(i),i=1,NLEVEL)
+        ENDIF
+      ENDIF
+C
+C---    Check conditions to stop the track
+C
+      IF(ISTOP.EQ.0) THEN
+        IF(NSTEP.GT.IOMCUTS(1)) THEN
+          ncstop=1
+          cstop='NSTE'
+          ISTOP=2
+        ENDIF
+        IF(NUMED.EQ.IDEADVOL) THEN
+          ncstop=1
+          cstop='ABSR'
+          ISTOP=2
+        ENDIF
+        DO mabs=1,NABSORB
+          IF(NUMED.EQ.MABSORB(1,mabs)) THEN
+            DO i=1,MXTABSOR
+              IF(MABSORB(1+i,mabs).GT.0.AND.
+     +           MABSORB(1+i,mabs).EQ.ITRTYP) THEN
+                ncstop=1
+                cstop='ABSR'
+                ISTOP=2
+                DESTEP=GEKIN
+              ENDIF
+            END DO
+          ENDIF
+        END DO
+      ELSE
+        IF(INWVOL.EQ.3) THEN
+          ncstop=1
+          cstop='OUT '
+        ENDIF
+      ENDIF
+C
+C---       For sensetive volumes (layers): calculate the energy deposit
+C
+      IF(ISVOL.NE.0) THEN
+C
+        CALL OMSENSV
+C
+      ENDIF
+C
+C---       Store the point in the JXYZ bank?
+C
+      istor=0
+      IF(.NOT.BATCH)       istor=1
+      IF(IOMGRAPH(1).NE.0) istor=1
+      IF(IDEBUG.NE.0)      istor=1
+C
+C---       Do not store the neutrals (except Cher. photons) save the first and last points
+C---                                      or the interaction point,
+C
+      IF(istor.NE.0) THEN
+        IF(ABS(CHARGE).LT.1.E-5.AND.ITRTYP.NE.7) THEN
+C          IF(NSTEP.NE.0.AND.ISTOP.EQ.0.AND.NGKINE.EQ.0) istor=0
+        ENDIF
+      ENDIF
+C
+C---       Do not store photons, electons and positrons - the shower products
+C---       in heavy materials for small steps - unless it enters/leaves
+C---       a volume
+C
+      IF(istor.NE.0) THEN
+        IF(iorig.EQ.0) THEN
+          IF(IPART.EQ.1.OR.IPART.EQ.2.OR.IPART.EQ.3) THEN
+            IF(VECT(7).LT.CUTXYZ(1)) THEN
+              IF(DENS.GT.1..AND.STEP.LT.1.) THEN
+C                istor=0
+              ENDIF
+            ENDIF
+            IF(INWVOL.EQ.0.AND.ISTOP.EQ.0.AND.NGKINE.EQ.0) THEN
+              IF(DENS.GT.CUTXYZ(2).AND.STEP.LT.CUTXYZ(3)) THEN
+C                istor=0
+              ENDIF
+            ENDIF
+          ENDIF
+        ENDIF
+C
+C---         Check the length of JXYZ
+C
+        IF(IABS(NENTXYZ).GT.NMXXYZ) THEN
+          istor=0
+          IF(NENTXYZ.GT.0) THEN
+            WRITE(LOUT,1400) IEVENT,NENTXYZ,NMXXYZ
+            NENTXYZ=-NENTXYZ
+          ENDIF
+        ENDIF
+C
+      ENDIF
+C
+      IF(istor.NE.0) THEN
+        CALL GSXYZ
+        NENTXYZ=NENTXYZ+1
+        CALL HF1(10001,VECT(7),1.)
+        IF(JOKTRA.NE.0.AND.ISTOP.NE.0.AND.NMEC+ncstop.GT.0) THEN
+          jokdeb=LQ(JOKTRA-6)
+          IF(jokdeb.NE.0) THEN
+            nlnk=IQ(jokdeb-2)
+            IF(nlnk.GE.ITRA) THEN
+              jdeb=LQ(jokdeb-ITRA)
+              IF(jdeb.EQ.0) THEN
+                CALL MZBOOK(IXDIV,jdeb,jokdeb,-ITRA,'OTDB',3,3,0,2,0)
+              ENDIF
+              IF(jdeb.NE.0) THEN
+                ndat=NMEC+ncstop
+                jstop=LQ(jdeb-1)
+                IF(jstop.EQ.0) THEN
+                  CALL MZBOOK(IXDIV,jstop,jdeb,-1,'OTDS',0,0,ndat,5,0)
+                  IF(jstop.NE.0) THEN
+                    DO i=1,ndat
+                      CALL UCTOH('    ',IQ(jstop+i),4,4)
+                      IF(i.LE.NMEC) THEN
+                        mec=LMEC(i)
+                        IF(mec.LE.MAXMEC) THEN
+                          IQ(jstop+i)=NAMEC(mec)
+                        ENDIF
+                      ELSE
+                        CALL UCTOH(cstop,IQ(jstop+i),4,4)
+                      ENDIF
+                    END DO
+                  ENDIF
+                ENDIF
+              ENDIF
+            ENDIF
+          ENDIF
+        ENDIF
+      ENDIF
+C
+C---       Plot the point
+C
+C~      IF(.NOT.BATCH.AND.IOMGRAPH(1).EQ.0) CALL GDCXYZ
+C
+C--- ...........    ADD NEW TRACKS ..............................
+C
+      IF(NGKINE.GT.0) THEN
+C
+        IF(IDEBUG.NE.0.AND.ISWIT(3).NE.0) THEN
+          WRITE(LOUT,1100) NGKINE,KCASE,(NINT(GKIN(5,itr))
+     +                                        ,itr=1,NGKINE)
+        ENDIF
+CC
+CC---     Reset the polarization
+CC
+C        NPOLTRA=0
+C
+        ntrnew=NGKINE
+        newkin=0
+        IF(NEWKINE.GE.2) newkin=1
+C
+        IF(IUSEFUL.NE.0)    newkin=1
+C
+C---         Decay
+C
+        IF(KCASE.EQ.NAMEC(5)) THEN
+          newkin=1
+C
+C---       Add the polarization?
+C
+          IF(NPOLDEC.NE.0) THEN
+            ierr=1
+            IF(NPOLDEC.LE.ntrnew) THEN
+              itr=NTRACK+NPOLDEC
+              IF(NTRPOL.LT.MXTRPOL) THEN
+                ierr=0
+                NTRPOL=NTRPOL+1
+                ITRPOL(NTRPOL)=itr
+                POLTREV(1,NTRPOL)=POLDEC(1)
+                POLTREV(2,NTRPOL)=POLDEC(2)
+                POLTREV(3,NTRPOL)=POLDEC(3)
+              ENDIF
+            ENDIF
+            IF(ierr.NE.0) THEN
+              WRITE(LOUT,1350) ITRA,ntrnew,NPOLDEC
+            ENDIF
+          ENDIF
+C
+C---        Mark the "useful" products
+C
+          IF(IUSEFUL.NE.0) THEN
+            IF(JOKTRA.NE.0) THEN
+              jokusf=LQ(JOKTRA-5)
+              IF(jokusf.NE.0) THEN
+                ndat=IQ(jokusf-1)
+                IF(ndat.LT.NTRACK+ntrnew) THEN
+                  CALL MZPUSH(IXDIV,jokusf,0,NTRACK+ntrnew+100-ndat,'I')
+                ENDIF
+                ndat=IQ(jokusf-1)
+                IF(ndat.GE.NTRACK+ntrnew) THEN
+                  DO itr=NTRACK+1,NTRACK+ntrnew
+                    IQ(jokusf+itr)=1
+                  END DO
+                ENDIF
+              ENDIF
+            ENDIF
+          ENDIF
+C
+C---       Resonances?
+C
+          IF(NRESDEC.NE.0) THEN
+            IF(NRESDEC.LE.ntrnew) THEN
+              DO i=1,NRESDEC
+                IF(IRESDEC(i).GT.0..AND.IRESDEC(i).LE.6) THEN
+                  IF(NTRRES.LT.MXTRRES) THEN
+                    ierr=0
+                    itr=NTRACK+IRESDEC(i)
+                    NTRRES=NTRRES+1
+                    ITRRES(NTRRES)=itr
+                    AMSRES(NTRRES)=AMRESDEC(i)
+                  ENDIF
+                ENDIF
+              END DO
+            ENDIF
+          ENDIF
+C
+        ELSE IF(KCASE.EQ.NAMEC(12)) THEN
+          IF(NEWKINE.GE.1) newkin=1
+        ENDIF
+C
+C---         For showers - do not store the products in KINE
+C
+        IF(iorig.EQ.0) newkin=0
+C
+C---         Store new tracks
+C
+        IF(newkin.NE.0) THEN
+C
+          DO itr=1,ntrnew
+            IFLGK(itr)=1
+          END DO
+C
+          CALL GSKING(0)
+          IF(IDEBUG.NE.0.AND.ISWIT(3).NE.0) THEN
+            CALL GPVERT(NVERTX)
+          ENDIF
+C
+C---          This should be erased for 3.21
+C
+C          DO itr=1,ntrnew
+C            IFLGK(itr)=0
+C          END DO
+C
+        ELSE
+C
+          DO itr=1,ntrnew
+            IFLGK(itr)=0
+          END DO
+C
+          CALL GSKING(0)
+C
+        ENDIF
+C
+      ENDIF
+C
+C---    Add new Cherenkov photons
+C
+      IF(NGPHOT.GT.0) THEN
+C
+        IF(IDEBUG.NE.0.AND.ISWIT(3).NE.0) THEN
+          WRITE(LOUT,1500) NGPHOT
+     +      ,(itr,(XPHOT(i,itr),i=1,11),itr=1,NGPHOT)
+        ENDIF
+C
+        CALL GSKPHO(0)
+C
+      ENDIF
+C
+      CALL OUSTEP
+C    ..............................................................
+C
+  999 RETURN
+C 1000 FORMAT(' --GUSTEP:tr',I4,' stp=',I5,' med=',I3,' vec:'
+C     +      ,3F7.1,1X,2F7.3,F7.4,F7.2
+C     +      ,' st=',E10.3,' inw,ist:',2I2,' proc: '
+C     +      ,(2(A4,1X)))
+ 1000 FORMAT(1X,I4,1X,A4,1X,I5,2X,I4,1X,F7.1,1X,3F7.1,3F7.3,E10.3
+     +      ,E10.3,I3,2X,I3,1X,3I11,1X,(5(A4,1X)))
+ 1100 FORMAT('            +',I3,' new particles from ',A4,' types:'
+     +      ,(20I4))
+ 1300 FORMAT(10X,'VOLUME: NLEVEL, (names,numbers): ',I2,2X
+     +      ,(5(A4,1X,I3,',',2X)))
+C 1200 FORMAT('  *** GUSTEP error: '
+C     +      ,'new data are NOT stored for the process:',A4
+C     +      ,2X,A8,2X,I3,' output number=',I3)
+ 1350 FORMAT('  *** GUSTEP error for track=',I3
+     +      ,'  decay products=',I2
+     +      ,' polarization for unknown product =',I3)
+ 1400 FORMAT('  *** GUSTEP: IEVENT=',I6,'  too many entries into JXYZ='
+     +      ,I8,'  (the limit=',I8,' - see FF MAXXYZ) - for the rest'
+     +      ,' of the event JXYZ is not filled')
+ 1500 FORMAT('  --- GUSTEP: add ',I6,'  photons',/,
+     +       (2X,I4,11E12.4))
+      END

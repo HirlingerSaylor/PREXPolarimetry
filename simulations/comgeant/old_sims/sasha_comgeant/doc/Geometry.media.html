@@ -1,0 +1,20 @@
+<a name="media">
+<h3>Media definition</h3>
+</a>
+Media are defined using the FFREAD commands:
+<pre>
+C -- Media definition
+C           #       name             mat sen F Fmx Fan Dmul  Elo epsi st(mu,lo)
+C
+PARMED01    1 'Air, mag  field$    '  15  0  1 30. 1.  0.1   0.2  1.     1.
+PARMED02  101 'Air, low mag. field$'  15  0  1  2. 1.  0.1   0.2  1.     1.
+PARMED03  201 'Air, mag. field$    '  15  0  1 30. 1.  0.1   0.2  0.2    1.
+PARMED04    2 'Silicon, no field$  '  20  1  0  0. 1.  0.002 0.2  0.0002 1.
+</pre>
+The number XX in PARMEDXX is used only to distinguish the FFREAD commands.
+Different key names can be used to define a medium:
+<pre>
+GPARMEDXX or GPARMEDXXX where 01&lt;=XX&lt;=99, 100&lt;=XXX&lt;=100 for general geometry files 
+PARMEDXX                where 01&lt;=XX&lt;=80,               for other   geometry files 
+UPARMEDXX               where 01&lt;=XX&lt;=20, reserved for the user 
+</pre>

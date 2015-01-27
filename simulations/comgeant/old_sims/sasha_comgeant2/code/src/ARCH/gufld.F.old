@@ -1,0 +1,245 @@
+* $Header: /afs/cern.ch/exp/compass/src/cvs/comgeant/code/src/omgbatch/ompro/gufld.F,v 1.1.1.1 1997/06/02 17:39:52 fdr Exp $
+* $Log: gufld.F,v $
+* Revision 1.1.1.1  1997/06/02 17:39:52  fdr
+* Comgeant Monte-Carlo
+*
+* Revision 3.5  1997/05/19 14:42:24  massim
+* *** empty log message ***
+*
+* Revision 3.4  1997/05/12 12:44:12  massim
+* Massimo Lamanna
+*
+* Revision 3.3  1997/03/16 22:11:29  gen
+* E.Chudakov: modifications #1
+*
+* Revision 3.2.0.1  1996/11/07 19:23:24  las
+* First CVS version.
+*
+*CMZ :          31/01/96  16.13.18  by  E.Chudakov
+*-- Author :    WA89 collaborators   30/11/91
+      SUBROUTINE GUFLD(XX,BX)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *          Define the magnetic field                             *
+C     *    Different magnets can be used:                              *
+C     *                                                                *
+C     *    called from: GRKUTA...                                      *
+C     *                                                                *
+C     ******************************************************************
+C
+C
+      IMPLICIT NONE
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id: gufld.F,v 1.1.1.1 1997/06/02 17:39:52 fdr Exp $'/
+#endif
+      REAL XX(3),BX(3)
+C
+#include "geant321/gcflag.inc"
+#include "geant321/gcunit.inc"
+#include "geant321/gcvolu.inc"
+#include "omgeant/omcfla.inc"
+#include "omgeant/omcsvol.inc"
+#include "omgeant/omctrack.inc"
+C
+      INTEGER i,mag,maga,iarea,ierr,lev,numed1,mag1,mag2
+      REAL    xm(3),x,xtransl(3),bxx(3),bxx1(3)
+      INTEGER i1,i2,i3
+      CHARACTER cmoth*4
+      SAVE xtransl
+      DATA xtransl/3*0./
+C
+C     ------------------------------------------------------------------
+C
+C---    CERN magnets (for WA89 or COMPASS)?
+C
+      IF(MAGCERN.NE.0) THEN
+         CALL OMFLDCERN(XX,BX)
+         GO TO 999
+      ENDIF
+C
+      i1=IDIRDET(1)
+      i2=IDIRDET(2)
+      i3=IDIRDET(3)
+C
+      BX(1)=0.
+      BX(2)=0.
+      BX(3)=0.
+      ierr=0
+      numed1=0
+C
+      x=XX(i1)
+      iarea=1
+      DO i=1,NAREAS
+        iarea=i
+        IF(x.LE.XYZAREA(i+1,i1)) GO TO 20
+      END DO
+   20 CONTINUE
+C
+      IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+        WRITE(LOUT,*) 'XX,iarea ',XX,iarea
+      ENDIF
+      IF(iarea.GT.0) THEN
+         maga=MAGAREA(iarea)    ! =0 - no field, >0 - the magnet number, =-1 - find the magnet
+C     
+         IF(maga.NE.0) THEN     ! there is magnetic field in this area
+C
+C---          Find the magnet
+C---          Define the magnet frame and transfer the coordinates there
+C
+            mag1=1
+            mag2=MXMAG
+C
+            IF(maga.GT.0.AND.maga.LE.MXMAG) THEN    ! The magnet is defined
+               mag1=maga
+               mag2=maga
+            ENDIF
+C
+C---   Find the magnet, or use the defined one
+C
+            DO mag=mag1,mag2
+C
+               IF(MAGPAR(6,mag).NE.-1) THEN
+                  CALL UHTOC(MAGPAR(2,mag),4,cmoth,4)
+C
+                  IF(cmoth.EQ.'HALL') THEN   ! the magnet is defined in MRS
+                     lev=1
+C
+                  ELSE                       ! the magnet is not defines in MRS
+C
+C---          If the volume tree has not been initialized  - do it now 
+C
+                     IF(NLEVEL.LE.0) THEN
+                        CALL GMEDIA(XX,numed1)
+                        IF(numed1.LE.0) THEN
+C     
+C---                The point is outside the setup
+C     
+                           WRITE(LOUT,1050) XX
+                           NLEVEL=0
+                           GO TO 999
+                        ENDIF
+                     ENDIF
+C
+C---          Find if the current point is sitting in one of the mother
+C---          volume for the magnet
+C
+                     lev=0
+C
+                     DO i=1,NLEVEL
+                        IF(NAMES(i).EQ.MAGPAR(2,mag)) THEN
+                           lev=i
+                           GO TO 30
+                        ENDIF
+                     ENDDO
+ 30                  CONTINUE
+C
+                     IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                        WRITE(LOUT,FMT='(A10,I5,10(1X,A4))') ' lev= '
+     +                   ,lev,(NAMES(i),i=1,lev)
+                     ENDIF
+C                     
+                  ENDIF
+C
+C---   Is the magnet found?
+C
+                  IF(lev.GT.0) THEN
+C
+C---            Transfer the coordinates to the mother volume
+C
+                     IF(lev.GT.1) THEN  
+                        CALL OMMTOD(XX,xm,1,lev)
+                     ELSE
+                        DO i=1,3
+                           xm(i)=XX(i)
+                        ENDDO
+                     ENDIF
+                     IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                        WRITE(LOUT,*) ' 1,xm,XX ',xm,XX
+                     ENDIF
+C
+C---               Transfer the coordinates to the center of the magnet
+C
+                     DO i=1,3
+                        xm(i)=xm(i)-AMAGPAR(i+2,mag)
+                     END DO
+                     IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                        WRITE(LOUT,*) ' 2,xm ',xm
+                     ENDIF
+C
+C---               Rotate the point if needed
+C
+                     IF(MAGPAR(6,mag).GT.0) THEN
+                        CALL OMMROT(xm(1),MAGPAR(6,mag),0)
+                     ENDIF
+                     IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                        WRITE(LOUT,*) ' 3,xm ',xm
+                     ENDIF
+C
+C---               Check the field fiducial volume
+C
+                     IF(ABS(xm(1)).LE.AMAGPAR(7,mag).AND.
+     +                  ABS(xm(2)).LE.AMAGPAR(8,mag).AND.
+     +                  ABS(xm(3)).LE.AMAGPAR(9,mag)) THEN
+C
+                        CALL OMAGFLDN(mag,xm,bxx)
+                        IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                           WRITE(LOUT,*) '1, bxx ',bxx
+                        ENDIF
+C
+C---        Rotate the field
+C
+                        IF(MAGPAR(6,mag).GT.0) THEN
+                           CALL OMMROT(bxx(1),MAGPAR(6,mag),1)
+                        ENDIF
+                        IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.10) THEN
+                           WRITE(LOUT,*) '2, bxx ',bxx
+                        ENDIF
+C
+C---        Transfer to MRS
+C
+                        IF(lev.GT.1) THEN
+                           CALL OMDTOM(bxx,bxx1,2,lev)
+                           DO i=1,3
+                              bxx(i)=bxx1(i)
+                           ENDDO
+                        ENDIF
+C
+                        DO i=1,3
+                           BX(i)=BX(i)+bxx(i)
+                        ENDDO
+C                    
+                        IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.11) THEN
+                           WRITE(LOUT,FMT='(A16,3(2X,3E12.4))') 
+     +                          ' 3, xm,bxx,BX ',xm,bxx,BX 
+                        ENDIF
+                        IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.3) THEN
+                           WRITE(LOUT,1200) mag,ierr,XX,xm,BX
+                        ENDIF
+                     ENDIF
+C
+                     IF(IDEBUG.NE.0.AND.ISWIT(3).EQ.13) THEN
+                        WRITE(LOUT,1200) mag,ierr,XX,xm,BX,bxx
+                     ENDIF
+                  ENDIF
+               ENDIF
+C
+            ENDDO  ! loop on magnets
+C
+         ENDIF
+      ENDIF
+C
+C
+C      IF(ierr.ne.0.and.mag.eq.4) WRITE(LOUT,1100) mag,ierr,XX,xm,BX
+C
+      IF(numed1.GT.0) NLEVEL=0
+C
+ 999  RETURN
+ 1050 FORMAT(' *** GUFLD Error: point outside the setup ',3E14.3)
+ 1100 FORMAT(' +++ GUFLD Error: mag,error,X(1:3),xm(1:3),B(1:3)==> '
+     +      ,I2,1X,I2,3X,3F10.2,4X,3F7.1,5X,3E11.3)
+ 1200 FORMAT(' ---  GUFLD mag,flag,X(1:3),xm(1:3),B(1:3)==> '
+     +      ,I2,1X,I2,3X,3F10.2,4X,3F7.1,5X,3E11.3,3X,3E11.3)
+      END

@@ -1,0 +1,29 @@
+<a name="Setups">
+<h2>Setup dependent routines (OUTDATED!!!)</h2>
+</a>
+Calls to several setup dependent routines have been included in the code
+(starting with the <a href="vers32">version 3.2</a>)
+<ul>
+ <li> WA89 calls depend on the flag SETUPNAME (see <a href="#Geometry">geometry</a>)
+   <ul>
+    <li> W89TRIG - trigger 
+    <li> W89SAVE - write events for TRIDENT 
+    <li> W89BGN  - FF cards definitions (called always)
+    <li> W89INI  - initialisation
+    <li> W89LAST - at the very end
+    <li> W89LGHIT - stores the intersections of tracks with the LG calorimeter
+   </ul>
+ <li> COMPASS calls
+   <ul>
+    <li> C9RICH1 - called if there is a volume with a name of 'RCH1' in order
+      to fill it;
+    <li> C9RICH2 - called if there is a volume with a name of 'RCH2' in order
+      to fill it
+   </ul>
+*** the previous explanation is out of date!
+Now the Rich1 simulation is driven by the routine 
+comgeant/code/src/compass/geomplugs/cgeplu2.F and triggered by the volume
+RCH1. The same mechanism will be used for Rich2 and the fine description
+of the PT system (these part of the equipments are
+considered too complicated to be described by simple FFR cards.
+</ul>

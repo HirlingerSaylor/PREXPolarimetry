@@ -1,0 +1,122 @@
+*** Begin of history file: Thu Feb 14 17:19:45 2008
+h/fil 21 /data2b/user/gen/halla/moller/mc/targ_2/moll_e_0.850_g06_lg02_coils_0.0.nt
+nt/lis //lun21
+nt/pri //lun21/2
+shell pwd
+shell ls -alF csimout.nt
+ld //
+h/fil 30 csimout.nt
+nt/pri //lun30/2
+nt/pl //lun30/2.pin(3,1)
+nt/pl //lun30/2.iproc
+ld //
+cut $0
+ld //
+h/fil 22 /data2b/user/gen/halla/moller/mc/targ_2/moll_e_0.850_g06_lg02_coils_4.0_mag_2_noproc.nt
+nt/pl //lun22/2.thetch*180/3.1416%phicm*180/3.1416
+nt/pl //lun22/2.thech*180/3.1416%phicm*180/3.1416
+nt/pri //lun22/2
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416
+exec fill lun=lun22
+cut $0
+nt/pl //lun22/2.siglg.f(2,1,4)
+nt/pl //lun22/2.apnum.f(2,1,4)
+nt/pl //lun22/2.apnum.f(2,0,50)
+nt/loop //lun22/2 cntpr.f(3)>-1 10 1
+nt/loop //lun22/2 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5.and.cntpr.f(3)>-1 10 1
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416
+zone 2 2
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416
+set csiz 0.4
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5
+nt/loop //lun22/2 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5.and.cntpr.f(4)>-1 10 1
+clo 22
+h/fil 22 /data2b/user/gen/halla/moller/mc/targ_2/moll_e_0.850_g06_lg02_coils_4.0_mag_2_noproc.nt
+nt/loop //lun22/2 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5.and.cntpr.f(4)>-1 10 1
+nt/loop //lun22/2 apnum.f(1,0,50)>0.5.and.apnum.f(2,0,50)>0.5.and.cntpr.f(3)>-1 10 1
+exec fill
+exec fill lun=lun22
+cut $0
+nt/pl //lun22/2.siglg.f(2,1,4)
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.abs(vert(1,1))<0.02.and.abs(vert(2,1))<0.02
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 abs(vert(1,1))<0.02.and.abs(vert(2,1))<0.02
+2dh 301 'X-Y' 5 -0.1 0.1 5 -0.1 0.1
+nt/pl //lun22/2.vert(2,1)%vert(2,1) ! -301
+nt/pl //lun22/2.vert(1,1)%vert(2,1) ! -301
+2dh 302 'X-Y' 5 -0.1 0.1 5 -0.1 0.1
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24 -302
+h/pri 301
+h/pri 302
+idopt 301 tabl
+idopt 302 tabl
+h/pri 301
+h/pri 302
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24 ! ! ! cont
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24 ! ! !
+nt/pri 1
+nt/pri2
+nt/pri //lun22/2
+nt/pl //lun22/2.anpow $24 ! ! !
+nt/pl //lun22/2.anpower $24 ! ! !
+nt/pl //lun22/2.anpower ! ! ! !
+nt/pl //lun22/2.anpower $24.and.abs(vert(2,1)-vert(2,1))<0.03 ! ! !
+nt/pl //lun22/2.anpower $24.and.abs(vert(2,1)-vert(1,1))<0.03 ! ! !
+nt/pl //lun22/2.anpower $24.and.abs(vert(2,1)-vert(1,1))>0.03 ! ! !
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24 ! ! !
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.vert(1,1)>0.5.and.vert(2,1)<-0.5
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05
+nt/pl //lun22/2.vert(1,1)%vert(2,1) $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05 ! ! !
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05 ! ! !
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.vert(1,1)>-1.05.and.vert(2,1)<1.05 ! ! !
+null -0.1 0.1 -0.1 0.1
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05 ! ! ! s
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.vert(1,1)>0.05.and.vert(2,1)<-0.05
+nt/pl //lun22/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.vert(1,1)<-0.05.and.vert(2,1)>0.05
+nt/pl //lun22/2.vert(2,1)+vert(1,1) $24
+nt/pl //lun22/2.vert(2,1)-vert(1,1) $24
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24 ! ! !
+cont 1000000
+h/pl 1000000 cont
+h/pl 1000000 lego
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.(vert(2,1)+vert(1,1))<0.01 ! ! !
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.abs(vert(2,1)+vert(1,1))<0.01 ! ! !
+nt/pl //lun22/2.vert(2,1)-vert(1,1) $24.and.abs(vert(2,1)+vert(1,1))<0.01 ! ! !
+nt/pl //lun22/2.vert(2,1)+vert(1,1) $24.and.abs(vert(2,1)-vert(1,1))<0.01 ! ! !
+nt/pl //lun22/2.(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.01 ! ! !
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun22/2.vert(2,1)%vert(1,1) $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun22/2.(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+h/fil 23 /data2b/user/gen/halla/moller/mc/targ_2/moll_e_0.850_g06_lg02_coils_4.0_mag_2_noproc_1.nt
+nt/pl //lun23/2.vert(2,1)%vert(1,1) $24 ! ! !
+2dh 311 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+2dh 312 'X-Y' 10 -0.1 0.1 10 -0.1 0.1
+nt/pl //lun23/2.vert(2,1)%vert(1,1) ! -311
+nt/pl //lun23/2.vert(2,1)%vert(1,1) $24 -312
+idopt 311 tabl
+idopt 312 tabl
+h/pri 311
+h/pri 312
+nt/pl //lun23/2.(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.(vert(2,1)+vert(1,1))/1.41 $24.and.abs(vert(2,1)-vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.thetcm*180/3.1416%(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.phicm*180/3.1416%(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.phicm*180/3.1416%(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<1.02 ! ! !
+nt/pl //lun23/2.phicm*180/3.1416%(vert(2,1)+vert(1,1))/1.41 $24.and.abs(vert(2,1)-vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.thetcm*180/3.1416%phicm*180/3.1416 $24
+nt/pl //lun23/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.abs(vert(2,1)-vert(1,1))<0.02
+nt/pl //lun23/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.abs(vert(2,1)-+vert(1,1))<0.02
+nt/pl //lun23/2.thetcm*180/3.1416%phicm*180/3.1416 $24.and.abs(vert(2,1)+vert(1,1))<0.02
+nt/pl //lun23/2.(vert(2,1)+vert(1,1))/1.41 $24.and.abs(vert(2,1)-vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.thetcm*180/3.1416%(vert(2,1)-vert(1,1))/1.41 $24.and.abs(vert(2,1)+vert(1,1))<0.02 ! ! !
+nt/pl //lun23/2.anpower $24.and.abs(vert(2,1)-0)<0.02.and.abs(vert(1,1)-0))<0.02 ! ! !
+nt/pl //lun23/2.anpower $24.and.abs(vert(2,1)-0)<0.02.and.abs(vert(1,1)-0)<0.02 ! ! !
+nt/pl //lun23/2.anpower $24.and.abs(vert(2,1)+0.08)<0.02.and.abs(vert(1,1)-0.08)<0.02 ! ! !
+*** End   of history file: Thu Feb 21 15:19:12 2008

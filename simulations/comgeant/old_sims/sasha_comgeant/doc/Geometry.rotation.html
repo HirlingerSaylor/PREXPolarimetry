@@ -1,0 +1,14 @@
+<a name="rotation">
+<h3>Rotation matrices</h3>
+</a>
+
+Rotation matrices are defined using the FFREAD commands:
+<pre>
+C
+C --    Rotation matrix
+C
+RMATR01  90.  90.   0.   0.  90.    0.     I is along Y,II along Z,III along X
+RMATR02   0.   0.  90.   0.  90.   90.     I is along Z,II along X,III along Y
+RMATR03  90.   0.   0.   0.  90.  270.  Z  I is along X,II along Z,III oppos Y
+</pre>
+The number XX in RMATRXX defines the rotation matrix number.

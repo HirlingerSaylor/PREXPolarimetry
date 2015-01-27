@@ -1,0 +1,73 @@
+***** Run COMGEANT for Moller Polarimiter in Hall A *****
+
+MACRO view_test file=run
+
+clo 0
+h/del 0
+opt grid
+
+h/fil 1 ../data/[file].nt
+*h/fil 1 [file].nt
+opt nbox
+exec  fill
+
+*make some text files
+nt/dump 2.thetcm nhit>0.and.$22 filename=../data/[file]_thetr.dat
+nt/dump 2.phicm nhit>0.and.$22 filename=../data/[file]_phir.dat
+
+nt/dump 2.thetcm nhit>0.and.$23 filename=../data/[file]_thetl.dat
+nt/dump 2.phicm nhit>0.and.$23 filename=../data/[file]_phil.dat
+
+nt/dump 2.thetcm nhit>0.and.$24 filename=../data/[file]_thetc.dat
+nt/dump 2.phicm nhit>0.and.$24 filename=../data/[file]_phic.dat
+
+nt/dump 2.hitraxy.f(-1,3,0,2) nhit>0.and.$24 filename=../data/[file]_xrc.dat
+
+nt/dump 2.hitraxy.f(-1,3,0,3) nhit>0.and.$24 filename=../data/[file]_xlc.dat
+
+nt/dump 2.hitraxy.f(-2,3,0,2) nhit>0.and.$24 filename=../data/[file]_yrc.dat
+
+nt/dump 2.hitraxy.f(-2,3,0,3) nhit>0.and.$24 filename=../data/[file]_ylc.dat
+
+nt/dump 2.siglg(2,1,4) nhit>0.and.$24 filename=../data/[file]_siglc.dat
+
+nt/dump 2.siglg(2,5,8) nhit>0.and.$24 filename=../data/[file]_sigrc.dat
+
+clo 1
+cd //pawc
+
+h/fil 1 ../data/[file].his ! N
+hrout 0
+
+clo 0
+cd //pawc
+
+* Get histogram properties
+nsim=$HINFO(1040,'ENTRIES')
+nlarm=$HINFO(1041,'ENTRIES')
+nrarm=$HINFO(1042,'ENTRIES')
+n2arm=$HINFO(1043,'ENTRIES')
+*anp=$HINFO(1033,'MEAN')
+*anpr=$HINFO(1033,'RMS')
+*theta=$HINFO(1013,'RMS')
+*phi=$HINFO(1023,'RMS')
+*tmean=$HINFO(1011,'MEAN')
+
+
+* Calculate Statitstics
+*eanp=$SIGMA([anpr]/SQRT([n2arm]))
+*acc=$SIGMA(REAL([n2arm])/REAL([nsim]))
+*eacc=$SIGMA(SQRT([acc]*(1.-[acc])/[nsim]))
+*accl=$SIGMA(REAL([n2arm])/REAL([nlarm]))
+*eaccl=$SIGMA(SQRT([accl]*(1.-[accl])/[nlarm]))
+*accr=$SIGMA(REAL([n2arm])/REAL([nrarm]))
+*eaccr=$SIGMA(SQRT([accr]*(1.-[accr])/[nrarm]))
+*err=$SIGMA(100./SQRT([n2arm]))
+
+* Creare arrays for analyzing power, and acceptances
+*ve/cr sval(4) r [anp] [acc] [accl] [accr]
+*ve/cr esval(4) r [eanp] [eacc] [eaccl] [eaccr]
+
+* Put stuff here to write specific data
+
+RETURN

@@ -1,0 +1,81 @@
+moll 90. 90.01 -0.1 0.1
+trig
+exec plot_setup
+dxyz
+trig
+dxyz
+trig
+dxyz
+exec plot_setup proj=2 z2=820 x1=-10 x2=10
+dxyz
+moll 104. 104.01 -0.1 0.1
+trig
+dxyz
+moll 103. 103.01 -0.1 0.1
+trig
+dxyz
+exec plot_setup proj=1 x1=-10 x2=10
+exec eve n=100
+exec plot_setup proj=1 x1=-10 x2=10 y1=-110 y2=10 z1=650 z2=800
+exec eve n=10
+help
+sparatt 2 1 2
+exec plot_setup proj=1 x1=-10 x2=10 y1=-110 y2=10 z1=650 z2=800
+exec eve n=10
+exec plot_setup proj=1 x1=-10 x2=10 y1=-110 y2=10 z1=650 z2=800
+sparatt 2 1 0
+exec plot_setup proj=1 x1=-10 x2=10 y1=-110 y2=10 z1=650 z2=800
+exec plot_setup proj=1 x1=-10 x2=10 y1=-110 y2=10 z1=650 z2=800
+exec eve n=10
+exec plot_setup proj=2 x1=-10 x2=10 y1=-80 y2=10 z1=300 z2=800
+dxyz 2
+exec plot_setup proj=2 x1=-10 x2=10 y1=-80 y2=10 z1=500 z2=550
+dxyz 2
+opriev 1
+ophits * *
+exec plot_setup proj=1 x1=-10 x2=10 y1=-80 y2=10 z1=300 z2=800
+exec eve n=1
+molla 90. 90.001 0. -0.01
+exec plot_setup proj=1 z1=-30 z2=800 y2=5 y1=-40
+exec eve n=10
+primag 0 0 10.9
+primag 0 0 2.9
+exec plot_setup proj=2 x1=-10 x2=10
+exec eve n=100
+magf 1 1.45
+opla
+exec plot_setup proj=2 x1=-10 x2=10
+exec eve n=200
+exec eve n=200
+clops
+shell mv paw.ps rays_moll-theta_65-90deg_q1_1.45.ps
+shell ls a-lF
+shell ls -alF
+mollang 70. 70.1 -10.1 -10.
+dxyz 2
+trig
+dxyz 2
+magf 1 0
+magf 3 0
+magf 2 0
+exec eve n=100
+null -1 1 -0.7 0.7
+draw hall 0 0 0 0 0 1 1
+dxyz
+null -0.1 0.1 -0.07 0.07
+draw hall 0 0 0 0 0 1 1
+dxyz
+exec plot_setup y1=-1.0 y2=1.0 x1=-1.0 x2=1.0 z1=-100 z2=1400 proj=1
+dxyz
+exec plot_setup y1=-1.0 y2=1.0 x1=-1.0 x2=1.0 z1=-100 z2=1400 proj=2
+dxyz
+magf 5 2.
+magf 5 0.75
+exec plot_setup y1=-1.0 y2=1.0 x1=-1.0 x2=1.0 z1=-100 z2=1400 proj=1
+exec plot_setup y1=-1.0 y2=1.0 x1=-1.0 x2=1.0 z1=-100 z2=1800 proj=1
+exec eve n=100
+beammom 1.05 1.051 0.
+exec eve n=100
+exit
+
+

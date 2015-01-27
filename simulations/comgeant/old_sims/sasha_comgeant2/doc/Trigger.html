@@ -1,0 +1,53 @@
+<a name="Trigger">
+<h2>Trigger</h2>
+</a>
+A template for a trigger logic is prepared. Certain detectors may be declared
+to be used in the trigger.
+Several adjacent channels may be "OR"-ed. 
+The digitisings from these detectors are copied
+to separate arrays. 
+The trigger routines are called if a flag is set:
+<pre>
+OMTRIG   1
+</pre>
+The trigger detectors are defined in the following way:
+<pre>
+TRIGDEF1 'HO11' 0 1
+TRIGDEF2 'HO21' 0 1 'HO22' 0 1
+TRIGDEF3 'HO31' 0 1
+TRIGDEF4 'HO41' 0 1
+TRIGDEF5 'LAW1' 1 8
+TRIGDEF6 'LAW2' 1 8
+</pre>
+The number of the trigger detectors is limited to 10. For each trigger
+detector one should specify up to 2 regular detectors, for example
+two types of plastic slates in a hodoscope.
+For each regular detector one has to set 
+the name of the detector ("DET" variable),
+the copy number (if =0 - all copies are taken) and how many adjacent
+channels should be "OR"-ed. <p>
+
+The trigger detector information and the hits are stored in COMMON/OMCTRIG/:
+<pre>
+C
+C---  Trigger part
+C
+      INTEGER MXTRIG,MXTRELEM,MXTWORD,MXTRAELE,MXTRIGD
+      PARAMETER (MXTRIG=10                 ! max number of trigg. detectors
+     +          ,MXTRELEM=256)             ! max number of elements/detect
+      PARAMETER (MXTWORD=(MXTRELEM+31)/32) ! max number of words/detec
+      PARAMETER (MXTRAELE=16)              ! max number of tracks per element
+      PARAMETER (MXTRIGD=2)                ! max number of GEANT detectors
+C                                            per a trigger detector
+      COMMON/OMCTRIG/ ITRIGDEF(3,MXTRIGD,MXTRIG) ! FF definitions
+     +               ,NTRIGDET             ! number of trigger detectors
+     +               ,NTRIGELE(MXTRIG)     ! number of elements/detect
+     +               ,NTRIGHIT(MXTRIG)     ! number of hits
+     +               ,ITRIGHIT(MXTRELEM,MXTRIG) ! (isl,j) hit patterns
+     +               ,ETALLHIT(MXTRIG)          ! full energy/hodoscope
+C                                                  i=1,NTRIGHIT
+     +               ,JTRIGHIT(MXTRELEM,MXTRIG) ! (i,j) channel numbers
+     +               ,NTRAGHIT(MXTRELEM,MXTRIG) ! (isl,j) tracks per hit
+     +               ,ITRAGHIT(MXTRAELE,MXTRELEM,MXTRIG) ! (k,isl,j) tracks #
+C
+</pre>

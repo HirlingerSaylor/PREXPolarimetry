@@ -1,0 +1,103 @@
+      REAL FUNCTION SIG_EM_TH(THETCM)
+C
+C===     Cross-section (in barns) of various EM processes vs scatt. angle in CM THECM (degrees)
+C===     COMMON/CKINTMP/:
+C===     for processes KEMPROC=1 - Moller, 
+C                             =2 - Bhabha, 
+C                             =3 - 2-photon annihil
+C===     Energy (LAB) of the beam: EEMPROC
+C
+      IMPLICIT NONE
+      REAL THETCM
+      VECTOR PREAC(8)
+C
+      COMMON/CKINTMP/ KEMPROC,EEMPROC,THCMEMPROC
+      INTEGER KEMPROC
+      REAL EEMPROC,THCMEMPROC
+C
+      REAL    r0,em,am1(2),am2(2),pi,radeg
+      DOUBLE PRECISION th,ecmp,vcmp,ecm,eom,eom2,elab
+     +                ,d1,d2,d3,d4,dsig,st,ct,st2,ct2
+     +                ,af,af2,cth,sth,cth2,sth2
+C
+      DATA r0/2.818/  ! electron radius in fm
+      DATA pi/3.14159/
+      DATA em/0.511E-3/
+C
+      KEMPROC=PREAC(3)+1.1
+      EEMPROC=PREAC(1)
+C
+      radeg=pi/180.
+      th=THETCM*radeg
+      elab=EEMPROC
+C
+      am1(1)=em
+      am1(2)=em
+      am2(1)=em
+      am2(2)=em
+C
+      IF(KEMPROC.EQ.3) THEN
+         am2(1)=0.
+         am2(2)=0.
+      ENDIF
+C
+      ecm=DSQRT(am1(1)**2+am1(2)**2+2.*am1(2)*elab)
+      ecmp=ecm/2.
+      vcmp=DSQRT(ecmp**2-am1(1)**2)/ecmp
+C
+C      print *,ecm,ecmp,vcmp,gam,bet
+      ct=DCOS(th)
+      st=DSIN(th)
+      ct2=ct**2
+      st2=st**2
+      dsig=0.
+C
+      IF(KEMPROC.EQ.1) THEN
+C
+C---       Moller
+C
+         eom=ecmp/am2(1)
+         eom2=eom**2
+         d1=r0**2*(2.*eom2-1.)**2/4./vcmp**4/eom2**3
+         d2=4./st2**2-3./st2+(eom2-1.)**2/(2.*eom2-1)**2*(1+4./st**2)
+C         print *,r0,d1,d2
+C
+         dsig=d1*d2
+C
+      ELSE IF(KEMPROC.EQ.2) THEN
+C
+C---       Bhabha
+C
+         eom=ecmp/am2(1)
+         eom2=eom**2
+         af=(eom2-1.)
+         af2=af**2
+         cth=DCOS(th/2.)
+         sth=DSIN(th/2.)
+         cth2=cth**2
+         sth2=sth**2
+C
+         d1=r0**2/16./eom2
+         d2=1./af2/sth2**2*
+     +        (1.+4.*af*cth2+2.*af2*(1.+cth2**2))
+         d3=1./eom2**2*(3.+4.*af+af2*(1+ct2))
+         d4=1./eom2/af/sth2*
+     +        (3.+4.*af*(1+ct)+af2*(1.+ct)**2)
+C
+         dsig=d1*(d2+d3-d4)
+C
+      ELSE IF(KEMPROC.EQ.3) THEN
+C
+C---       Bhabha
+C
+         d1=r0**2/4.*am1(1)**2/vcmp/ecmp**2
+         d2=(1.+2.*vcmp**2*st2-vcmp**4*(1.-st2**2))/(1.-vcmp**2*ct2)**2
+C
+         dsig=d1*d2
+C
+      ENDIF
+C
+      SIG_EM_TH=REAL(dsig)*10.
+C
+      RETURN
+      END

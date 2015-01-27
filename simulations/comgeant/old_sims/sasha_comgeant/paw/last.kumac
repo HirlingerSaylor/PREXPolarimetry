@@ -1,0 +1,5 @@
+*** Begin of history file: Thu Feb  7 17:08:25 2013
+exec run_ener nev=1000
+exec run_energy nev=1000
+exit
+*** End   of history file: Thu Feb  7 17:09:12 2013

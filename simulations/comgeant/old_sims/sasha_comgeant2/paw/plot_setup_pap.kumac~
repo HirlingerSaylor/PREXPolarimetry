@@ -1,0 +1,240 @@
+MACRO plot_setup proj=1 x1=-20 x2=20 y1=-80 y2=50 z1=-30 z2=800 black=0
+*   proj = 1 - side view
+*          2 - top view
+*          3 - stereo
+*
+  gr/set dmod 1
+  gr/opt ndat
+  gr/opt nbox
+
+  satt * seen 1
+
+  satt ho11 colo 3
+  satt ho21 colo 4
+  satt ho11 colo 1
+  satt ho21 colo 1
+  colar=2
+  if [black]>0 then
+    satt ho11 colo 1
+    satt ho21 colo 1
+    colar=1
+  endif
+
+  fnt=-60
+ 
+  satt hall seen 0
+  satt mten seen 0
+  satt mtin seen 0
+  satt mtb1 seen 0
+  satt mtv1 seen 0
+  satt mtd1 seen 0
+  satt mtb2 seen 0
+  satt mtv2 seen 0
+
+  satt bpi1 seen 0
+  satt bpv1 seen 0
+  satt bpi2 seen 0
+  satt bpv2 seen 0
+  satt bpi3 seen 0
+  satt bpv3 seen 0
+  satt bpi4 seen 0
+  satt bpv4 seen 0
+  satt bpi5 seen 0
+  satt bpv5 seen 0
+  satt bpf3 seen 0
+  satt bpf4 seen 0
+  satt bpe4 seen 0
+
+  satt dbi1 seen 0
+  satt dbv1 seen 0
+  satt dbw1 seen 0
+  satt dbw2 seen 0
+  satt dbw3 seen 0
+  satt dbw4 seen 0
+  satt dbt3 seen 0
+  satt dbt4 seen 0
+*  satt dms1 seen 0
+*  satt dmbh seen 0
+  satt dmfr seen 0
+
+*  satt dco1 seen 0
+*  satt dsl1 seen 0
+*  satt dco2 seen 0
+*  satt dsl2 seen 0
+
+  satt mdbx seen 0
+  satt mdba seen 0
+  satt mdbw seen 0
+  satt mdet seen 0
+
+  satt s1ld seen 0
+  satt s1h1 seen 0
+  satt s1h2 seen 0
+  satt s2ld seen 0
+  satt s21b seen 0
+  satt s21h seen 0
+  satt s3ld seen 0
+  
+  satt hod1 seen 0
+  satt hod2 seen 0
+  satt hod3 seen 0
+  satt ho31 seen 0
+
+  satt mdd1 seen 0
+  satt mdd2 seen 0
+  satt mdd3 seen 0
+  satt mdd4 seen 0
+
+  satt hlm1 lwid 2
+  satt hlm2 lwid 2
+  satt 'mq1 ' lwid 3
+  satt 'mq2 ' lwid 3
+  satt 'mq3 ' lwid 3
+  satt  mdp1 lwid 3
+  satt  mdp2 lwid 3
+  satt  dms1 lwid 2
+
+  gr/set vfon -100
+  gr/set lfon -100
+  gr/set vsiz 0.35
+  gr/set asiz 0.35
+
+*  dopt hide on
+*  dopt shad on
+
+*  satt ho11 fill 1
+
+  if [proj]=1 then
+
+    null [z1] [z2] [y1] [y2] 
+    atit 'Z cm' 'Y cm'
+    draw hall 90 180 0 0 0 1 1
+
+    igset plci 1
+    gr/set dmod 4
+    line 400 0 750 0 
+    gr/set dmod 1
+
+    igset plci [colar]
+    igset faci [colar]
+    igset lwid 6
+
+*    arline 127 0 180 0 3
+*    arline 520 0 600 0 3
+    arrow 140 170 0 0 0.2
+    arrow 640 670 0 0 0.2
+
+    igset plci 1
+    igset faci 1
+    igset lwid 1
+
+    igset chhe 0.4
+    igset txal 23
+    igset txfp -100
+    zm=$SIGMA([z2]*0.95+[z1]*0.05)
+    ym=$SIGMA([y2]*0.9+[y1]*0.1)
+    gr/prim/itx [zm] [ym] '(a)'
+
+    igset chhe 0.35
+    igset txal 23
+    igset txfp [fnt]
+    igset tang 90
+    gr/prim/itx 0 -30 'Target'
+*    gr/prim/itx 0  25 'Coils'
+    gr/prim/itx 330 27 'Collimator'
+    igset tang  0
+    gr/prim/itx 0  25 'Coils'
+    gr/prim/itx  75 28 'Q1'
+    gr/prim/itx 140 28 'Q2'
+    gr/prim/itx 208 28 'Q3'
+    gr/prim/itx 280 28 'Q4'
+    gr/prim/itx 425 25 'Dipole'
+    igset tang -18
+    gr/prim/itx 720 -25 'Detector'
+    igset tang 0
+    gr/prim/itx 650 20 'non-scattered'
+    gr/prim/itx 650 12 'beam' 
+    
+  elseif [proj]=2 then
+
+    null [z1] [z2] [x1] [x2] 
+    atit 'Z cm' 'X cm'
+    draw hall 90 90 0 0 0 1 1
+    
+    igset plci 1
+    gr/set dmod 4
+    line 0 0 750 0 
+    gr/set dmod 1
+
+    igset plci [colar]
+    igset faci [colar]
+    igset lwid 6
+
+*    arline 127 0 180 0 1.2
+*    arline 520 0 600 0 1.2
+    arrow 140 170 0 0 0.2
+    arrow 540 570 0 0 0.2
+
+    igset plci 1
+    igset faci 1
+    igset lwid 5
+
+    arrow 420 420 10 7 0.3
+    igset plci 1
+    igset faci 1
+    igset lwid 1
+
+    igset chhe 0.4
+    igset txal 23
+    igset txfp -100
+    zm=$SIGMA([z2]*0.95+[z1]*0.05)
+    xm=$SIGMA([x2]*0.9+[x1]*0.1)
+    gr/prim/itx [zm] [xm] '(b)'
+
+    igset chhe 0.35
+    igset txal 23
+    igset txfp -60
+*    gr/prim/itx 420 12 'B&^[\256]!' 
+    gr/prim/itx 420 12 'B' 
+    igset txfp [fnt]
+
+
+  elseif [proj]=3 then
+
+    satt hall seen 0
+    dopt hide on
+    dopt shad on
+    ang1=30
+    ang2=120
+    
+*    null -40 400 -500 40 
+    null -40 200 -500 40 
+    draw hall [ang1] [ang2] 0 0 0 1 1
+
+*    dopt hide off
+*    draw hall [ang1] [ang2] 0 0 0 1 1
+
+  endif
+  dopt hide off
+  dopt shad off
+  gr/set dmod 1
+  gr/set vfon 2
+  gr/set lfon 2
+  gr/set vsiz 0.28
+  gr/set asiz 0.28
+  igset plci 1
+  igset faci 1
+  gr/opt date
+ 
+RETURN
+
+
+
+
+
+
+
+
+
+
+

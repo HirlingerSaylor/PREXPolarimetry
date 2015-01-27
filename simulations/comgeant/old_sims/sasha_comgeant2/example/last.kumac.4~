@@ -1,0 +1,14 @@
+*** Begin of history file: Tue Feb 19 16:04:43 2008
+shell cat last.kumac
+exec plot_setup proj=1
+molla 81.2 81.21 3.1 3.11
+exec eve n=1
+molla 90. 90.001 10 10.01
+exec eve n=1
+exec plot_setup proj=1
+molla 90. 90.001 12 12.01
+exec eve n=1
+exec eve n=100
+primag 0 0 10.0
+exit
+*** End   of history file: Tue Feb 19 16:49:02 2008

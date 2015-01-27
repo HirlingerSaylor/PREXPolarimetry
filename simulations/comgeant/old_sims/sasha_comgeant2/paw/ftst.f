@@ -1,0 +1,3 @@
+      REAL FUNCTION FTST(XX)
+      FTST=XX
+      END

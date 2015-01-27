@@ -1,0 +1,19 @@
+MACRO dipol_siz e=1.72 
+*
+* -- Moller dipole configuration
+*    e - beam energy (GeV)
+
+ s1=0.138
+ s2=0.223
+ fac=.163*0.86/2.90
+
+ x=([s2]-[s1])/([s2]+[s1])
+ thet=$SIGMA(90.-ACOS([x])*180./3.1415)
+
+ h=[e]*[s1]*[s2]/([s1]+[s2])/[fac]
+ bdl=[h]*478843./2.915
+ amp=[h]*107.58/2.915
+
+ mess H=[h] BdL=[bdl] Amp=[amp] theta=+/-[thet]
+
+RETURN

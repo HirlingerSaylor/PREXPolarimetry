@@ -1,0 +1,167 @@
+MACRO fill lun=lun1 id=1000 cut=0 il1=1 il2=4 ir1=5 ir2=8 typ=0
+*
+* --- Fills histograms for MC Moller events
+* 
+  cd //pawc
+
+  id0=[id]+1
+  if $HEXIST([id0])>0 then
+    h/del [id0]
+  endif
+
+  if $VDIM(cutmol,1)<4 then
+     ve/cr cutmol(4) r
+  endif
+
+  cute=[cut]
+  if [cute]>0 goto ecuts
+
+  nt/pl //[lun]/2.siglg.f(2,1,8) siglg.f(2,[il1],[il2])>50..and.siglg.f(2,[ir1],[ir2])>50..and.apnum.f(0,0,50)>1.5  -[id0]
+  opt fit 
+  nx=$HINFO([id0],'XBINS')
+  x1=$HINFO([id0],'XMIN')
+  x2=$HINFO([id0],'XMAX')
+  xb=$SIGMA(([x2]-[x1])/[nx])
+  if $VDIM(yy,1)<[nx] then
+    ve/cr yy([nx]) r
+  endif
+  h/get_vec/con [id0] yy
+  ymx=$HINFO([id0],'MAX')
+  imx=0
+  do i=1,[nx]
+    a=yy([i])
+    a=[a]+0.1
+    if [a]>[ymx] then
+      imx=[i]
+    endif
+  enddo
+  if [cute]=0 .AND. [imx]>0 then
+    xmx=$sigma([x1]+[xb]*([imx]-0.5))
+    if $VDIM(par,1)<10 then
+      ve/cr par(10) r
+    endif
+    ve/in par(1:3) [ymx] [xmx] 10.
+    i1=[imx]-10 
+    i2=[imx]+10
+    h/fit [id0]([i1]:[i2]) g ' ' 3 par
+    xx1=$SIGMA(par(2)-par(3)*4.-[x1]) 
+    xx2=$SIGMA(par(2)+par(3)*4.-[x1])
+    i1=$SIGMA(INT([xx1]/[xb])) 
+    i2=$SIGMA(INT([xx2]/[xb])) 
+    h/fit [id0]([i1]:[i2]) g ' ' 3 par
+    cute=$SIGMA(par(2)-par(3)*6.)
+    cute=[cute]*0.8
+  endif
+
+  ecuts:
+
+  ve/in cutmol(1) [cute]
+
+  cuth=[cute]*0.37
+  mess Cute= [cute]  Cuth= [cuth]
+
+  cut $21 1>0
+  cut $22 siglg.f(2,[il1],[il2])>[cuth].and.apnum.f(1,0,50)>0.5
+  cut $23 siglg.f(2,[ir1],[ir2])>[cuth].and.apnum.f(2,0,50)>0.5
+  cut $24 $22.and.$23
+*  exitm
+
+  it1=1
+  it2=3
+  if [typ]>0 then
+    it1=[typ]
+    it2=[it1]
+  endif
+  do ityp=[it1],[it2]
+    case [ityp] in
+      (1) 
+          idd=10
+          hnam='Theta '
+          nh=60
+          x1=60
+          x2=120
+          vnam='thetcm*180./3.1415'
+      (2) 
+          idd=20
+          hnam='Phi '
+          nh=120
+          x1=-60
+          x2=60
+          vnam='phicm*180./3.1415'
+      (3) 
+          idd=30
+          hnam='Analyzing power '
+          nh=400
+          x1=0.4
+          x2=0.8
+          vnam='abs(anpower)'
+    endcase
+      
+    id0=[id]+[idd]
+
+    do ih=1,4
+
+      idh=$SIGMA([id0]+[ih]-1)
+      case [ih] in
+        (1) hname='initial '
+        (2) hname='left arm '
+        (3) hname='right arm '
+        (4) hname='coincidence '
+      endcase            
+      hnam1=[hnam]//[hname]
+*      mess [ityp] [ih] [idh] [hnam1] [nh] [x1] [x2] [vnam]
+      1dh [idh] [hnam1] [nh] [x1] [x2]
+
+      icut=20+[ih]
+      nt/pl //[lun]/2.[vnam] $[icut] -[idh]
+      if [ih]>1 then
+         idhe=$SIGMA([id0]+3+[ih])
+         call effih.f([id0],[idh],[idhe])
+      endif
+    enddo
+  enddo
+ exitm
+  id4=[id0]+4
+  id5=[id0]+5
+  call effih.f([id0],[id3],[id5])
+
+  id1=[id]+20
+  id1=[id1]+1
+  id2=[id1]+2
+  1dh [id0] 'Phi   initial' 30 -15 15
+  h/cop [id0] [id1] 'Phi single arm'
+  h/cop [id0] [id2] 'Phi coincidence'
+  nt/pl //[lun]/2.phicm*180./3.1415 ! -[id1]
+  nt/pl //[lun]/2.phicm*180./3.1415 $21 -[id2]
+  nt/pl //[lun]/2.phicm*180./3.1415 $22 -[id3]
+  nt/pl //[lun]/2.phicm*180./3.1415 $21.and.$22 -[id4]
+  id4=[id1]+3
+  call effih.f([id1],[id2],[id4])
+  id5=[id1]+4
+  call effih.f([id1],[id3],[id5])
+
+  id1=[id]+30
+  id2=[id1]+1
+  id3=[id1]+2
+  1dh [id1] 'Analazing power initial' 100 0.4 0.8
+  idopt [id1] stat
+  h/cop [id1] [id2] 'Analyzing power single arm'
+  h/cop [id1] [id3] 'Analyzing power coincidence'
+  idopt [id1] stat
+  idopt [id2] stat
+  idopt [id3] stat
+  nt/pl //[lun]/2.anpower ! -[id1]
+  nt/pl //[lun]/2.anpower $21 -[id2]
+  nt/pl //[lun]/2.anpower $22 -[id3]
+  nt/pl //[lun]/2.anpower $21.and.$22 -[id4]
+  id4=[id1]+3
+  call effih.f([id1],[id2],[id4])
+  id5=[id1]+4
+  call effih.f([id1],[id3],[id5])
+
+RETURN
+
+
+
+
+

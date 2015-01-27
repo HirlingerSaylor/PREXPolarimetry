@@ -1,0 +1,28 @@
+<a name="pileup">
+<h3>Beam pileup</h3>
+</a>
+One may simulate the beam pileup turning on the command:
+<pre>
+PILEUP    2.E7   300.
+</pre>
+In this example it is assumed that the beam flux is 2.E7 per second. The time
+interval in which the spurious beam tracks will be simulated is from -300ns to
++300ns. The main beam track comes at the time zero. It is reasonable to specify
+the time interval matching the time resolution of the slowest detector. For 
+example it may be a drift chamber with maximum drift time of 300ns. The spurious
+beam tracks are just
+normal tracks of the beam type, which are traced through the setup taking
+into account the proper interactions. When a spurious track or its products
+crosses a detector the timing of the hit is considered.<p>
+
+Sometimes it is convenient to simulate beam particles of a special type -
+say Sigma- which does not decay and does not interact hadronically
+while traced by GEANT. A new particle type can by defined. This particle
+would have the same properties as an ordinary Sigma-, but the lifetime
+is set to infinity and the muon-type of tracking (=5) is taken. However
+for calculations of pileup one has to define an ordinary Sigma-:
+<pre>
+PILEUP    2.E7   300.  21
+</pre>
+If the third field =0 the beam type of particle is taken.
+

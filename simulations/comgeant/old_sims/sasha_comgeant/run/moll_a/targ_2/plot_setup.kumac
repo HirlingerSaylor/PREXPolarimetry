@@ -1,0 +1,37 @@
+MACRO plot_setup proj=1 x1=-30 x2=30 y1=-90 y2=30 z1=-30 z2=900  
+*   proj = 1 - side view
+*          2 - top view
+*          3 - stereo
+*
+  satt ho11 colo 3
+  satt ho21 colo 4
+ 
+*  satt ho11 fill 1
+
+  if [proj]=1 then
+
+    null [z1] [z2] [y1] [y2] 
+    draw hall 90 180 0 0 0 1 1
+
+  elseif [proj]=2 then
+
+    null [z1] [z2] [x1] [x2] 
+    draw hall 90 90 0 0 0 1 1
+
+  elseif [proj]=3 then
+
+    satt hall seen 0
+    dopt hide on
+    dopt shad on
+    
+*    null -40 400 -500 40 
+    null -40 200 -500 40 
+    draw hall 30 110 0 0 0 1 1
+
+    dopt hide off
+    draw hall 30 110 0 0 0 1 1
+
+  endif
+RETURN
+
+

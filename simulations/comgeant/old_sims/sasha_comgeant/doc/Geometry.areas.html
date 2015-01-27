@@ -1,0 +1,29 @@
+<a name="areas">
+<h3>Areas</h3>
+</a>
+Areas which are entities of OMGEANT (not GEANT) are introduced in order to
+speed up the tracking. They are used to specify the maximum
+sizes of the useful area and roughly define regions with magnetic fields.
+The coordinates of the MRS are used (tied to the volume HALL).
+Example:
+<pre>
+C --                       Areas
+C
+C            start       up to ...
+C --   Attention: areas should be a bit wider than the mag. fields
+C          beam     target,mag1        mag2
+C  area#        1      2      3      4      5      
+MEDAREA      1    201      1    201      1      1
+MAGAREA      0      2      0      5      0      0
+XMNAREA    -500.  -200.   200.  1000.  1500.  4000.
+YMXAREA     300.   500.   500.   500.   500.   500.
+ZMXAREA     200.   300.   300.   300.   300.   400.
+</pre>
+The areas are arranged in the X-increasing order.
+XNMAREA sets the limits of each area in the X projection.
+The YMXAREA/ZMXAREA defines the Y/Z limits of each area. These limits are
+used to set the sizes of the 'HALL' volume. Using the command DEADVOL one
+may set "dead volumes" beyond each area (between the area and the 'HALL')
+where tracking of particles stops. The flag MAGAREA sets whether there
+is magnetic field in the area or not. The value defined gives the number
+of the magnet used (what field map will be used in this area).

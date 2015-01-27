@@ -1,0 +1,34 @@
+<a name="material">
+<h3>Material definition</h3>
+</a>
+
+Materials are defined using the FFREAD commands:
+<pre>
+C
+C -- New materials
+C           #       name               A    Z    g/cm3        RLcm   Int.len cm
+C
+PARMAT01   20 'Silicon$            '  28.  14.   2.33         9.36   45.5   0
+PARMAT02   21 'Glass borosilic.$   '  19.  10.   2.23        12.7    44.    0
+PARMAT03   22 'G10           $     '  16.   8.   1.7         19.4    53.0   0
+</pre>
+The number XX in PARMATXX is used only to distinguish the FFREAD commands.
+<p>
+Materials can be also defined as mixtures (starting with the
+<a href="#vers32">version 3.2</a>) with up to 20 materials per mixture:
+<pre>
+C
+C -- Mixtures
+C           #       name            g/cm3  Nmat   A1  Z1  W1    A2  Z2  W2 ...
+C
+PARMXT01   25 'CH4                 ' 1.1   -2     12.  6.  1.    1.  1.  4. 
+</pre>
+Different key names can be used to define a material:
+<pre>
+GPARMATXX   where 01&lt;=XX&lt;=50   for general geometry files 
+PARMATXX    where 01&lt;=XX&lt;=40   for other geometry files 
+UPARMATXX   where 01&lt;=XX&lt;=10   reserved for the user
+GPARMXTXX   where 01&lt;=XX&lt;=40   for general geometry files 
+PARMXTXX    where 01&lt;=XX&lt;=30   for other geometry files 
+UPARMXTXX   where 01&lt;=XX&lt;=10   reserved for the user
+</pre>

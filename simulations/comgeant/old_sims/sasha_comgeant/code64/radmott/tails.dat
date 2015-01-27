@@ -1,0 +1,28 @@
+ program polrad20 version from 10.04.1997
+
+ the file contains information about quantities
+ delta (see (42) of smc/7/93)
+
+ the following switches are active
+   polrad strffun integrat polrad_add exact elect long kin_hermes 
+   targ_o f2nmc_d8 g2_eq_0 pol_asym 
+
+ leptons are electrons
+ target is oxygen
+ target is longitudinally polarized
+ bmom =   0.0
+ tmom = *****
+    pl = 0.00    pn = 0.00   qn = 0.00
+
+ d is in %
+
+  x      y    d _i_p  d_e_p  d_q_p  d_v_p  d_i_u  d_e_u  d_q_u  d_v_u 
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02   0.00   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02  -0.01   0.00
+ 0.001 0.500*******   0.00   0.00   0.00   0.00  -1.02  -0.01   0.00

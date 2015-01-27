@@ -1,0 +1,98 @@
+MACRO helmholz z=0. dr=0. rstep=0.1 nr=21 nz=1 fill=1 rcn=0. rcoil=1.5 np=2
+
+*
+*-- Moller Helmholz coils
+*   Calculate the flux integral through a test coil (perp to Z)
+* 
+  if $VDIM(sol_par)<3 then
+    ve/cr sol_par(12,3) r
+    ve/cr sol_b(3) r
+  endif
+
+  ve/in sol_par(1:8,1)  1.   0. 0. -4.     2.58  9.5  2.7  -200. 
+  ve/in sol_par(1:8,2)  1.   0. 0.  4.     2.58  9.5  2.7  -200. 
+
+  if $VDIM(bzr)<10 then
+    ve/cr bzr(30,20) r
+    ve/cr rrr(30,20) r
+    ve/cr bz0(20) r
+  endif
+
+  if [fill]>0 then
+    do i=1,[nr]
+      z0=$RSIGMA([z])
+      r=$RSIGMA(([i]-1)*[rstep])
+      cmn='solen_v.f('//[r]//',0.,'//[z0]//')'
+      b=$CALL([cmn])
+      bzz=sol_b(3)
+      if [i]=1 then
+        b0=[bzz]
+        bzz=1.
+        ve/in bz0([nz]) [b0]
+      else
+        bzz=$SIGMA([bzz]/[b0])
+      endif
+      ve/in bzr([i],[nz]) [bzz]
+      ve/in rrr([i],[nz]) [r]
+      mess r=[r] bz=[bzz]
+    enddo
+  endif
+
+Application COMIS Quit
+      REAL FUNCTION POL2(X)
+      IMPLICIT NONE
+      REAL X
+      COMMON/PAWPAR/ PARA(10)
+      VECTOR NPAR(1)
+      INTEGER i
+      REAL XX
+
+      POL2=1.
+      XX=1.
+      DO i=1,NPAR(1)
+        XX=XX*X**2
+        POL2=POL2+PARA(i)*XX
+      ENDDO
+      END
+Quit  
+  if $VDIM(err)<100 then
+    ve/cr err(100) r
+  endif
+  if $VDIM(npar)<1 then
+    ve/cr npar(1) i
+  endif
+
+  ve/in err(1:[nr]) [nr]*0.001
+  ve/del bt
+  ve/del rt
+  ve/cop bzr(1:[nr],[nz]) bt
+  ve/cop rrr(1:[nr],[nz]) rt
+  ve/cr par(20) r
+  ve/in par(1:5) 1. 0. 0. 0. 0.
+  ve/in npar(1) [np]
+  ve/fit rt bt err pol2 ! [np] par
+  gr/hp/err rt bt err err [nr] 20 0.1
+
+* integral
+
+  a=par(1)
+  b=par(1)
+  a=$SIGMA(-1.*[a])
+  b=$SIGMA(-1.*[b])
+  r=[rcoil]
+  r2=$SIGMA([r]*[r])
+  dr2=$SIGMA([dr]*[dr])
+  s1=$SIGMA(1.-[a]*[dr2]-[b]*[dr2]**2)
+  s2=$SIGMA([r2]/2*([a]+4*[b]*[dr2]))
+  s3=$SIGMA([b]*[r2]*[r2]/3)
+  s=$SIGMA([s1]-[s2]-[s3])
+*  s=$SIGMA(3.1415*[r2]*([s1]-[s2]-[s3]))
+*  s=$SIGMA(3.1415*[r2]*(1.-[a]*[dr2]-[b]*[dr2]**2-[r2]/2*([a]+4*[b]*[dr2])-[b]*[r2]*[r2]/3))
+  mess Magnetic flux=[s]
+RETURN
+
+
+
+
+
+

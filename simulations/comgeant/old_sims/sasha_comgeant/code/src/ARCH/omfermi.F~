@@ -1,0 +1,55 @@
+* $Header:$
+* $Log:$
+*
+      SUBROUTINE OMFERMI(AMTAR,FERMIMOM,P)
+C
+C     ******************************************************************
+C     *                                                                *
+C     *       Simulate the Fermi motion                                *
+C     *   INPUT: AMTAR    - Target mass                                *
+C     *          FERMIMOM - Fermi max momentum                         *
+C     *  OUTPUT: P(1-4)   - target particle 4-momentum                 *
+C     *                                                                *
+C     *    ==>Called by : OMOTT...                                     *
+C     *                                                                *
+C     ******************************************************************
+C
+      IMPLICIT NONE
+      REAL     AMTAR,FERMIMOM,P(4)
+C
+#include "geant321/gconst.inc"
+#include "geant321/gcunit.inc"
+C
+#if defined OMGEANT_VERSION
+      CHARACTER*80 VersionString
+      DATA VersionString /
+     & '$Id:$'/
+#endif
+C
+      REAL     RNDM
+      EXTERNAL RNDM
+C
+      REAL      pfermi,pf,cf,sf,at2,ab2
+C
+C     ------------------------------------------------------------------
+C
+C
+C---          Generate the target momentum
+C---          Assumed Fermi distribution: dn/(dpx dpy dpz) = const(p), or dn/dp = p**2*const 
+C
+      at2=AMTAR**2
+      ab2=P0(4)**2-P0(1)**2-P0(2)**2-P0(3)**2
+C
+      pfermi=RNDM(pfermi)**0.333333*FERMIMOM
+      cf=2.*RNDM(cf)-1.
+      sf=SQRT(1.-cf**2)
+      pf=TWOPI*RNDM(sf)
+C
+      P(1)=pfermi*sf*COS(pf)
+      P(2)=pfermi*sf*SIN(pf)
+      P(3)=pfermi*cf
+      P(4)=SQRT(pfermi**2+at2)
+C
+C
+      RETURN
+      END

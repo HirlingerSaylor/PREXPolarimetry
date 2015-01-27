@@ -1,0 +1,273 @@
+LIST
+C KEYS
+C  -------  Read the geomtery file 
+C NOLI
+C LIST
+READ  21         general file
+READ  22         local update for beam momentum magnets etc
+C
+NOLI
+READ 16          particle definitions
+LIST
+C
+TRIG   500000          number of events
+C CONTINUE 1
+C
+C
+C ==========   Pileup  ==========================
+C                 Beam pileup:
+C           1/sec   +/-ns   particle type
+C PILEUP      4.E7     300.        14
+C
+HALOPART      3                      halo particle type
+C
+C origine:  X: min   max  Y: min  max  Z:min   max  
+C HALOORIGIN    -300. -299.   -200. 200.   -150. 150.   
+C
+C HALOFLAT     100.                    particles per sq centimeter
+C     center: flux/cm**2   Ycen  Ysigma  Zcen Zsigma (transv. plane)
+C HALOGAUS     2.E4            0.  40.       0.  20.
+C            offset   corr.      sigma
+C HALOSLOPE      0.       0.       0.002     Y
+C                0.       0.       0.002     Z
+C mom:       mean    corY  corY**2   corZ   corZ**2
+HALOPMEAN     250.    0.     0.        0.     0.     momentum
+HALOPSIGM      20.    0.     0.        0.     0.     sigma
+C
+C ==========   Writing out ZEBRA banks ========== 
+C ----     Write to a pipe (comment this line out otherwise)
+C LUNSAVE  32
+C
+C SAVE  'KINE' 'VERT' 'OHIT'
+C
+C
+C ==========   NTUPLES   ===========
+C
+C          beam  kine  hits  LUND
+NTUPPROCO    1    -1    1     0
+C NTUPPROCO    1     0    0     1
+C NTUPLENO              3=7800
+NTUPLENO              3=2000
+NTUPWRHIT   1  write all events    if NE zero write only events with hits
+C
+C ==========   Geometry modifications =============
+C
+C DEADVOL  99
+C
+C
+C       Absorbers: (works about 6 times faster)
+C         medium  tracking types
+MEDABSORB2   55        1  2  7            photons electrons
+MEDABSORB3   96        1  2  3  4  7      photons electrons hadrons
+C
+C ==========  
+CUTXYZ  0.005
+C MAXXYZ 200000  
+C
+C -----------   Ignore: neutrino, (K0L, pi0, eta)
+C
+IGNTYPE   4
+C                (10   7  17)
+C
+C -----------   Ignore photons!
+C
+C IGNTYPE   2=1
+C               Forbid to decay in LUND for:
+C            pi0   eta   omega  eta'
+LUNDDECOFF   111   
+C
+C     ===    "fixed" track (the useful one)
+C OMITRAFIX      2
+C
+C -----------            Beam -------------------
+C
+OMBEAM     2       simple beam
+C
+C ============================================================================
+C  -------    Kinematics
+C
+OMKINE        4
+C             0      primitive multiplicity
+C             1      PYTHIA
+C             2      FRTIOF generator
+C             3      VENUS
+C             4      Exclusive production (turn NINCL to 0 ! ) Mott/Moller ...
+C             5      LEPTO
+C             9      nothing
+C
+C ===             If OMKINE=4 : Moller/Mott
+C ============================================================================
+OMEXKINE      1
+C             0      nothing (prints a message if OMKINE=4)
+C             1      Moller/Bhabha
+C             2      Mott
+C             3      Photoproduction by Bremstr. photons
+C             4      VMeson photoproduction
+C             5      Mott on lead (needs a special compillation to include Bob's code)
+C             6      e+ + e- ==> gam + gam
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on Moller:
+MOLLIMTHETA     70.0 110.0    theta range in CM  in degrees
+MOLLIMPHI      -20.0  20.0    phi   range in CM  in degrees
+C 
+MOLLSHELL     0
+C             0    scattering on a free e-
+C             1    scattering on e- from L shell in Fe
+C             2    scattering on e- from K shell in Fe
+C
+C ----------------------------------------------------------------------------
+C ===          Limits on Mott:
+MOTTIMTHETA     0.06    0.6   theta range in LAB in degrees
+MOTTIMPHI     -180.0  180.0   phi   range in LAB in degrees
+MOTTTARG     14               target particle
+C            14               Quasielastic scattering on protons if the target is a heavy nucleus 
+C            82               Scattering on Fe Nucleus
+MOTTWEIGHT    0               event weight 
+C             0               weight=1 for all events 
+C             1               weights are slightly different (see Ntuple variable WGCROS) 
+C             2               weight=cross-section (uniform simulation in the LAB angle) 
+C
+MOTTRADIAT    1               type of Mott scattering
+C             0               Regular Mott
+C             1               Radiative Mott
+MOTTRADLIM      0.2     0.8   Relative energy range for the scattered electrons due to radiatiion
+PARTICLE01   82  4  55.85  26. 1.E20  'Fe 56         $'       Fe nucleus definition
+C
+C ===             If OMKINE=5 : LEPTO Deep Inelastic
+C==============================================================================
+C ===           Start of LEPTO flags
+C
+MUKIN         2
+C             0      nothing is called
+C             1      read a file with kinematics
+C             2      normal LEPTO call 
+C             3      AROMA call (does not work yet)
+C
+C Lepto Internal Event Generation
+C
+C Min/Max of bjorken x, y, Q^2 and nu (=E-E')
+C
+XLPT  0.01    0.999
+YLPT  0.0     0.999
+WLPT  4.0   100.
+QLPT  0.5   100.
+VLPT  0.1   100.
+C   ----1--2--3--4--5--6--7--8--9-10-11-12-13-14--15-16-17-18-19-20--------LST--*
+C LST   2  1  5  1  3  1  1 12  5  1 111 3  3  4 5007 2  0  2  1  1
+LST     0  1  5  1  3  1  1 12  5  1  0  3  3  0  1  1  0  2  1  1
+C ----1---2---3---4---5---6---7---8----9--10-----------------------------PARL-*
+C PARL 1.  1. .44 .75 .226 0.  0. 1.5E-2 2.0 0.
+C ---11-------12--13---14-----15----16-------17-------18-----19----20----PARL-*
+C       1.0E-2 4.0 0.1 0.44 1.0E-2 7.2974E-3 1.1664E-5 4.4E-2 3.0E-2 1.0
+
+C XLPT  0.1     0.999
+C YLPT  0.001   0.999
+C QLPT  10.0   100.0
+C VLPT 15.0 65.0
+
+C===           End of LEPTO flags
+C==============================================================================
+C -----------------------------------------
+C
+OMTRACK    1
+OMHITS     1
+OMDIGI     1
+RUNG       1 
+C
+C
+C      init    kine   track   hits   digit  outp
+C SWIT    1        2      1      0       0      2
+SWIT    1        0      0      0       0      0
+C
+C
+C
+C
+VIEW 0 0
+SETS 0 0
+ANNI 0
+BREM 0
+COMP 0
+DCAY 0
+DRAY 0
+HADR 0
+LOSS 0
+MULS 0
+MUNU 0
+PAIR 0
+PFIS 0
+PHOT 0
+RAYL 0
+KINE 1
+TIME 2=-999999.
+C
+ANNI 1
+BREM 1
+COMP 1
+DCAY 1
+DRAY 1
+HADR 1
+LOSS 1
+MULS 1
+MUNU 1
+PAIR 1
+PFIS 1
+PHOT 1
+RAYL 1
+C
+ANNI 0
+BREM 0
+COMP 0
+DCAY 0
+DRAY 0
+HADR 0
+LOSS 1
+MULS 0
+MUNU 0
+PAIR 0
+PFIS 0
+PHOT 0
+RAYL 0
+C
+C CUTS    0.05  0.02   0.05   0.05    0.05    0.05   0.05
+C CUTS    11=200.E-9
+C CUTS    0.05    0.05    0.05    0.05    0.05
+C CUTS    0.01    0.01    0.01    0.01    0.01
+C
+C
+C  RNDMSEQ   0
+C  STOP
+
+
+C MAGNET05 10=0.
+
+MEDABSORB4  295        1  2  3  4  7      photons electrons hadrons
+MEDABSORB5  260        1  2  3  4  7      photons electrons hadrons
+C
+MEDABSORB6  454        1  2  3  4  7      photons electrons hadrons
+HOD2IDTYPE      42
+C
+MEDABSORB7   60        1  2  3  4  7      photons electrons hadrons
+C MEDABSORB8   35        1  2  3  4  7      photons electrons hadrons
+C
+GPARVOL20  'MTAT' 296  'BPVT'    0.    0.    6.9  0  'TUBE'  3   0.    1.5    0.0002   
+C   Beam spot reference limits
+C                 Y           Z         SlopeY          SlopeZ
+BEAMYZLIM    -0.01 0.01  -0.01 0.01  -0.000  0.000   -0.000  0.000 
+C --  For 4 T coils
+MOLLIMTHETA     75.0 105.0    theta range in CM  in degrees
+MOLLIMPHI      -15.0   0.0    phi   range in CM  in degrees
+GPARMED04  203 'Vacuum,    mf$      '  16  0  1 40. 40.  5.    0.1  0.1    0.5 
+
+C -- Field rotation
+
+RMATR11  90.573   0.  90.     90.   0.573   0.     Field rotation around Y
+RMATR12  90.      0.  90.573  90.   0.573  90.     Field rotation around X
+
+MAGNET05   9    'HALL'    0.     0.    0.     12  20.    20.    80.     1.0     0     0 
+
+MAGNET01  10=1.559
+MAGNET02  10=0.
+MAGNET03  10=0.343
+MAGNET04  10=1.740
+C

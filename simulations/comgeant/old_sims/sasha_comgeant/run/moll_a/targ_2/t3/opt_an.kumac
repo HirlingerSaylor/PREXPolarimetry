@@ -1,0 +1,49 @@
+MACRO opt_an nev=30000 e=1.05 file='csimout.nt'
+
+*read file 'input nt file name' 
+  clo 0
+  h/del 0
+  opt grid
+
+*  h/fil 1 /u/scratch/glamazdi/ntup-his/[file]
+  h/fil 1 [file]
+  exec  fill lun=lun1 id=1000
+*  exec  fill_sol lun=lun1 id=1000
+  clo 1
+  cd //pawc
+
+  nsim=$HINFO(1030,'ENTRIES')
+  n1arm=$HINFO(1031,'ENTRIES')
+  n2arm=$HINFO(1033,'ENTRIES')
+  anp=$HINFO(1033,'MEAN')
+  anpr=$HINFO(1033,'RMS')
+  eanp=$SIGMA([anpr]/SQRT([n2arm]))
+  acc1= $SIGMA(REAL([n2arm])/REAL([nsim]))
+  eacc1=$SIGMA(SQRT([acc1]*(1.-[acc1])/[nsim]))
+  acc2=$SIGMA(REAL([n2arm])/REAL([n1arm]))
+  eacc2=$SIGMA(SQRT([acc2]*(1.-[acc2])/[n1arm]))
+  theta=$HINFO(1013,'RMS')
+  phi=$HINFO(1023,'RMS')
+  err=$SIGMA(100./SQRT([n2arm]))
+
+  ve/in  sval(1)  [anp]
+  ve/in esval(1) [eanp]
+  ve/in  sval(2)  [acc1]
+  ve/in esval(2) [eacc1]
+  ve/in  sval(3)  [acc2]
+  ve/in esval(3) [eacc2]
+  mess Events=[nev]  Events=[nsim]   Hits=[n2arm]
+  mess Ener=[e] [nev] [dq] An.power=[anp]+/-[eanp]  Acc=[acc1]+/-[eacc1]
+  mess Theta=[theta]    Phi=[phi]
+  mess Stat.Err=[err]
+  mess file=[file]
+  ve/cr kin(4) r
+  ve/in kin(1) [theta] 
+  ve/in kin(2) [phi] 
+  ve/in kin(3) [n2arm]
+  ve/in kin(4) [anp]
+
+*ve/write kin(1),kin(2),kin(3),kin(4) temp.dat (F10.6,F10.6,F10.1,F10.6)
+*shell cat temp.dat >> paw.dat
+
+RETURN

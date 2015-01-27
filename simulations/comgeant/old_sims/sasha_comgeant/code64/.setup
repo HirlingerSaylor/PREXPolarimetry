@@ -1,0 +1,15 @@
+#! /bin/sh
+# -- Env. variables for COMGEANT compillation: cvs references
+# -- 2 possiblities: refer to /home/gen or to /apph2
+src=/home/gen
+host=`uname -n | cut -f1 -d.`
+if [ $host != "haplix2" ] || [ `whoami` != gen ]; then
+  if test -d /apph2/cvs ; then
+    src=/apph2
+  fi
+fi
+export CFGDIR=$src/cvs/config
+export CERNCFGDIR=$src/cvs/cernconfig
+export CVSROOT=":pserver:dist@wwwcompass.cern.ch:/afs/cern.ch/exp/compass/src/cvs/"
+export COMGCOD=$src/cvs/comgeant/code
+export COMGLIB="$COMGCOD"/`uname`

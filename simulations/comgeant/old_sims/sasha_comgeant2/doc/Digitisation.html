@@ -1,0 +1,51 @@
+<a name="Digitisation">
+<h2>Digitisation</h2>
+</a>
+Digitisation is turned on by the command:
+<pre>
+OMDIGI   1
+</pre>
+Plane coordinate detectors and hodoscopes are treated.
+The results are stored in the regular GEANT digitisation
+banks (via CALL GSDIGI).
+<ul>
+ <li> <b>MWPC</b> <br>
+      A track may hit one or several wires, depending on
+      the length of the projection of
+      its trajectory inside the sensitive volume on the wire plane.
+      All hit wires are combined in clusters
+      if there is no gap between them. The maximum length of a cluster
+      is 16 wires. The following words are stored:
+   <ol>
+    <li> 16 bits: the number of the first wire in a cluster (name:WIRE);
+    <li> 16 bits: the number of wires in a cluster (name:WIDT);
+   </ol>
+ <li> <b>Silicon micro-strips (SMS)</b><br>
+      At the moment they are treated like MWPC.
+ <li> <b>MSGC</b><br>
+      At the moment they are treated like MWPC.
+ <li> <b>Drift</b> chambers<br>
+      The distance between
+      the center of a track trajectory inside the sensitive volume
+      and the closest wire is calculated
+      (a track may hit only one wire).
+      The drift time in unit of time bins is
+      calculated as
+      time=INT((dist/velocity)+smearing+RTOF)
+      where smearing simulates the resolution (Gaussian distribution)
+      and RTOF is the "reduced time of flight" (see <a href="#Hits">Hits</a>).
+      The resolution
+      is given in the description of the chamber.
+      The following words are stored:
+   <ol>
+    <li> 16 bits: the number of the wire (name:WIRE);
+    <li> 16 bits: the time in units of time bins (name:TIME);
+   </ol>
+ <li> <b>Hodoscopes</b> <br>
+      Each slate is identified by its 'detector' name and the copy number. 
+      The ionisation energy release per slate is calculated. 
+      The following words are stored:
+   <ol>
+    <li> 16 bits: the energy (GeV)*1.E4 (name:EION);
+   </ol>
+</ul>
